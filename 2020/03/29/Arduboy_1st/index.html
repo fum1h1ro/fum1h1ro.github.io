@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Arduboy ことはじめ | мята</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概要Arduboy のセットアップから簡単なスケッチを動かすところまで解説します。 環境セットアップArduino IDE をダウンロードする Arduino　公式 から IDE をダウンロードします。   Download をクリックして先に進みます。  右側の一覧から、自分の環境に合ったものを選びます。  気が向いたら寄付しましょう。寄付しない場合は、 JUST DOWNLOAD で。 ダウン">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Arduboy ことはじめ">
+<meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/index.html">
+<meta property="og:site_name" content="мята">
+<meta property="og:description" content="概要Arduboy のセットアップから簡単なスケッチを動かすところまで解説します。 環境セットアップArduino IDE をダウンロードする Arduino　公式 から IDE をダウンロードします。   Download をクリックして先に進みます。  右側の一覧から、自分の環境に合ったものを選びます。  気が向いたら寄付しましょう。寄付しない場合は、 JUST DOWNLOAD で。 ダウン">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/b951bf2a-d143-bdc7-c636-234e895cd0f8.png">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/ba3b343a-211e-9cb6-b2ea-fe339ffd1cae.png">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/ad26593a-9a37-6af2-8aeb-267000e97122.png">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/71313123-79be-17b0-c654-61249c06dd51.png">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/06dae7bc-f90a-05b8-5a81-2eff457ab4ec.png">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/28e26abb-34c9-6e62-6a6d-5ad013d8c6aa.png">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/1c932faa-8a0c-5ae0-01cb-7a67a3ccd0e5.png">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/61de1c66-1bd0-0258-34d4-bebec7e1f8c3.jpeg">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/1714a697-164d-1b00-f84f-7230a19c4206.png">
+<meta property="article:published_time" content="2020-03-29T11:00:00.000Z">
+<meta property="article:modified_time" content="2020-03-29T11:28:43.490Z">
+<meta property="article:author" content="fum1h1ro">
+<meta property="article:tag" content="qiita">
+<meta property="article:tag" content="arduboy">
+<meta property="article:tag" content="dev">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fum1h1ro.github.io/images/b951bf2a-d143-bdc7-c636-234e895cd0f8.png">
+  
+    <link rel="alternate" href="/atom.xml" title="мята" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">мята</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://fum1h1ro.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Arduboy_1st" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Arduboy_1st/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Arduboy ことはじめ
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduboy のセットアップから簡単なスケッチを動かすところまで解説します。</p>
+<h2 id="環境セットアップ"><a href="#環境セットアップ" class="headerlink" title="環境セットアップ"></a>環境セットアップ</h2><h3 id="Arduino-IDE-をダウンロードする"><a href="#Arduino-IDE-をダウンロードする" class="headerlink" title="Arduino IDE をダウンロードする"></a>Arduino IDE をダウンロードする</h3><ul>
+<li><a href="https://www.arduino.cc/" target="_blank" rel="noopener">Arduino　公式</a> から IDE をダウンロードします。</li>
+</ul>
+<p><img src="/images/b951bf2a-d143-bdc7-c636-234e895cd0f8.png" alt="Arduino - Home 2016-06-05 11-07-16.png"></p>
+<p><code>Download</code> をクリックして先に進みます。</p>
+<p><img src="/images/ba3b343a-211e-9cb6-b2ea-fe339ffd1cae.png" alt="Arduino - Software 2016-06-05 11-09-46.png"></p>
+<p>右側の一覧から、自分の環境に合ったものを選びます。</p>
+<p><img src="/images/ad26593a-9a37-6af2-8aeb-267000e97122.png" alt="Arduino - Donate 2016-06-05 11-14-01.png"></p>
+<p>気が向いたら寄付しましょう。寄付しない場合は、 <strong>JUST DOWNLOAD</strong> で。</p>
+<p>ダウンロード後、インストールします。</p>
+<h3 id="Arduino-IDE-の設定"><a href="#Arduino-IDE-の設定" class="headerlink" title="Arduino IDE の設定"></a>Arduino IDE の設定</h3><p><img src="/images/71313123-79be-17b0-c654-61249c06dd51.png" alt="Screen Shot 2016-06-05 at 11.50.53.png"></p>
+<p>メニューからボードを <code>Arduino Leonardo</code> にします。</p>
+<p><img src="/images/06dae7bc-f90a-05b8-5a81-2eff457ab4ec.png" alt="Screen Shot 2016-06-05 at 11.52.35.png"></p>
+<p>ポートも、 Arduino のものにしておくとあとで便利です。</p>
+<h3 id="Arduboy-ライブラリの追加"><a href="#Arduboy-ライブラリの追加" class="headerlink" title="Arduboy ライブラリの追加"></a>Arduboy ライブラリの追加</h3><p>Arduboy でプログラムするにあたって必要なライブラリを IDE に追加します。</p>
+<p><img src="/images/28e26abb-34c9-6e62-6a6d-5ad013d8c6aa.png" alt="Screen Shot 2016-06-05 at 12.08.27.png"></p>
+<p>メニューの <code>Include Library &gt; Manage Libraris...</code> を選びます。</p>
+<p><img src="/images/1c932faa-8a0c-5ae0-01cb-7a67a3ccd0e5.png" alt="Screen Shot 2016-06-05 at 12.10.50.png"></p>
+<p>検索フィルタに <code>boy</code> と入れると、 Arduboy 用のライブラリが出てくるので、最新のバージョンをインストールします。</p>
+<h3 id="Arduboy-を繋ぐ"><a href="#Arduboy-を繋ぐ" class="headerlink" title="Arduboy を繋ぐ"></a>Arduboy を繋ぐ</h3><p><img src="/images/61de1c66-1bd0-0258-34d4-bebec7e1f8c3.jpeg" alt="IMG_5323.JPG"></p>
+<p>USB&lt;&gt;USB-Micro ケーブルでホスト PC と Arduboy を繋ぎます。</p>
+<p>Arduboy の電源を入れると、既にインストールされているプログラムが即時実行されますが、開発中も電源入れっぱなしで、プログラムが実行されたままでも大丈夫です。</p>
+<h2 id="スケッチを用意する"><a href="#スケッチを用意する" class="headerlink" title="スケッチを用意する"></a>スケッチを用意する</h2><p><img src="/images/1714a697-164d-1b00-f84f-7230a19c4206.png" alt="Screen Shot 2016-06-05 at 12.05.18.png"></p>
+<p>新規スケッチを用意すると、上記画面のようになっていると思います。</p>
+<p>これから、ここにプログラムを書き込んでいきます。</p>
+<h2 id="スケッチに書き込む"><a href="#スケッチに書き込む" class="headerlink" title="スケッチに書き込む"></a>スケッチに書き込む</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Arduboy.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">Arduboy arduboy;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  arduboy.<span class="built_in">begin</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!arduboy.nextFrame()) <span class="keyword">return</span>;</span><br><span class="line">  arduboy.<span class="built_in">clear</span>();</span><br><span class="line">  arduboy.drawCircle(<span class="number">128</span>/<span class="number">2</span>, <span class="number">64</span>/<span class="number">2</span>, <span class="number">16</span>, <span class="number">1</span>);</span><br><span class="line">  arduboy.<span class="built_in">display</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>スケッチの中身を上記のソースに置き換えて、 Command+U （Windows なら Ctrl+U） を押して Arduboy に転送します。</p>
+<p>しばらくすると、 Arduboy が起動し、真っ黒な画面の中心に円が描かれているのが確認出来ると思います。</p>
+<p>これで、プリインストールされていたゲームの代わりに、あなたが書き込んだプログラムが実行されたことになります。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/" data-id="ck9zb3lc500003zpk7w03ab73" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/30/Arduboy_move_tofu/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">次の記事</strong>
+      <div class="article-nav-title">
+        
+          Arduboy で豆腐を動かす
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/29/Arduboy_OLED/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">Arduboy のOLEDを叩く</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity/" rel="tag">unity</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/arduboy/" style="font-size: 16.67px;">arduboy</a> <a href="/tags/c/" style="font-size: 10px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/qiita/" style="font-size: 20px;">qiita</a> <a href="/tags/unity/" style="font-size: 13.33px;">unity</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/30/Arduboy_move_tofu/">Arduboy で豆腐を動かす</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_measure_1frame/">1フレームの時間を測る</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 fum1h1ro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

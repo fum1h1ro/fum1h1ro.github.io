@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Arduboy への道 | мята</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概要Arduboy が届かなさすぎておかしくなった頭を冷やすための記事です。 小ネタ外部エディタで書きたい 書いてもいいけど、そのままだと IDE に変更が反映されない Preferences &gt; Use external editor を有効にする IDE から編修出来なくなるけど、外部エディタで編集して IDE に戻るとファイルを読み込み直してくれる  逆アセンブルしたい or コンパイ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Arduboy への道">
+<meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/index.html">
+<meta property="og:site_name" content="мята">
+<meta property="og:description" content="概要Arduboy が届かなさすぎておかしくなった頭を冷やすための記事です。 小ネタ外部エディタで書きたい 書いてもいいけど、そのままだと IDE に変更が反映されない Preferences &gt; Use external editor を有効にする IDE から編修出来なくなるけど、外部エディタで編集して IDE に戻るとファイルを読み込み直してくれる  逆アセンブルしたい or コンパイ">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:published_time" content="2020-03-29T11:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-09T06:09:00.356Z">
+<meta property="article:author" content="fum1h1ro">
+<meta property="article:tag" content="qiita">
+<meta property="article:tag" content="arduboy">
+<meta property="article:tag" content="dev">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="мята" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">мята</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://fum1h1ro.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Arduboy_road_to" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Arduboy_road_to/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Arduboy への道
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduboy が届かなさすぎておかしくなった頭を冷やすための記事です。</p>
+<h2 id="小ネタ"><a href="#小ネタ" class="headerlink" title="小ネタ"></a>小ネタ</h2><h3 id="外部エディタで書きたい"><a href="#外部エディタで書きたい" class="headerlink" title="外部エディタで書きたい"></a>外部エディタで書きたい</h3><ul>
+<li>書いてもいいけど、そのままだと IDE に変更が反映されない</li>
+<li><code>Preferences &gt; Use external editor</code> を有効にする</li>
+<li>IDE から編修出来なくなるけど、外部エディタで編集して IDE に戻るとファイルを読み込み直してくれる</li>
+</ul>
+<h3 id="逆アセンブルしたい-or-コンパイルした結果がどうなってるか知りたい"><a href="#逆アセンブルしたい-or-コンパイルした結果がどうなってるか知りたい" class="headerlink" title="逆アセンブルしたい or コンパイルした結果がどうなってるか知りたい"></a>逆アセンブルしたい or コンパイルした結果がどうなってるか知りたい</h3><ol>
+<li>コンパイルした結果を取得出来るようにする<ul>
+<li><a href="http://mpu.seesaa.net/article/434274452.html" target="_blank" rel="noopener">Arduino/Genuino 101 の追加メモ 2016/02</a> を参考にする。この記事は Windows 版向けだけど、OSX 版でも同じようにできる。</li>
+<li><code>~/Library/Arduino15/preferences.txt</code> を編集。 <code>build.path=ビルド結果を出力するパス</code> を追加する</li>
+<li>権限的に問題ないパスを指定するよう注意 ex) <code>/Users/Hoge/Documents/Arduino/build</code></li>
+</ul>
+</li>
+<li>逆アセンブルする<ul>
+<li><code>/Applications/Arduino.app/Contents/Java/hardware/tools/avr/bin</code> に色々入ってるのでそれを使う</li>
+<li>適当にパスを通すなどして</li>
+<li><code>% avr-objdump -hdSC hoge.elf &gt; hoge.txt</code></li>
+</ul>
+</li>
+<li>読む</li>
+</ol>
+<ul>
+<li>実際に転送されるのは、 <code>hoge.ino.hex</code> なのかな？</li>
+<li>この辺は Arduino の文献を漁った方がよさそう</li>
+</ul>
+<h3 id="早く受け取りたい"><a href="#早く受け取りたい" class="headerlink" title="早く受け取りたい"></a>早く受け取りたい</h3><ul>
+<li>日本の国際交換局に到着した段階で直接交換局に行き、受け取ることが可能らしい -&gt; <a href="http://jetstream.bz/archives/17615" target="_blank" rel="noopener">早期通関申請</a></li>
+<li>行く気満々だったが、タッチの差で発送されてしまった</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/" data-id="ck9zb3lce00073zpk6rhzfz40" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/29/Arduboy_measure_1frame/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">次の記事</strong>
+      <div class="article-nav-title">
+        
+          1フレームの時間を測る
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/29/Arduboy_using_latest_lib/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">常に最新の Arduboy ライブラリを使う</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity/" rel="tag">unity</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/arduboy/" style="font-size: 16.67px;">arduboy</a> <a href="/tags/c/" style="font-size: 10px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/qiita/" style="font-size: 20px;">qiita</a> <a href="/tags/unity/" style="font-size: 13.33px;">unity</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/30/Arduboy_move_tofu/">Arduboy で豆腐を動かす</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_measure_1frame/">1フレームの時間を測る</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 fum1h1ro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

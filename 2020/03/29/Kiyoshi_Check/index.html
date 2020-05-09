@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>例のキヨシチェックを Sprache で書いてみる | мята</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="はじめにhttp:&#x2F;&#x2F;qiita.com&#x2F;beinteractive&#x2F;items&#x2F;a2264048a601ee998aca 例の(?)が何だか解らないんですが、こういうのが上がってきたので、パーサの練習がてら書いてみました。 使ったものhttps:&#x2F;&#x2F;github.com&#x2F;sprache&#x2F;Sprache C# の Monadic Parser だそうです。Monadic って Haskell で出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="例のキヨシチェックを Sprache で書いてみる">
+<meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/Kiyoshi_Check/index.html">
+<meta property="og:site_name" content="мята">
+<meta property="og:description" content="はじめにhttp:&#x2F;&#x2F;qiita.com&#x2F;beinteractive&#x2F;items&#x2F;a2264048a601ee998aca 例の(?)が何だか解らないんですが、こういうのが上がってきたので、パーサの練習がてら書いてみました。 使ったものhttps:&#x2F;&#x2F;github.com&#x2F;sprache&#x2F;Sprache C# の Monadic Parser だそうです。Monadic って Haskell で出">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:published_time" content="2020-03-29T11:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-09T06:20:40.777Z">
+<meta property="article:author" content="fum1h1ro">
+<meta property="article:tag" content="qiita">
+<meta property="article:tag" content="dev">
+<meta property="article:tag" content="c#">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="мята" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">мята</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://fum1h1ro.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Kiyoshi_Check" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Kiyoshi_Check/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      例のキヨシチェックを Sprache で書いてみる
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h2><p><a href="http://qiita.com/beinteractive/items/a2264048a601ee998aca" target="_blank" rel="noopener">http://qiita.com/beinteractive/items/a2264048a601ee998aca</a></p>
+<p>例の(?)が何だか解らないんですが、こういうのが上がってきたので、パーサの練習がてら書いてみました。</p>
+<h2 id="使ったもの"><a href="#使ったもの" class="headerlink" title="使ったもの"></a>使ったもの</h2><p><a href="https://github.com/sprache/Sprache" target="_blank" rel="noopener">https://github.com/sprache/Sprache</a></p>
+<p>C# の Monadic Parser だそうです。Monadic って Haskell で出てきたモナド的なヤツでしょうか。</p>
+<h2 id="できたもの"><a href="#できたもの" class="headerlink" title="できたもの"></a>できたもの</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Text;</span><br><span class="line"><span class="keyword">using</span> Sprache;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ZundokoGenerator</span> &#123;</span><br><span class="line">  Random _random = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IEnumerator&lt;<span class="keyword">string</span>&gt; <span class="title">RandomZunDoko</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">      <span class="keyword">yield</span> <span class="keyword">return</span> _random.Next(<span class="number">0</span>, <span class="number">2</span>) == <span class="number">0</span> ? <span class="string">"ズン"</span> : <span class="string">"ドコ"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">KiyoshiParser</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Parser&lt;<span class="keyword">string</span>&gt; zun =</span><br><span class="line">    <span class="keyword">from</span> txt <span class="keyword">in</span> Parse.String(<span class="string">"ズン"</span>).Text()</span><br><span class="line">    <span class="keyword">select</span> txt;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Parser&lt;<span class="keyword">string</span>&gt; doko =</span><br><span class="line">    <span class="keyword">from</span> txt <span class="keyword">in</span> Parse.String(<span class="string">"ドコ"</span>).Text()</span><br><span class="line">    <span class="keyword">select</span> txt;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Parser&lt;<span class="keyword">string</span>&gt; zzzd =</span><br><span class="line">    <span class="keyword">from</span> z0 <span class="keyword">in</span> zun</span><br><span class="line">    <span class="keyword">from</span> z1 <span class="keyword">in</span> zun</span><br><span class="line">    <span class="keyword">from</span> z2 <span class="keyword">in</span> zun</span><br><span class="line">    <span class="keyword">from</span> z3 <span class="keyword">in</span> zun</span><br><span class="line">    <span class="keyword">from</span> dk <span class="keyword">in</span> doko</span><br><span class="line">    <span class="keyword">select</span> <span class="string">"キヨシ"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> zdg = <span class="keyword">new</span> ZundokoGenerator().RandomZunDoko();</span><br><span class="line">    <span class="keyword">var</span> sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">      sb.Clear();</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; ++i) &#123;</span><br><span class="line">        zdg.MoveNext();</span><br><span class="line">        sb.Append(zdg.Current);</span><br><span class="line">      &#125;</span><br><span class="line">      ++count;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> kys = KiyoshiParser.zzzd.Parse(sb.ToString());</span><br><span class="line">        Console.WriteLine(sb.ToString() + kys);</span><br><span class="line">        Console.WriteLine(count + <span class="string">"回ズンドコしました"</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">catch</span> (Sprache.ParseException) &#123;</span><br><span class="line">        Console.WriteLine(sb.ToString());</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="解説"><a href="#解説" class="headerlink" title="解説"></a>解説</h2><h3 id="ZundokoGenerator"><a href="#ZundokoGenerator" class="headerlink" title="ZundokoGenerator"></a>ZundokoGenerator</h3><p>クラス <code>ZundokoGenerator</code> は元になった記事からパクってきましたが、実は <code>UnityEngine.Random</code> が使われていたので、 <code>System.Random</code> を使うように変更しました。</p>
+<p><code>IEnumerator</code> で、ズン or ドコを延々と返すだけですね。</p>
+<h3 id="KiyoshiParser"><a href="#KiyoshiParser" class="headerlink" title="KiyoshiParser"></a>KiyoshiParser</h3><p>パーサ本体です。</p>
+<p>文法についてはなんとなく見てもらえば解ると思いますが、 LINQ のクエリ構文で繋いでいく感じです。</p>
+<p>詳しいところは <code>Sprache</code> のドキュメントをあたってもらった方がいいと思いますが、 <code>bison</code> や <code>yacc</code> でいうパターンを <code>from</code> の羅列で記述し、 <code>select</code> でアクションといった感じです。</p>
+<p>注意する点は、 <code>Parse.String()</code> は返値が <code>IEnumerator&lt;char&gt;</code> (だっけ？)になっているので、 <code>string</code> に変換してやる必要があるところです。</p>
+<h3 id="Program"><a href="#Program" class="headerlink" title="Program"></a>Program</h3><p>メインの処理です。</p>
+<p>正しくないズンドコ(?)の際は例外で処理しています。</p>
+<h2 id="コンパイル＆結果"><a href="#コンパイル＆結果" class="headerlink" title="コンパイル＆結果"></a>コンパイル＆結果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">% mcs main.cs -r:Sprache.dll ; mono main.exe</span><br><span class="line">ドコズンズンズンズン</span><br><span class="line">ズンズンズンズンズン</span><br><span class="line">ドコドコズンドコズン</span><br><span class="line">ドコズンドコズンズン</span><br><span class="line">ドコズンズンドコズン</span><br><span class="line">ドコドコズンドコズン</span><br><span class="line">ズンドコドコズンズン</span><br><span class="line">ドコズンドコドコズン</span><br><span class="line">ズンドコズンズンドコ</span><br><span class="line">ズンドコズンドコドコ</span><br><span class="line">ズンドコドコズンズン</span><br><span class="line">ドコドコズンドコズン</span><br><span class="line">ズンドコドコズンドコ</span><br><span class="line">ドコドコズンズンズン</span><br><span class="line">ドコズンドコズンドコ</span><br><span class="line">ドコズンズンズンズン</span><br><span class="line">ズンドコドコドコズン</span><br><span class="line">ズンズンズンズンドコキヨシ</span><br><span class="line">18回ズンドコしました</span><br></pre></td></tr></table></figure>
+
+<p>簡単ですね(‘ω`)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Kiyoshi_Check/" data-id="ck9zb3lch000b3zpkaane573r" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">次の記事</strong>
+      <div class="article-nav-title">
+        
+          GBuffer helper – Packing integer and float together
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/29/UnityEditorConnection/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">UnityEditor と実機間で通信がしたい</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity/" rel="tag">unity</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/arduboy/" style="font-size: 16.67px;">arduboy</a> <a href="/tags/c/" style="font-size: 10px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/qiita/" style="font-size: 20px;">qiita</a> <a href="/tags/unity/" style="font-size: 13.33px;">unity</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/30/Arduboy_move_tofu/">Arduboy で豆腐を動かす</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_measure_1frame/">1フレームの時間を測る</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 fum1h1ro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

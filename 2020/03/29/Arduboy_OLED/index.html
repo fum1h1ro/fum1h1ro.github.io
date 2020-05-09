@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Arduboy のOLEDを叩く | мята</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概要OLED に直接制御コマンドを流し込みます。 今回はあまり実用的でも初心者向けでもありません。 ハードウェア的な話OLED の型番https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy&#x2F;blob&#x2F;master&#x2F;src&#x2F;core&#x2F;core.h#L112 分解しなくてもライブラリに書いてあったのですぐわかりました。 OLED のデータシート（マニュアル)https:&#x2F;&#x2F;cdn-sho">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Arduboy のOLEDを叩く">
+<meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/index.html">
+<meta property="og:site_name" content="мята">
+<meta property="og:description" content="概要OLED に直接制御コマンドを流し込みます。 今回はあまり実用的でも初心者向けでもありません。 ハードウェア的な話OLED の型番https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy&#x2F;blob&#x2F;master&#x2F;src&#x2F;core&#x2F;core.h#L112 分解しなくてもライブラリに書いてあったのですぐわかりました。 OLED のデータシート（マニュアル)https:&#x2F;&#x2F;cdn-sho">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:published_time" content="2020-03-29T11:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-09T06:13:38.936Z">
+<meta property="article:author" content="fum1h1ro">
+<meta property="article:tag" content="qiita">
+<meta property="article:tag" content="arduboy">
+<meta property="article:tag" content="dev">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="мята" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">мята</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://fum1h1ro.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Arduboy_OLED" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Arduboy_OLED/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Arduboy のOLEDを叩く
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>OLED に直接制御コマンドを流し込みます。</p>
+<p>今回はあまり実用的でも初心者向けでもありません。</p>
+<h1 id="ハードウェア的な話"><a href="#ハードウェア的な話" class="headerlink" title="ハードウェア的な話"></a>ハードウェア的な話</h1><h2 id="OLED-の型番"><a href="#OLED-の型番" class="headerlink" title="OLED の型番"></a>OLED の型番</h2><p><a href="https://github.com/Arduboy/Arduboy/blob/master/src/core/core.h#L112" target="_blank" rel="noopener">https://github.com/Arduboy/Arduboy/blob/master/src/core/core.h#L112</a></p>
+<p>分解しなくてもライブラリに書いてあったのですぐわかりました。</p>
+<h2 id="OLED-のデータシート（マニュアル"><a href="#OLED-のデータシート（マニュアル" class="headerlink" title="OLED のデータシート（マニュアル)"></a>OLED のデータシート（マニュアル)</h2><p><a href="https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf" target="_blank" rel="noopener">https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf</a></p>
+<p>英語ですが、マニュアルがありました。</p>
+<h1 id="ソフトウェア的な話"><a href="#ソフトウェア的な話" class="headerlink" title="ソフトウェア的な話"></a>ソフトウェア的な話</h1><h2 id="コマンドの送り方"><a href="#コマンドの送り方" class="headerlink" title="コマンドの送り方"></a>コマンドの送り方</h2><p><code>ArduboyCore</code> クラス( <code>Arduboy</code> クラスのベースクラス )に、関数があります。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">static</span> <span class="title">LCDDataMode</span><span class="params">()</span></span>; <span class="comment">//&lt; put the display in data mode</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">static</span> <span class="title">LCDCommandMode</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">static</span> <span class="title">sendLCDCommand</span><span class="params">(<span class="keyword">uint8_t</span> command)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>名前についてツッコむのは野暮ってもんです。</p>
+<ul>
+<li><code>LCDDataMode()</code> は OLED の受信モードを、表示データを受信するモードにします</li>
+<li><code>LCDCommandMode()</code> は OLED の受信モードを、制御コマンドを受信するモードにします</li>
+<li><code>sendLCDCommand()</code> は、上記二つを自動で発行し、その間に 1byte の制御コマンドを送信する便利関数です</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ArduboyCore::sendLCDCommand</span><span class="params">(<span class="keyword">uint8_t</span> command)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  LCDCommandMode();</span><br><span class="line">  <span class="built_in">SPI</span>.<span class="built_in">transfer</span>(command);</span><br><span class="line">  LCDDataMode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>コアライブラリは、常に表示データ受信モードになっている前提で作られているので、受信モードを変更したあとは必ず戻すようにしておきます。</p>
+<h2 id="試しに送ってみる"><a href="#試しに送ってみる" class="headerlink" title="試しに送ってみる"></a>試しに送ってみる</h2><p>コントラストを変更するコマンドを発見したので、試しに送ってみます。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">u8 c = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!boy.nextFrame()) <span class="keyword">return</span>;</span><br><span class="line">  boy.<span class="built_in">clear</span>();</span><br><span class="line">  boy.fillScreen(<span class="number">1</span>);</span><br><span class="line">  boy.<span class="built_in">display</span>();</span><br><span class="line">  boy.LCDCommandMode();</span><br><span class="line">  <span class="built_in">SPI</span>.<span class="built_in">transfer</span>(<span class="number">0x81</span>);</span><br><span class="line">  <span class="built_in">SPI</span>.<span class="built_in">transfer</span>(c++);</span><br><span class="line">  boy.LCDDataMode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>setup()</code> 関数等は省略しますが、上記のソースでコントラストを 0〜255 に変化しま……す？</p>
+<p>確かに変化はしましたが、真っ暗までにはならず、また階調も三階調ほどしか変化しないようでした。残念。フェードイン・フェードアウトに使えるかと思ったのですが(‘ω`)</p>
+<h2 id="おわり"><a href="#おわり" class="headerlink" title="おわり"></a>おわり</h2><p>データシートを読むと他にも色々面白そうな制御コマンドがあるので、色々試してみると面白いかもしれません。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/" data-id="ck9zb3lc900013zpk655s2yjh" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/29/Arduboy_1st/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">次の記事</strong>
+      <div class="article-nav-title">
+        
+          Arduboy ことはじめ
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/03/29/Arduboy_framebuffer/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">Arduboy のフレームバッファ</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity/" rel="tag">unity</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/arduboy/" style="font-size: 16.67px;">arduboy</a> <a href="/tags/c/" style="font-size: 10px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/qiita/" style="font-size: 20px;">qiita</a> <a href="/tags/unity/" style="font-size: 13.33px;">unity</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/03/30/Arduboy_move_tofu/">Arduboy で豆腐を動かす</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_measure_1frame/">1フレームの時間を測る</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 fum1h1ro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
