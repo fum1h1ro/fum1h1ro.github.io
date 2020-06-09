@@ -67,10 +67,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-about-musiclib" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-mesh-api-v2-trap" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/12/about-musiclib/" class="article-date">
-  <time datetime="2020-05-12T11:19:15.000Z" itemprop="datePublished">2020-05-12</time>
+    <a href="/2020/06/09/mesh-api-v2-trap/" class="article-date">
+  <time datetime="2020-06-09T03:00:00.000Z" itemprop="datePublished">2020-06-09</time>
 </a>
     
   </div>
@@ -81,7 +81,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/12/about-musiclib/">音楽ライブラリについての備忘録</a>
+      <a class="article-title" href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
     </h1>
   
 
@@ -89,45 +89,28 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h1><p>iTunes での管理に未来が見えないので、自分で何とかする方法を模索した結果をここに記しておく。未来の自分が忘れないように……。</p>
-<h1 id="ある日"><a href="#ある日" class="headerlink" title="ある日"></a>ある日</h1><p>突然、純正の音楽管理に嫌気がさしたので、自前で何とかしようと決意した。ぶっちゃけ、サブスクとか性に合わないというか、自分が聴きたいような曲配信されないしね。</p>
-<p>とりあえず、自分が何を求めているのか考えてみた。</p>
-<ol>
-<li>手軽さ</li>
-<li>手持ちの CD が好きな時に聴ける</li>
-<li>ライブラリが安定する（急に曲が見えなくなったりしない）</li>
-<li>音源の永続化（CD の寿命は考慮したい）</li>
-<li>音質</li>
-</ol>
-<p>というように、音質はだいぶ低い。そんな耳ないし。</p>
-<p>上記の要望を満たすソリューションを探していたのだが、結局自前で NAS を用意してアレコレするのがコスト的にも現実的だった。クラウドはまだ……ちょっと無理っぽかった。</p>
-<h1 id="リッピング"><a href="#リッピング" class="headerlink" title="リッピング"></a>リッピング</h1><p>昔は CD から .mp3 へ直接変換したんだけど、今は可逆圧縮フォーマットでいいだろうと言うことで、.flac を選択。</p>
-<ul>
-<li><a href="https://tmkk.undo.jp/xld/" target="_blank" rel="noopener">X Lossless Decoder: Lossless audio decoder for Mac OS X</a></li>
-</ul>
-<p>ドライブは 2000 円くらいの USB CD ドライブを Amazon で買った。</p>
-<p>しかし、.flac は流石にサイズがでかく、転送に時間が掛かりすぎるので .flac でリッピングし、それを元に .mp3 を作成することにした。.flac は残しておいて、いつか容量問題を気にしなくても良くなった時に移行する。</p>
-<h1 id="タグ編集"><a href="#タグ編集" class="headerlink" title="タグ編集"></a>タグ編集</h1><h1 id="NAS-について"><a href="#NAS-について" class="headerlink" title="NAS について"></a>NAS について</h1><ul>
-<li><a href="https://www.qnap.com/ja-jp/product/ts-231p2" target="_blank" rel="noopener">QNAP TS-231P2</a></li>
-</ul>
-<p>NAS はいろいろ探したけど、RAID1 を使いたかったのと、昔触ったことがあった経験から、QNAP にした。こいつに NAS 用の 2TB HDD を二つ刺した。</p>
-<p>当初、スマホの音楽再生アプリによくある Wi-Fi Transfer をスマホへの音楽転送に使おうと考えていたのだが、正直面倒くさかったし、なにより条件1に反する。これなら DLNA 等にも対応しているので、家庭内での配信もバッチリ。また、QNAP の独自アプリで Qmusic というのがあり、それを使うと NAS からストリーミングで再生できる（しかも WAN から！）。</p>
-<div class="twitter-wrapper"><blockquote class="twitter-tweet"><a href="https://twitter.com/Astro_Kimiya/status/1261959823580524544" target="_blank" rel="noopener"></a></blockquote></div><script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <p>今更ながらに Mesh API v2 と呼ばれるものを触ってみたけど、初っ端から罠に引っかかった。</p>
+<p>v2 では、頂点データの配列を別々に渡すのではなく、インターリーブされたものとして渡す。なので、一つの頂点データがどういう構造になっているかを伝えてやらねばならないのだが、以下はダメ。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)</span>]</span><br><span class="line"><span class="keyword">struct</span> Vertex</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Vector3 BeginPos;</span><br><span class="line">    <span class="keyword">public</span> Vector3 EndPos;</span><br><span class="line">    <span class="keyword">public</span> Vector4 Adjuster;</span><br><span class="line">    <span class="keyword">public</span> Color Color;</span><br><span class="line">    <span class="keyword">public</span> Vector3 Normal0;</span><br><span class="line">    <span class="keyword">public</span> Vector4 Normal1;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> VertexAttributeDescriptor[] Layout = <span class="keyword">new</span>[]&#123;</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord2, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<h1 id="再生アプリ"><a href="#再生アプリ" class="headerlink" title="再生アプリ"></a>再生アプリ</h1><div class="twitter-wrapper"><blockquote class="twitter-tweet"><a href="https://twitter.com/fum1h1ro/status/1137911703897722880" target="_blank" rel="noopener"></a></blockquote></div><script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>何故か。</p>
+<p>一日悩んで、諦めた。と言うのも、使っていた場所が Runtime ではなく、Editor 拡張だったから。</p>
+<p>Asset としての Mesh をいじる場合は、シリアライズしたりする必要もあって、従来の API を使うべきなのでは？と思ったのだ。マニュアルにそうしろとは書いてなかったが(伏線)。</p>
+<p>飯食って、そろそろ寝るかと落ち着いた時に、「まさか」と思って試したらうまくいったのが次のコード。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)</span>]</span><br><span class="line"><span class="keyword">struct</span> Vertex</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Vector3 BeginPos;</span><br><span class="line">    <span class="keyword">public</span> Vector3 Normal0;</span><br><span class="line">    <span class="keyword">public</span> Vector4 Normal1;</span><br><span class="line">    <span class="keyword">public</span> Vector3 EndPos;</span><br><span class="line">    <span class="keyword">public</span> Vector4 Adjuster;</span><br><span class="line">    <span class="keyword">public</span> Color Color;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> VertexAttributeDescriptor[] Layout = <span class="keyword">new</span>[]&#123;</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord2, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">脱iTunesすると決めてAppleMusic解約。プレイヤはいろいろ探したがFlacboxに落ち着いた。WebDAV対応が決め手 <a href="https://t.co/9X9uHyN1i2" target="_blank" rel="noopener">https://t.co/9X9uHyN1i2</a> <a href="https://t.co/Vdc4qyaNyP" target="_blank" rel="noopener">pic.twitter.com/Vdc4qyaNyP</a></p>&mdash; Fumihiro Kanaya (@fum1h1ro) <a href="https://twitter.com/fum1h1ro/status/1137911703897722880?ref_src=twsrc%5Etfw" target="_blank" rel="noopener">June 10, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<p>違うのは、 <code>VertexAttribute</code> の順番。これを、おそらく <code>enum VertexAttribute</code> の定義順に合わせた。</p>
+<p>それなら最初に言ってくれよ……。マニュアルにそうしろとは書いてなかった(回収)。</p>
+<p>まあ、でもこれ、 Unity というより、グラフィックの API 側の都合のような気はする。最近はとんと、直接 API に触れることもなくなったので、「オマエがヌルいだけじゃねーか」と言われれば、「はい」としか(‘A’)</p>
 
-<p>なんて言ってたけど、結局母艦から転送せにゃならんので、面倒くさい。ここに関しては、純正の iCloud Music Library が便利だったことは否めない。</p>
-<p>そして、Qmusic も検証したのだが、当時は安定せず、アプリが落ちまくって印象が悪かった。</p>
-<h2 id="手軽さ"><a href="#手軽さ" class="headerlink" title="手軽さ"></a>手軽さ</h2><p>リッピングした音源をフォルダで分けるまではいいんだけど、それを聴くのに専用機やデスクトップが必要とかでは本末転倒。聴くのはスマホがいい。<br>また、スマホへの転送に手間が掛かるのもイヤだな。</p>
-<h2 id="手持ちの-CD-が好きな時に聴ける"><a href="#手持ちの-CD-が好きな時に聴ける" class="headerlink" title="手持ちの CD が好きな時に聴ける"></a>手持ちの CD が好きな時に聴ける</h2>
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/05/12/about-musiclib/" data-id="cka3tpr6u0000mupk2gak2jwq" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/06/09/mesh-api-v2-trap/" data-id="ckb79bjcl0004nwpkgbddh4i8" class="article-share-link">共有</a>
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
+
     </footer>
   </div>
   
@@ -193,7 +176,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/30/Arduboy_move_tofu/" data-id="ck9zb3lcd00053zpkfg2d5n3v" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/30/Arduboy_move_tofu/" data-id="ckb1t8mkw0005ucpk4ewufwhm" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -262,7 +245,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/" data-id="ck9zb3lc500003zpk7w03ab73" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/" data-id="ckb1t8mkn0000ucpk47ky1vaf" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -324,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/" data-id="ck9zb3lc900013zpk655s2yjh" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/" data-id="ckb1t8mks0002ucpkbsttbfor" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -466,7 +449,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/" data-id="ck9zb3lcb00033zpkafo252za" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/" data-id="ckb1t8mkv0004ucpk16t93fwq" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -511,7 +494,60 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_measure_1frame/" data-id="ck9zb3lcc00043zpkfxefdcg0" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_measure_1frame/" data-id="ckb1t8mkx0006ucpk2vlg3j2n" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Arduboy_using_latest_lib" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Arduboy_using_latest_lib/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/Arduboy_using_latest_lib/">常に最新の Arduboy ライブラリを使う</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。</p>
+<h1 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h1><p><a href="http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633" target="_blank" rel="noopener">Arduboy ことはじめ</a></p>
+<p>上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。</p>
+<p>最新は、Github 上のリポジトリから入手可能です。</p>
+<h1 id="入手方法"><a href="#入手方法" class="headerlink" title="入手方法"></a>入手方法</h1><h2 id="古いライブラリを消す"><a href="#古いライブラリを消す" class="headerlink" title="古いライブラリを消す"></a>古いライブラリを消す</h2><p>Arduino IDE を終了させた状態で、 <code>~/Documents/Arduino/libraries/Arduboy</code> フォルダをざっくり消します。</p>
+<h2 id="新しいライブラリを入れる"><a href="#新しいライブラリを入れる" class="headerlink" title="新しいライブラリを入れる"></a>新しいライブラリを入れる</h2><h3 id="ターミナルを起動する"><a href="#ターミナルを起動する" class="headerlink" title="ターミナルを起動する"></a>ターミナルを起動する</h3><p>黒い画面を開きます。</p>
+<h3 id="Github-から-clone-する"><a href="#Github-から-clone-する" class="headerlink" title="Github から clone する"></a>Github から clone する</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~</span><br><span class="line">% cd Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">% git clone https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy.git</span><br><span class="line">Cloning into &#39;Arduboy&#39;...</span><br><span class="line">remote: Counting objects: 1148, done.</span><br><span class="line">remote: Total 1148 (delta 0), reused 0 (delta 0), pack-reused 1148</span><br><span class="line">Receiving objects: 100% (1148&#x2F;1148), 295.96 KiB | 160.00 KiB&#x2F;s, done.</span><br><span class="line">Resolving deltas: 100% (664&#x2F;664), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">%</span><br></pre></td></tr></table></figure>
+
+<p><code>~/Documents/Arduino/libraries</code> へ移動し、Github からクローンします。</p>
+<p>これで、最新のライブラリがインストールされました。</p>
+<h2 id="常に最新に保つ"><a href="#常に最新に保つ" class="headerlink" title="常に最新に保つ"></a>常に最新に保つ</h2><p>最新だから良いというわけではありませんが、最新版を追っかけたい場合は、ターミナルから、 <code>~/Documents/Arduino/libraries/Arduino</code> へ移動し、</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries&#x2F;Arduino</span><br><span class="line">% git pull origin master</span><br></pre></td></tr></table></figure>
+
+<p>とすると、更新のあったファイルを落としてくることが出来ます。</p>
+<h2 id="おわり"><a href="#おわり" class="headerlink" title="おわり"></a>おわり</h2><p>Arduino IDE からインストール出来る 1.1.0 から最新の 1.2.0 では、文字表示ライブラリが追加されていたり、サウンドの処理からデフォルトの割り込みベクタがなくなっていたりして、結構変わっているようです。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/" data-id="ckb1t8mky0008ucpk4zc4gs4x" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -578,208 +614,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/" data-id="ck9zb3lce00073zpk6rhzfz40" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/" data-id="ckb1t8mky0009ucpk4kvyhdxo" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Arduboy_using_latest_lib" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/29/Arduboy_using_latest_lib/" class="article-date">
-  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/29/Arduboy_using_latest_lib/">常に最新の Arduboy ライブラリを使う</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。</p>
-<h1 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h1><p><a href="http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633" target="_blank" rel="noopener">Arduboy ことはじめ</a></p>
-<p>上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。</p>
-<p>最新は、Github 上のリポジトリから入手可能です。</p>
-<h1 id="入手方法"><a href="#入手方法" class="headerlink" title="入手方法"></a>入手方法</h1><h2 id="古いライブラリを消す"><a href="#古いライブラリを消す" class="headerlink" title="古いライブラリを消す"></a>古いライブラリを消す</h2><p>Arduino IDE を終了させた状態で、 <code>~/Documents/Arduino/libraries/Arduboy</code> フォルダをざっくり消します。</p>
-<h2 id="新しいライブラリを入れる"><a href="#新しいライブラリを入れる" class="headerlink" title="新しいライブラリを入れる"></a>新しいライブラリを入れる</h2><h3 id="ターミナルを起動する"><a href="#ターミナルを起動する" class="headerlink" title="ターミナルを起動する"></a>ターミナルを起動する</h3><p>黒い画面を開きます。</p>
-<h3 id="Github-から-clone-する"><a href="#Github-から-clone-する" class="headerlink" title="Github から clone する"></a>Github から clone する</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~</span><br><span class="line">% cd Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">% git clone https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy.git</span><br><span class="line">Cloning into &#39;Arduboy&#39;...</span><br><span class="line">remote: Counting objects: 1148, done.</span><br><span class="line">remote: Total 1148 (delta 0), reused 0 (delta 0), pack-reused 1148</span><br><span class="line">Receiving objects: 100% (1148&#x2F;1148), 295.96 KiB | 160.00 KiB&#x2F;s, done.</span><br><span class="line">Resolving deltas: 100% (664&#x2F;664), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">%</span><br></pre></td></tr></table></figure>
-
-<p><code>~/Documents/Arduino/libraries</code> へ移動し、Github からクローンします。</p>
-<p>これで、最新のライブラリがインストールされました。</p>
-<h2 id="常に最新に保つ"><a href="#常に最新に保つ" class="headerlink" title="常に最新に保つ"></a>常に最新に保つ</h2><p>最新だから良いというわけではありませんが、最新版を追っかけたい場合は、ターミナルから、 <code>~/Documents/Arduino/libraries/Arduino</code> へ移動し、</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries&#x2F;Arduino</span><br><span class="line">% git pull origin master</span><br></pre></td></tr></table></figure>
-
-<p>とすると、更新のあったファイルを落としてくることが出来ます。</p>
-<h2 id="おわり"><a href="#おわり" class="headerlink" title="おわり"></a>おわり</h2><p>Arduino IDE からインストール出来る 1.1.0 から最新の 1.2.0 では、文字表示ライブラリが追加されていたり、サウンドの処理からデフォルトの割り込みベクタがなくなっていたりして、結構変わっているようです。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/" data-id="ck9zb3lcf00083zpkg5101k8o" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-GBuffer_helper_Packing_integer_and_float_together" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/" class="article-date">
-  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/">GBuffer helper – Packing integer and float together</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>この記事は、<a href="https://seblagarde.wordpress.com/2018/09/02/gbuffer-helper-packing-integer-and-float-together/" target="_blank" rel="noopener">こちら</a>の記事を日本語に翻訳したものです(翻訳の許可は取っています)。</p>
-<blockquote>
-<p>Version : 1.0 – Living blog</p>
-</blockquote>
-<blockquote>
-<p>With GBuffer approach, it is often required to pack values together. One useful case is to be able to pack an integer value (often matching an enum like material ID) and a float value (inside 0..1 range).</p>
-</blockquote>
-<p>GBufferを利用するアプローチにおいて頻繁に様々な値をパックする必要がある。特によく使われるのは、整数値（マテリアルIDのような列挙型）と浮動小数値（0〜1の間）をパックするようなケースだ。</p>
-<blockquote>
-<p>For example in Unity High Definition Render Pipeline we have pack inside the GBuffer:</p>
-</blockquote>
-<p>UnityのHDPRにおけるGBuffer内部では以下のようなパッキングを行っている。</p>
-<blockquote>
-<ul>
-<li>DiffusionProfile (16 values) and Subsurface Mask (Float 0..1)</li>
-<li>Material Features (8 values) and Coat Mask (Float 0..1)</li>
-<li>Quadrant for tangent frame (8 values) and metallic (Float 0..1)</li>
-</ul>
-</blockquote>
-<ul>
-<li>拡散反射タイプ（16個）とサブサーフェスマスク（浮動小数点数0..1）</li>
-<li>マテリアル効果（8個）とコートマスク（浮動小数点数0..1）</li>
-<li>接線空間における象限（16個）とメタリック値（浮動小数点数0..1）</li>
-</ul>
-<blockquote>
-<p>During development we have change several times the number of bit required for our packing and it quickly come to us that we were needed to have general packing functions to encode arbitrary values. This is the topic of this short blog post.</p>
-</blockquote>
-<p>開発中、我々は幾度となくパック中のビット数を変更し、我々が任意の値をパックするためにパッキング関数が必要なことにすぐ気づいた。これは、このブログポストのトピックである。</p>
-<blockquote>
-<p>Let’s say that we want to encode a Mask on 1 bit with a Scalar in range 0..1 with 8 bit of precision inside a shader. Mean in practice we pack both values in a component of a RGBA 32bit render target. Remember that the float value in the shader is convert at the end of the pipeline to corresponding render target format, in our case the float value will be multiply by 255 to fit into the 8bit precision of the component. We will have 7 bits to encode the float, this could be perform with a simple remapping:</p>
-</blockquote>
-<p>さて、我々は1bitのマスクと0..1のスカラー値を8bit精度にエンコードしたいと思っている。これは、双方の値をRGBA32レンダーターゲットの1要素へパックすることである。忘れないで欲しいのは、シェーダ内の浮動小数点数はパイプラインの最後で対応するレンダーターゲットのフォーマットに変換される。今回の場合、浮動小数点数は255を掛けられて8bit精度の要素になる。我々は7bitを浮動小数点数のエンコードに使う。これはシンプルな変換式で実行できる。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">127.0</span> * Scalar)  / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>multiply by 127 (or (1 &lt;&lt; 7) – 1) which is 01111111 in binaries leave 1 bit available for the Mask.</p>
-</blockquote>
-<p>二進数で0b01111111である127（もしくは<code>(1&lt;&lt;7)-1</code>）を掛けることで、1bitをマスクのために使えるようになる。</p>
-<blockquote>
-<p>Then we divide by 255.0</p>
-</blockquote>
-<p>そして、255で割る。</p>
-<blockquote>
-<p>Then we need to add the bit for the mask itself at the 8th position mean value of 128 (or (1 &lt;&lt; 8) – 1)</p>
-</blockquote>
-<p>そして、我々はマスクのために、8番目のbitである128(もしくは<code>(1&lt;&lt;8)-1</code>)を足す。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">128.0</span> * Mask) / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>So encoding is</p>
-</blockquote>
-<p>そしてエンコード式は</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Val = (<span class="number">127.0</span> / <span class="number">255.0</span>) * Scalar + (<span class="number">128.0</span> / <span class="number">255.0</span>) * Mask</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Decoding should be the reverse of the operation above. First we need to retrieve the Mask value</p>
-</blockquote>
-<p>デコードは、上記の式と反対を行う必要がある。まず最初に、マスク値から取得する。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mask = <span class="keyword">int</span>((<span class="number">255.0</span> / <span class="number">128.0</span>) * Val)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Note that here we use the int cast to remove all the Scalar value part.<br>For example if we have Scalar of 0 and Mask with 1, Val is suppose to be 128.0 / 255.0.<br>Mean the above code give us 1</p>
-</blockquote>
-<p>ここでは、スカラー値部分をそぎ落とすためにintキャストを使う。<br>例えば、スカラー値0とマスク値1を持つ場合、<code>Val</code>は<code>128.0/255.0</code>になるはずだ。<br>この場合、上記の式は1を返すことになる。</p>
-<blockquote>
-<p>if Scalar is 1, Val is suppose to be 1.0, mean Mask = int(1.9921875) = 1. All good.</p>
-</blockquote>
-<p>もし、スカラー値が1の場合、<code>Val</code>は1.0になるはずだ。これは、<code>Mask = int(1.9921875) = 1</code>となるので、バッチリだ。</p>
-<blockquote>
-<p>We then retrieve the value of Scalar</p>
-</blockquote>
-<p>次にスカラー値を取り出す。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Scalar = (Val - (<span class="number">128.0</span> / <span class="number">255.0</span>) * <span class="keyword">float</span>(Mask)) / (<span class="number">127.0</span> / <span class="number">255.0</span>)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Now let’s consider a RGBA1010102 render target with a Mask on 4 bit. The process is exactly the same.<br>First remap value to cover 6 bit for the float value and 4 bit for the Mask value</p>
-</blockquote>
-<p>今、RGBA1010102のレンダーターゲットで、4bitマスクを持つ場合を考えてみよう。手順は先ほどと同じ。<br>まず、浮動小数点数を6bit、マスク値を4bitに再マップする。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Val = (<span class="number">63.0</span> / <span class="number">1023.0</span>) * Scalar + (<span class="number">64.0</span> / <span class="number">1023.0</span>) * Mask</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>For example if Mask is 2 (i.e 128.0 / 1023.0) and Scalar is 1.0 we get 0010 1111 11 as binaries representation.<br>4 bit for Mask then 6 bit for Scalar.</p>
-</blockquote>
-<p>例えば、マスク値が2(すなわち128.0/1023.0)とスカラー値が1.0の時、0b0010_1111_11が得られる。<br>4bitがマスク値、6bitがスカラー値に使われている。</p>
-<blockquote>
-<p>For decoding we first retrieve the Mask then the Scalar</p>
-</blockquote>
-<p>デコードは、まずマスク値、そしてスカラー値の順に取り出す。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Mask = <span class="keyword">int</span>((<span class="number">1023.0</span> / <span class="number">64.0</span>) * Val)</span><br><span class="line">Scalar = (Val - (<span class="number">64.0</span> / <span class="number">1023.0</span>) * <span class="keyword">float</span>(Mask)) / (<span class="number">63.0</span> / <span class="number">1023.0</span>)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Important addition.<br>Due to rounding and floating point calculation on GPU it may appear that Mask reconstruction is shifted by one value.<br>This can be fixed by adding the smallest epsilon allowed by the render target format. i.e</p>
-</blockquote>
-<p>重要なことがある。<br>GPU中で浮動小数点演算や丸めが行われる間に、マスクの再構成は一つの値によってずらされるように見えるかもしれない。（訳注：？）<br>これは、レンダーターゲットに許容される最小値を足すことで回避できる。すなわち、</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mask = <span class="keyword">int</span>((<span class="number">1023.0</span> / <span class="number">64.0</span>) * Val + <span class="number">1.0</span> / <span class="number">1023.0</span>)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>We can easily generalize this process for any unsigned render target format and any Mask size. Here are the functions to do the work.</p>
-</blockquote>
-<p>我々は簡単にこれらの手順を、様々な符号なしレンダーターゲットフォーマット、及び様々なマスクサイズに対して一般化できる。<br>ここに動く関数がある。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">PackFloatInt</span><span class="params">(<span class="keyword">float</span> f, uint i, uint numBitI, uint numBitTarget)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Constant optimize by compiler</span></span><br><span class="line">    <span class="keyword">float</span> precision = <span class="keyword">float</span>(<span class="number">1</span> &lt;&lt; numBitTarget);</span><br><span class="line">    <span class="keyword">float</span> maxi = <span class="keyword">float</span>(<span class="number">1</span> &lt;&lt; numBitI);</span><br><span class="line">    <span class="keyword">float</span> precisionMinusOne = precision - <span class="number">1.0</span>;</span><br><span class="line">    <span class="keyword">float</span> t1 = ((precision / maxi) - <span class="number">1.0</span>) / precisionMinusOne;</span><br><span class="line">    <span class="keyword">float</span> t2 = (precision / maxi) / precisionMinusOne;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Code</span></span><br><span class="line">    <span class="keyword">return</span> t1 * f + t2 * <span class="keyword">float</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnpackFloatInt</span><span class="params">(<span class="keyword">float</span> val, uint numBitI, uint numBitTarget, out <span class="keyword">float</span> f, out uint i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Constant optimize by compiler</span></span><br><span class="line">    <span class="keyword">float</span> precision = <span class="keyword">float</span>(<span class="number">1</span> &lt;&lt; numBitTarget);</span><br><span class="line">    <span class="keyword">float</span> maxi = <span class="keyword">float</span>(<span class="number">1</span> &lt;&lt; numBitI);</span><br><span class="line">    <span class="keyword">float</span> precisionMinusOne = precision - <span class="number">1.0</span>;</span><br><span class="line">    <span class="keyword">float</span> t1 = ((precision / maxi) - <span class="number">1.0</span>) / precisionMinusOne;</span><br><span class="line">    <span class="keyword">float</span> t2 = (precision / maxi) / precisionMinusOne;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Code</span></span><br><span class="line">    <span class="comment">// extract integer part</span></span><br><span class="line">    <span class="comment">// + rcp(precisionMinusOne) to deal with precision issue</span></span><br><span class="line">    i = <span class="keyword">int</span>((val / t2) + rcp(precisionMinusOne));</span><br><span class="line">    <span class="comment">// Now that we have i, solve formula in PackFloatInt for f</span></span><br><span class="line">    <span class="comment">//f = (val - t2 * float(i)) / t1 =&gt; convert in mads form</span></span><br><span class="line">    f = saturate((-t2 * <span class="keyword">float</span>(i) + val) / t1); <span class="comment">// Saturate in case of precision issue</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Define various variants for ease of use and code read</span></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">PackFloatInt8bit</span><span class="params">(<span class="keyword">float</span> f, uint i, uint numBitI)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PackFloatInt(f, i, numBitI, <span class="number">8</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnpackFloatInt8bit</span><span class="params">(<span class="keyword">float</span> val, uint numBitI, out <span class="keyword">float</span> f, out uint i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UnpackFloatInt(val, numBitI, <span class="number">8</span>, f, i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">PackFloatInt10bit</span><span class="params">(<span class="keyword">float</span> f, uint i, uint numBitI)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PackFloatInt(f, i, numBitI, <span class="number">10</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnpackFloatInt10bit</span><span class="params">(<span class="keyword">float</span> val, uint numBitI, out <span class="keyword">float</span> f, out uint i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UnpackFloatInt(val, numBitI, <span class="number">10</span>, f, i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">PackFloatInt16bit</span><span class="params">(<span class="keyword">float</span> f, uint i, uint numBitI)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PackFloatInt(f, i, numBitI, <span class="number">16</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnpackFloatInt16bit</span><span class="params">(<span class="keyword">float</span> val, uint numBitI, out <span class="keyword">float</span> f, out uint i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UnpackFloatInt(val, numBitI, <span class="number">16</span>, f, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>And example usage:</p>
-</blockquote>
-<p>それと使い方。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Encode</span></span><br><span class="line">outSSSBuffer0.a = PackFloatInt8bit(sssData.subsurfaceMask, sssData.diffusionProfile, <span class="number">4</span>);</span><br><span class="line"><span class="comment">// Decode</span></span><br><span class="line">UnpackFloatInt8bit(inSSSBuffer0.a, <span class="number">4</span>, sssData.subsurfaceMask, sssData.diffusionProfile);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Encode</span></span><br><span class="line">outGBuffer2.a  = PackFloatInt8bit(coatMask, materialFeatureId, <span class="number">3</span>);</span><br><span class="line"><span class="comment">// Decode</span></span><br><span class="line"><span class="keyword">float</span> coatMask;</span><br><span class="line">uint materialFeatureId;</span><br><span class="line">UnpackFloatInt8bit(inGBuffer2.a, <span class="number">3</span>, coatMask, materialFeatureId);</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/" data-id="ck9zb3lcg000a3zpk8m5nehoo" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
 
     </footer>
   </div>
@@ -831,10 +669,112 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Kiyoshi_Check/" data-id="ck9zb3lch000b3zpkaane573r" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Kiyoshi_Check/" data-id="ckb1t8mkz000bucpkhez6gzrz" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-SpriteKit" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/SpriteKit/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/SpriteKit/">SpriteKit でゲームを作ってみる</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="動機"><a href="#動機" class="headerlink" title="動機"></a>動機</h1><p><a href="https://developer.apple.com/tech-talks/jp/" target="_blank" rel="noopener">iOS7 Tech Talks</a> に当選したので、いそいそとお出かけしたら、ゴイスーなホテルでランチまでごちそうになってしまった。その割にアウトプットも無い自分なので、これは申し訳ないなと思い、 <a href="http://www.apple.com/jp/" target="_blank" rel="noopener">Apple 社</a>激推しの <a href="https://developer.apple.com/library/ios/documentation/GraphicsAnimation/Conceptual/SpriteKit_PG/Introduction/Introduction.html" target="_blank" rel="noopener">SpriteKit</a> でも使ってゲームでも作ってみるかと思ったのだが、例によって締切がないと動かない体質が邪魔をしたので、 <a href="http://qiita.com/advent-calendar/2013/ios-2" target="_blank" rel="noopener">Advent Calendar</a> に登録して退路を断ってみた次第(‘ω`)</p>
+<p>偶然にも、本日 <a href="https://developer.apple.com/tech-talks/videos/" target="_blank" rel="noopener">iOS7 Tech Talks のビデオ</a> が公開されたらしいので、是非そちらも（要 Developer アカウント）。</p>
+<p>最初に書いておきますが、最後まで出来ませんでした……(‘A`)</p>
+<h1 id="SpriteKit-とは？"><a href="#SpriteKit-とは？" class="headerlink" title="SpriteKit とは？"></a>SpriteKit とは？</h1><ul>
+<li>iOS7 より利用できる Apple 社謹製の 2D 描画＆ 2D 物理シミュライブラリ</li>
+<li>OS(SDK) に最初から含まれるので、利用が簡単</li>
+<li>UIKit に似た実装で、利用が簡単</li>
+<li>描画部分と物理シミュ部分が最初から統合されているので、扱いが簡単</li>
+<li>パーティクルエフェクトが利用可能。パラメータを Xcode 上でプレビューしながら編集できる</li>
+<li>性能について書くと炎上するので、そこは割愛</li>
+<li>OSX でも使えるので、マルチプラットフォーム（と言っていいのだろうか）</li>
+</ul>
+<p>この記事では、SpriteKit を使って、ゲームを作ろうと思います。</p>
+<h1 id="どんなゲームを作ったか"><a href="#どんなゲームを作ったか" class="headerlink" title="どんなゲームを作ったか"></a>どんなゲームを作ったか</h1><ul>
+<li>SpriteKit は 2D ゲームのためのライブラリである -&gt; 2D のゲーム……？ -&gt; 2D シューティングだ！</li>
+</ul>
+<p><img src="/images/68801df3-2401-c58d-8647-2d360cfe3147.png" alt="Screen Shot 2013-12-24 at 20.29.27.png"></p>
+<p>というわけで、懐かしいキャラバンシューティングを作ることにしました。</p>
+<h2 id="縛り"><a href="#縛り" class="headerlink" title="縛り"></a>縛り</h2><ul>
+<li><strong>描画周りは SpriteKit 以外利用しない</strong><ul>
+<li>大前提</li>
+</ul>
+</li>
+<li><strong>なるべく Objective-C のみで作成する</strong><ul>
+<li>Objective-C 歴自体は iPhone3G の頃からだけど、記述時間的にはさっぱりなので、 Objective-C 的にヌルい部分もあるけど、そこは目を瞑る(‘A`)</li>
+</ul>
+</li>
+<li>ちゃんと遊べるものにする<ul>
+<li>すみませんすみません(‘A`)</li>
+</ul>
+</li>
+</ul>
+<h1 id="作っていく"><a href="#作っていく" class="headerlink" title="作っていく"></a>作っていく</h1><p>色々書こうと思ったんですが、そもそも完成しておらず、予定していたソースの公開もままならぬ故、実際に SpriteKit でゲームを作る上で気になった点などを記していこうと思います。</p>
+<h2 id="SKView"><a href="#SKView" class="headerlink" title="SKView"></a>SKView</h2><p>SpriteKit で表示をするために必要な専用の View です。</p>
+<p>ほぼ通常の <code>UIView</code> と同じですが、表示内容については、<code>SKScene</code> という別のクラスを渡します。この <code>SKScene</code> を継承してゲーム独自の処理を加えていきます。</p>
+<h2 id="SKScene"><a href="#SKScene" class="headerlink" title="SKScene"></a>SKScene</h2><p>その名の通り、SpriteKit において、ゲームのシーン（舞台）を表します。</p>
+<p>これに後述する <code>SKNode</code> を子供として追加していくことで画面を作ります。この辺は <code>UIView</code> の仕組みと似ていると思います。</p>
+<p>またこのクラスは、ゲームフレーム単位で <code>update:</code> というメソッドが OS から呼ばれます。通常のアプリと違い、ゲームの場合、入力があって初めて処理が呼ばれるのではなく、常に処理を行っておきたいため、このような仕様になっていると思われます。</p>
+<h2 id="SKNode"><a href="#SKNode" class="headerlink" title="SKNode"></a>SKNode</h2><p>SpriteKit における画面作りの基本になるクラスです。</p>
+<p>UIKit では、<code>UIView</code> を基本として画面を構成しましたが、SpriteKit では同じように <code>SKNode</code> をツリー状に構成していくことで画面を作ります。実は <code>SKScene</code> も <code>SKNode</code> を継承しています。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">SKScene</span>* scene = [[<span class="built_in">SKScene</span> alloc] initWithSize:<span class="built_in">CGSizeMake</span>(<span class="number">320</span>, <span class="number">480</span>)];</span><br><span class="line"><span class="built_in">SKNode</span>* node0 = [<span class="built_in">SKNode</span> node];</span><br><span class="line">[scene addChild:node0];</span><br><span class="line"><span class="built_in">SKNode</span>* node1 = [<span class="built_in">SKNode</span> node];</span><br><span class="line">[node0 addChild:node1];</span><br></pre></td></tr></table></figure>
+
+<p>このように、<code>SKNode</code> は <code>SKNode</code> の子供になることができます。<code>UIView</code> 等と同じく、座標系は親の影響を受けます。</p>
+<h3 id="派生クラス"><a href="#派生クラス" class="headerlink" title="派生クラス"></a>派生クラス</h3><p><code>SKNode</code> は、それ単体では凝った何かを表示することが出来ません。</p>
+<p>何かを表示したりする際は、<code>SKNode</code> の派生クラスを使います。色々ありますが、今回は <code>SKSpriteNode</code> のみ簡単に説明します。</p>
+<p><code>SKSpriteNode</code> は、<code>SKNode</code> に一枚の絵を表示する機能を追加したものです。一枚の絵は、単色の矩形か、<code>SKTexture</code> で指定するイメージになります。</p>
+<h2 id="SKTexture"><a href="#SKTexture" class="headerlink" title="SKTexture"></a>SKTexture</h2><p><code>SKTexture</code> は SpriteKit におけるイメージ全般を取り扱うクラスです。<code>UIImageView</code> 等のように簡単にイメージを取り扱うことができます。</p>
+<p>Xcode でいわゆるテクスチャアトラスを簡単に作ることが出来るのですが、実はこれが少し罠で、しばらくハマってた時期がありました。</p>
+<p><code>SKTexture</code> は画像一枚だけでなく、画像一枚の一部分（サブテクスチャといいます）を扱うことが出来ます。サブテクスチャは、既にある <code>SKTexture</code> から切り出す部分を指定することで作ることが出来ます。これは Xcode によって作られたテクスチャアトラス中のテクスチャを使う場合もそうなります。</p>
+<p>しかし、サブテクスチャからサブテクスチャを作ることは出来ません。これが地味に困る場合があります。</p>
+<p>具体例を挙げます。</p>
+<p>人が歩くアニメーションパターンを用意したとしましょう。同じキャラクタなので、一枚のイメージファイル（a）に複数のパターンを追加します。そして、それをテクスチャアトラス（b）にします。</p>
+<p>実際に使用する際、a を呼び出すことは可能です。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">SKTexture</span>* tex = [<span class="built_in">SKTexture</span> textureWithImageNamed:<span class="string">@"a"</span>];</span><br></pre></td></tr></table></figure>
+
+<p>で呼び出せるはずです。</p>
+<p>ですが、ここから a 中の歩きパターンを個々に取り出そうとすると、上手くいきません。</p>
+<p>これは、<code>tex</code> が既にサブテクスチャになってるためです。テクスチャアトラスからテクスチャを取り出した際には、自動的にサブテクスチャになってしまうようです。</p>
+<p>色々試したのですが、 <code>SKTexture</code> がサブテクスチャなのかどうかを判定も出来ませんし、ましてや UV を書き換えることも出来ないようなので、これはプログラムというよりデータを作る段階で意識しておく必要があることになります。</p>
+<p>簡便なのはいいのですが、UV くらい書き換えられてもいいのではないかと思います。iOS8 に期待です。</p>
+<h1 id="最後に"><a href="#最後に" class="headerlink" title="最後に"></a>最後に</h1><p>本当は他にも色々あるのですが、時間がなくて、こんな中途半端で終わって申し訳ないです。せめて、動く状態のプロジェクトを年内にはアップしたいと思いますので、興味があれば見てやってください。</p>
+<p>ちなみに、<a href="https://vimeo.com/user23308390/videos" target="_blank" rel="noopener">動画はこの辺にあります</a>。</p>
+<p>そういや、今日はクリスマスイヴですね(‘ω`;)</p>
+<h1 id="追記"><a href="#追記" class="headerlink" title="追記"></a>追記</h1><p>すっかり忘れてましたが、<a href="https://github.com/fum1h1ro/sss" target="_blank" rel="noopener">ソースをアップしました</a>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/SpriteKit/" data-id="ckb1t8ml2000eucpk7lbq01i3" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
 
     </footer>
   </div>
@@ -861,7 +801,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグ</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity/" rel="tag">unity</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
     </div>
   </div>
 
@@ -871,7 +811,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/tags/arduboy/" style="font-size: 16.67px;">arduboy</a> <a href="/tags/c/" style="font-size: 10px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/qiita/" style="font-size: 20px;">qiita</a> <a href="/tags/unity/" style="font-size: 13.33px;">unity</a>
+      <a href="/tags/arduboy/" style="font-size: 15px;">arduboy</a> <a href="/tags/c/" style="font-size: 10px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/qiita/" style="font-size: 17.5px;">qiita</a> <a href="/tags/unity3d/" style="font-size: 12.5px;">unity3d</a>
     </div>
   </div>
 
@@ -880,7 +820,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -893,7 +833,7 @@
       <ul>
         
           <li>
-            <a href="/2020/05/12/about-musiclib/">音楽ライブラリについての備忘録</a>
+            <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
           </li>
         
           <li>

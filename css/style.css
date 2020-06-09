@@ -624,9 +624,20 @@ a.article-title:hover {
 }
 .article-entry blockquote {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.4em;
-  margin: 1.6em 20px;
-  text-align: center;
+  font-size: 1em;
+  margin: 1em;
+  padding: 1em;
+  border: solid 2px #000;
+}
+.article-entry blockquote:before {
+  display: inline-block;
+  position: absolute;
+  top: 0px;
+  left: 0;
+  content: "777“";
+  font-family: sans-serif;
+  color: #000;
+  font-size: 90px;
 }
 .article-entry blockquote footer {
   font-size: 14px;
