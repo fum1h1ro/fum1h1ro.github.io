@@ -5,20 +5,14 @@
   
 
   
-  <title>GBuffer helper – Packing integer and float together | мята</title>
+  <title>мята</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="この記事は、こちらの記事を日本語に翻訳したものです(翻訳の許可は取っています)。  Version : 1.0 – Living blog   With GBuffer approach, it is often required to pack values together. One useful case is to be able to pack an integer value (oft">
-<meta property="og:type" content="article">
-<meta property="og:title" content="GBuffer helper – Packing integer and float together">
-<meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="мята">
+<meta property="og:url" content="https://fum1h1ro.github.io/page/3/index.html">
 <meta property="og:site_name" content="мята">
-<meta property="og:description" content="この記事は、こちらの記事を日本語に翻訳したものです(翻訳の許可は取っています)。  Version : 1.0 – Living blog   With GBuffer approach, it is often required to pack values together. One useful case is to be able to pack an integer value (oft">
 <meta property="og:locale" content="ja_JP">
-<meta property="article:published_time" content="2020-03-29T11:00:00.000Z">
-<meta property="article:modified_time" content="2020-05-09T06:46:12.406Z">
 <meta property="article:author" content="fum1h1ro">
-<meta property="article:tag" content="qiita">
-<meta property="article:tag" content="dev">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@fum1h1ro">
   
@@ -71,7 +65,129 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-GBuffer_helper_Packing_integer_and_float_together" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main">
+  
+    <article id="post-Arduboy_road_to" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Arduboy_road_to/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/Arduboy_road_to/">Arduboy への道</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduboy が届かなさすぎておかしくなった頭を冷やすための記事です。</p>
+<h2 id="小ネタ"><a href="#小ネタ" class="headerlink" title="小ネタ"></a>小ネタ</h2><h3 id="外部エディタで書きたい"><a href="#外部エディタで書きたい" class="headerlink" title="外部エディタで書きたい"></a>外部エディタで書きたい</h3><ul>
+<li>書いてもいいけど、そのままだと IDE に変更が反映されない</li>
+<li><code>Preferences &gt; Use external editor</code> を有効にする</li>
+<li>IDE から編修出来なくなるけど、外部エディタで編集して IDE に戻るとファイルを読み込み直してくれる</li>
+</ul>
+<h3 id="逆アセンブルしたい-or-コンパイルした結果がどうなってるか知りたい"><a href="#逆アセンブルしたい-or-コンパイルした結果がどうなってるか知りたい" class="headerlink" title="逆アセンブルしたい or コンパイルした結果がどうなってるか知りたい"></a>逆アセンブルしたい or コンパイルした結果がどうなってるか知りたい</h3><ol>
+<li>コンパイルした結果を取得出来るようにする<ul>
+<li><a href="http://mpu.seesaa.net/article/434274452.html" target="_blank" rel="noopener">Arduino/Genuino 101 の追加メモ 2016/02</a> を参考にする。この記事は Windows 版向けだけど、OSX 版でも同じようにできる。</li>
+<li><code>~/Library/Arduino15/preferences.txt</code> を編集。 <code>build.path=ビルド結果を出力するパス</code> を追加する</li>
+<li>権限的に問題ないパスを指定するよう注意 ex) <code>/Users/Hoge/Documents/Arduino/build</code></li>
+</ul>
+</li>
+<li>逆アセンブルする<ul>
+<li><code>/Applications/Arduino.app/Contents/Java/hardware/tools/avr/bin</code> に色々入ってるのでそれを使う</li>
+<li>適当にパスを通すなどして</li>
+<li><code>% avr-objdump -hdSC hoge.elf &gt; hoge.txt</code></li>
+</ul>
+</li>
+<li>読む</li>
+</ol>
+<ul>
+<li>実際に転送されるのは、 <code>hoge.ino.hex</code> なのかな？</li>
+<li>この辺は Arduino の文献を漁った方がよさそう</li>
+</ul>
+<h3 id="早く受け取りたい"><a href="#早く受け取りたい" class="headerlink" title="早く受け取りたい"></a>早く受け取りたい</h3><ul>
+<li>日本の国際交換局に到着した段階で直接交換局に行き、受け取ることが可能らしい -&gt; <a href="http://jetstream.bz/archives/17615" target="_blank" rel="noopener">早期通関申請</a></li>
+<li>行く気満々だったが、タッチの差で発送されてしまった</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/" data-id="ckbhr6ike0009jopkad9h4a2v" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Arduboy_using_latest_lib" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Arduboy_using_latest_lib/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/Arduboy_using_latest_lib/">常に最新の Arduboy ライブラリを使う</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。</p>
+<h1 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h1><p><a href="http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633" target="_blank" rel="noopener">Arduboy ことはじめ</a></p>
+<p>上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。</p>
+<p>最新は、Github 上のリポジトリから入手可能です。</p>
+<h1 id="入手方法"><a href="#入手方法" class="headerlink" title="入手方法"></a>入手方法</h1><h2 id="古いライブラリを消す"><a href="#古いライブラリを消す" class="headerlink" title="古いライブラリを消す"></a>古いライブラリを消す</h2><p>Arduino IDE を終了させた状態で、 <code>~/Documents/Arduino/libraries/Arduboy</code> フォルダをざっくり消します。</p>
+<h2 id="新しいライブラリを入れる"><a href="#新しいライブラリを入れる" class="headerlink" title="新しいライブラリを入れる"></a>新しいライブラリを入れる</h2><h3 id="ターミナルを起動する"><a href="#ターミナルを起動する" class="headerlink" title="ターミナルを起動する"></a>ターミナルを起動する</h3><p>黒い画面を開きます。</p>
+<h3 id="Github-から-clone-する"><a href="#Github-から-clone-する" class="headerlink" title="Github から clone する"></a>Github から clone する</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~</span><br><span class="line">% cd Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">% git clone https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy.git</span><br><span class="line">Cloning into &#39;Arduboy&#39;...</span><br><span class="line">remote: Counting objects: 1148, done.</span><br><span class="line">remote: Total 1148 (delta 0), reused 0 (delta 0), pack-reused 1148</span><br><span class="line">Receiving objects: 100% (1148&#x2F;1148), 295.96 KiB | 160.00 KiB&#x2F;s, done.</span><br><span class="line">Resolving deltas: 100% (664&#x2F;664), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">%</span><br></pre></td></tr></table></figure>
+
+<p><code>~/Documents/Arduino/libraries</code> へ移動し、Github からクローンします。</p>
+<p>これで、最新のライブラリがインストールされました。</p>
+<h2 id="常に最新に保つ"><a href="#常に最新に保つ" class="headerlink" title="常に最新に保つ"></a>常に最新に保つ</h2><p>最新だから良いというわけではありませんが、最新版を追っかけたい場合は、ターミナルから、 <code>~/Documents/Arduino/libraries/Arduino</code> へ移動し、</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries&#x2F;Arduino</span><br><span class="line">% git pull origin master</span><br></pre></td></tr></table></figure>
+
+<p>とすると、更新のあったファイルを落としてくることが出来ます。</p>
+<h2 id="おわり"><a href="#おわり" class="headerlink" title="おわり"></a>おわり</h2><p>Arduino IDE からインストール出来る 1.1.0 から最新の 1.2.0 では、文字表示ライブラリが追加されていたり、サウンドの処理からデフォルトの割り込みベクタがなくなっていたりして、結構変わっているようです。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/" data-id="ckbhr6ike000ajopk617hgrz1" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-GBuffer_helper_Packing_integer_and_float_together" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/" class="article-date">
   <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
@@ -84,8 +200,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      GBuffer helper – Packing integer and float together
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/">GBuffer helper – Packing integer and float together</a>
     </h1>
   
 
@@ -212,28 +328,16 @@
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2020/03/29/Arduboy_using_latest_lib/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">次の記事</strong>
-      <div class="article-nav-title">
-        
-          常に最新の Arduboy ライブラリを使う
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/03/29/Kiyoshi_Check/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">前の記事</strong>
-      <div class="article-nav-title">例のキヨシチェックを Sprache で書いてみる</div>
-    </a>
-  
-</nav>
+</article>
+
 
   
-</article>
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; 戻る</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">次へ &amp;raquo;</a>
+  </nav>
 
 </section>
         

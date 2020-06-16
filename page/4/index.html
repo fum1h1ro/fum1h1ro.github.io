@@ -5,21 +5,14 @@
   
 
   
-  <title>UnityEditor と実機間で通信がしたい | мята</title>
+  <title>мята</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="UnityEditorとビルド後の実機との間で通信がしたい表題の件を、色々と今まで試行錯誤しつつやっていたんですが、公式で PlayerConnection が実装され、晴れて自前実装がお役御免になりそうです。なんか勿体ないので記録として残しておこうかと思って書きました。決してContribute稼ぎではな（ｒｙ 昔のお話昔々、CD-ROMというメディアでゲームが提供されていた時代のことですが、当">
-<meta property="og:type" content="article">
-<meta property="og:title" content="UnityEditor と実機間で通信がしたい">
-<meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/UnityEditorConnection/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="мята">
+<meta property="og:url" content="https://fum1h1ro.github.io/page/4/index.html">
 <meta property="og:site_name" content="мята">
-<meta property="og:description" content="UnityEditorとビルド後の実機との間で通信がしたい表題の件を、色々と今まで試行錯誤しつつやっていたんですが、公式で PlayerConnection が実装され、晴れて自前実装がお役御免になりそうです。なんか勿体ないので記録として残しておこうかと思って書きました。決してContribute稼ぎではな（ｒｙ 昔のお話昔々、CD-ROMというメディアでゲームが提供されていた時代のことですが、当">
 <meta property="og:locale" content="ja_JP">
-<meta property="article:published_time" content="2020-03-29T11:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-09T01:34:00.029Z">
 <meta property="article:author" content="fum1h1ro">
-<meta property="article:tag" content="qiita">
-<meta property="article:tag" content="dev">
-<meta property="article:tag" content="unity3d">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@fum1h1ro">
   
@@ -72,7 +65,166 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-UnityEditorConnection" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main">
+  
+    <article id="post-Kiyoshi_Check" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Kiyoshi_Check/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/Kiyoshi_Check/">例のキヨシチェックを Sprache で書いてみる</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h2><p><a href="http://qiita.com/beinteractive/items/a2264048a601ee998aca" target="_blank" rel="noopener">http://qiita.com/beinteractive/items/a2264048a601ee998aca</a></p>
+<p>例の(?)が何だか解らないんですが、こういうのが上がってきたので、パーサの練習がてら書いてみました。</p>
+<h2 id="使ったもの"><a href="#使ったもの" class="headerlink" title="使ったもの"></a>使ったもの</h2><p><a href="https://github.com/sprache/Sprache" target="_blank" rel="noopener">https://github.com/sprache/Sprache</a></p>
+<p>C# の Monadic Parser だそうです。Monadic って Haskell で出てきたモナド的なヤツでしょうか。</p>
+<h2 id="できたもの"><a href="#できたもの" class="headerlink" title="できたもの"></a>できたもの</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Text;</span><br><span class="line"><span class="keyword">using</span> Sprache;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ZundokoGenerator</span> &#123;</span><br><span class="line">  Random _random = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IEnumerator&lt;<span class="keyword">string</span>&gt; <span class="title">RandomZunDoko</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">      <span class="keyword">yield</span> <span class="keyword">return</span> _random.Next(<span class="number">0</span>, <span class="number">2</span>) == <span class="number">0</span> ? <span class="string">"ズン"</span> : <span class="string">"ドコ"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">KiyoshiParser</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Parser&lt;<span class="keyword">string</span>&gt; zun =</span><br><span class="line">    <span class="keyword">from</span> txt <span class="keyword">in</span> Parse.String(<span class="string">"ズン"</span>).Text()</span><br><span class="line">    <span class="keyword">select</span> txt;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Parser&lt;<span class="keyword">string</span>&gt; doko =</span><br><span class="line">    <span class="keyword">from</span> txt <span class="keyword">in</span> Parse.String(<span class="string">"ドコ"</span>).Text()</span><br><span class="line">    <span class="keyword">select</span> txt;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Parser&lt;<span class="keyword">string</span>&gt; zzzd =</span><br><span class="line">    <span class="keyword">from</span> z0 <span class="keyword">in</span> zun</span><br><span class="line">    <span class="keyword">from</span> z1 <span class="keyword">in</span> zun</span><br><span class="line">    <span class="keyword">from</span> z2 <span class="keyword">in</span> zun</span><br><span class="line">    <span class="keyword">from</span> z3 <span class="keyword">in</span> zun</span><br><span class="line">    <span class="keyword">from</span> dk <span class="keyword">in</span> doko</span><br><span class="line">    <span class="keyword">select</span> <span class="string">"キヨシ"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> zdg = <span class="keyword">new</span> ZundokoGenerator().RandomZunDoko();</span><br><span class="line">    <span class="keyword">var</span> sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">      sb.Clear();</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; ++i) &#123;</span><br><span class="line">        zdg.MoveNext();</span><br><span class="line">        sb.Append(zdg.Current);</span><br><span class="line">      &#125;</span><br><span class="line">      ++count;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> kys = KiyoshiParser.zzzd.Parse(sb.ToString());</span><br><span class="line">        Console.WriteLine(sb.ToString() + kys);</span><br><span class="line">        Console.WriteLine(count + <span class="string">"回ズンドコしました"</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">catch</span> (Sprache.ParseException) &#123;</span><br><span class="line">        Console.WriteLine(sb.ToString());</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="解説"><a href="#解説" class="headerlink" title="解説"></a>解説</h2><h3 id="ZundokoGenerator"><a href="#ZundokoGenerator" class="headerlink" title="ZundokoGenerator"></a>ZundokoGenerator</h3><p>クラス <code>ZundokoGenerator</code> は元になった記事からパクってきましたが、実は <code>UnityEngine.Random</code> が使われていたので、 <code>System.Random</code> を使うように変更しました。</p>
+<p><code>IEnumerator</code> で、ズン or ドコを延々と返すだけですね。</p>
+<h3 id="KiyoshiParser"><a href="#KiyoshiParser" class="headerlink" title="KiyoshiParser"></a>KiyoshiParser</h3><p>パーサ本体です。</p>
+<p>文法についてはなんとなく見てもらえば解ると思いますが、 LINQ のクエリ構文で繋いでいく感じです。</p>
+<p>詳しいところは <code>Sprache</code> のドキュメントをあたってもらった方がいいと思いますが、 <code>bison</code> や <code>yacc</code> でいうパターンを <code>from</code> の羅列で記述し、 <code>select</code> でアクションといった感じです。</p>
+<p>注意する点は、 <code>Parse.String()</code> は返値が <code>IEnumerator&lt;char&gt;</code> (だっけ？)になっているので、 <code>string</code> に変換してやる必要があるところです。</p>
+<h3 id="Program"><a href="#Program" class="headerlink" title="Program"></a>Program</h3><p>メインの処理です。</p>
+<p>正しくないズンドコ(?)の際は例外で処理しています。</p>
+<h2 id="コンパイル＆結果"><a href="#コンパイル＆結果" class="headerlink" title="コンパイル＆結果"></a>コンパイル＆結果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">% mcs main.cs -r:Sprache.dll ; mono main.exe</span><br><span class="line">ドコズンズンズンズン</span><br><span class="line">ズンズンズンズンズン</span><br><span class="line">ドコドコズンドコズン</span><br><span class="line">ドコズンドコズンズン</span><br><span class="line">ドコズンズンドコズン</span><br><span class="line">ドコドコズンドコズン</span><br><span class="line">ズンドコドコズンズン</span><br><span class="line">ドコズンドコドコズン</span><br><span class="line">ズンドコズンズンドコ</span><br><span class="line">ズンドコズンドコドコ</span><br><span class="line">ズンドコドコズンズン</span><br><span class="line">ドコドコズンドコズン</span><br><span class="line">ズンドコドコズンドコ</span><br><span class="line">ドコドコズンズンズン</span><br><span class="line">ドコズンドコズンドコ</span><br><span class="line">ドコズンズンズンズン</span><br><span class="line">ズンドコドコドコズン</span><br><span class="line">ズンズンズンズンドコキヨシ</span><br><span class="line">18回ズンドコしました</span><br></pre></td></tr></table></figure>
+
+<p>簡単ですね(‘ω`)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Kiyoshi_Check/" data-id="ckbhr6ikg000djopk310sgtam" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-SpriteKit" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/SpriteKit/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/SpriteKit/">SpriteKit でゲームを作ってみる</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="動機"><a href="#動機" class="headerlink" title="動機"></a>動機</h1><p><a href="https://developer.apple.com/tech-talks/jp/" target="_blank" rel="noopener">iOS7 Tech Talks</a> に当選したので、いそいそとお出かけしたら、ゴイスーなホテルでランチまでごちそうになってしまった。その割にアウトプットも無い自分なので、これは申し訳ないなと思い、 <a href="http://www.apple.com/jp/" target="_blank" rel="noopener">Apple 社</a>激推しの <a href="https://developer.apple.com/library/ios/documentation/GraphicsAnimation/Conceptual/SpriteKit_PG/Introduction/Introduction.html" target="_blank" rel="noopener">SpriteKit</a> でも使ってゲームでも作ってみるかと思ったのだが、例によって締切がないと動かない体質が邪魔をしたので、 <a href="http://qiita.com/advent-calendar/2013/ios-2" target="_blank" rel="noopener">Advent Calendar</a> に登録して退路を断ってみた次第(‘ω`)</p>
+<p>偶然にも、本日 <a href="https://developer.apple.com/tech-talks/videos/" target="_blank" rel="noopener">iOS7 Tech Talks のビデオ</a> が公開されたらしいので、是非そちらも（要 Developer アカウント）。</p>
+<p>最初に書いておきますが、最後まで出来ませんでした……(‘A`)</p>
+<h1 id="SpriteKit-とは？"><a href="#SpriteKit-とは？" class="headerlink" title="SpriteKit とは？"></a>SpriteKit とは？</h1><ul>
+<li>iOS7 より利用できる Apple 社謹製の 2D 描画＆ 2D 物理シミュライブラリ</li>
+<li>OS(SDK) に最初から含まれるので、利用が簡単</li>
+<li>UIKit に似た実装で、利用が簡単</li>
+<li>描画部分と物理シミュ部分が最初から統合されているので、扱いが簡単</li>
+<li>パーティクルエフェクトが利用可能。パラメータを Xcode 上でプレビューしながら編集できる</li>
+<li>性能について書くと炎上するので、そこは割愛</li>
+<li>OSX でも使えるので、マルチプラットフォーム（と言っていいのだろうか）</li>
+</ul>
+<p>この記事では、SpriteKit を使って、ゲームを作ろうと思います。</p>
+<h1 id="どんなゲームを作ったか"><a href="#どんなゲームを作ったか" class="headerlink" title="どんなゲームを作ったか"></a>どんなゲームを作ったか</h1><ul>
+<li>SpriteKit は 2D ゲームのためのライブラリである -&gt; 2D のゲーム……？ -&gt; 2D シューティングだ！</li>
+</ul>
+<p><img src="/images/68801df3-2401-c58d-8647-2d360cfe3147.png" alt="Screen Shot 2013-12-24 at 20.29.27.png"></p>
+<p>というわけで、懐かしいキャラバンシューティングを作ることにしました。</p>
+<h2 id="縛り"><a href="#縛り" class="headerlink" title="縛り"></a>縛り</h2><ul>
+<li><strong>描画周りは SpriteKit 以外利用しない</strong><ul>
+<li>大前提</li>
+</ul>
+</li>
+<li><strong>なるべく Objective-C のみで作成する</strong><ul>
+<li>Objective-C 歴自体は iPhone3G の頃からだけど、記述時間的にはさっぱりなので、 Objective-C 的にヌルい部分もあるけど、そこは目を瞑る(‘A`)</li>
+</ul>
+</li>
+<li>ちゃんと遊べるものにする<ul>
+<li>すみませんすみません(‘A`)</li>
+</ul>
+</li>
+</ul>
+<h1 id="作っていく"><a href="#作っていく" class="headerlink" title="作っていく"></a>作っていく</h1><p>色々書こうと思ったんですが、そもそも完成しておらず、予定していたソースの公開もままならぬ故、実際に SpriteKit でゲームを作る上で気になった点などを記していこうと思います。</p>
+<h2 id="SKView"><a href="#SKView" class="headerlink" title="SKView"></a>SKView</h2><p>SpriteKit で表示をするために必要な専用の View です。</p>
+<p>ほぼ通常の <code>UIView</code> と同じですが、表示内容については、<code>SKScene</code> という別のクラスを渡します。この <code>SKScene</code> を継承してゲーム独自の処理を加えていきます。</p>
+<h2 id="SKScene"><a href="#SKScene" class="headerlink" title="SKScene"></a>SKScene</h2><p>その名の通り、SpriteKit において、ゲームのシーン（舞台）を表します。</p>
+<p>これに後述する <code>SKNode</code> を子供として追加していくことで画面を作ります。この辺は <code>UIView</code> の仕組みと似ていると思います。</p>
+<p>またこのクラスは、ゲームフレーム単位で <code>update:</code> というメソッドが OS から呼ばれます。通常のアプリと違い、ゲームの場合、入力があって初めて処理が呼ばれるのではなく、常に処理を行っておきたいため、このような仕様になっていると思われます。</p>
+<h2 id="SKNode"><a href="#SKNode" class="headerlink" title="SKNode"></a>SKNode</h2><p>SpriteKit における画面作りの基本になるクラスです。</p>
+<p>UIKit では、<code>UIView</code> を基本として画面を構成しましたが、SpriteKit では同じように <code>SKNode</code> をツリー状に構成していくことで画面を作ります。実は <code>SKScene</code> も <code>SKNode</code> を継承しています。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">SKScene</span>* scene = [[<span class="built_in">SKScene</span> alloc] initWithSize:<span class="built_in">CGSizeMake</span>(<span class="number">320</span>, <span class="number">480</span>)];</span><br><span class="line"><span class="built_in">SKNode</span>* node0 = [<span class="built_in">SKNode</span> node];</span><br><span class="line">[scene addChild:node0];</span><br><span class="line"><span class="built_in">SKNode</span>* node1 = [<span class="built_in">SKNode</span> node];</span><br><span class="line">[node0 addChild:node1];</span><br></pre></td></tr></table></figure>
+
+<p>このように、<code>SKNode</code> は <code>SKNode</code> の子供になることができます。<code>UIView</code> 等と同じく、座標系は親の影響を受けます。</p>
+<h3 id="派生クラス"><a href="#派生クラス" class="headerlink" title="派生クラス"></a>派生クラス</h3><p><code>SKNode</code> は、それ単体では凝った何かを表示することが出来ません。</p>
+<p>何かを表示したりする際は、<code>SKNode</code> の派生クラスを使います。色々ありますが、今回は <code>SKSpriteNode</code> のみ簡単に説明します。</p>
+<p><code>SKSpriteNode</code> は、<code>SKNode</code> に一枚の絵を表示する機能を追加したものです。一枚の絵は、単色の矩形か、<code>SKTexture</code> で指定するイメージになります。</p>
+<h2 id="SKTexture"><a href="#SKTexture" class="headerlink" title="SKTexture"></a>SKTexture</h2><p><code>SKTexture</code> は SpriteKit におけるイメージ全般を取り扱うクラスです。<code>UIImageView</code> 等のように簡単にイメージを取り扱うことができます。</p>
+<p>Xcode でいわゆるテクスチャアトラスを簡単に作ることが出来るのですが、実はこれが少し罠で、しばらくハマってた時期がありました。</p>
+<p><code>SKTexture</code> は画像一枚だけでなく、画像一枚の一部分（サブテクスチャといいます）を扱うことが出来ます。サブテクスチャは、既にある <code>SKTexture</code> から切り出す部分を指定することで作ることが出来ます。これは Xcode によって作られたテクスチャアトラス中のテクスチャを使う場合もそうなります。</p>
+<p>しかし、サブテクスチャからサブテクスチャを作ることは出来ません。これが地味に困る場合があります。</p>
+<p>具体例を挙げます。</p>
+<p>人が歩くアニメーションパターンを用意したとしましょう。同じキャラクタなので、一枚のイメージファイル（a）に複数のパターンを追加します。そして、それをテクスチャアトラス（b）にします。</p>
+<p>実際に使用する際、a を呼び出すことは可能です。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">SKTexture</span>* tex = [<span class="built_in">SKTexture</span> textureWithImageNamed:<span class="string">@"a"</span>];</span><br></pre></td></tr></table></figure>
+
+<p>で呼び出せるはずです。</p>
+<p>ですが、ここから a 中の歩きパターンを個々に取り出そうとすると、上手くいきません。</p>
+<p>これは、<code>tex</code> が既にサブテクスチャになってるためです。テクスチャアトラスからテクスチャを取り出した際には、自動的にサブテクスチャになってしまうようです。</p>
+<p>色々試したのですが、 <code>SKTexture</code> がサブテクスチャなのかどうかを判定も出来ませんし、ましてや UV を書き換えることも出来ないようなので、これはプログラムというよりデータを作る段階で意識しておく必要があることになります。</p>
+<p>簡便なのはいいのですが、UV くらい書き換えられてもいいのではないかと思います。iOS8 に期待です。</p>
+<h1 id="最後に"><a href="#最後に" class="headerlink" title="最後に"></a>最後に</h1><p>本当は他にも色々あるのですが、時間がなくて、こんな中途半端で終わって申し訳ないです。せめて、動く状態のプロジェクトを年内にはアップしたいと思いますので、興味があれば見てやってください。</p>
+<p>ちなみに、<a href="https://vimeo.com/user23308390/videos" target="_blank" rel="noopener">動画はこの辺にあります</a>。</p>
+<p>そういや、今日はクリスマスイヴですね(‘ω`;)</p>
+<h1 id="追記"><a href="#追記" class="headerlink" title="追記"></a>追記</h1><p>すっかり忘れてましたが、<a href="https://github.com/fum1h1ro/sss" target="_blank" rel="noopener">ソースをアップしました</a>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/SpriteKit/" data-id="ckbhr6iki000gjopk4vdvhsan" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-UnityEditorConnection" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/03/29/UnityEditorConnection/" class="article-date">
   <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
@@ -85,8 +237,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      UnityEditor と実機間で通信がしたい
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/UnityEditorConnection/">UnityEditor と実機間で通信がしたい</a>
     </h1>
   
 
@@ -169,28 +321,16 @@
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2020/03/29/SpriteKit/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">次の記事</strong>
-      <div class="article-nav-title">
-        
-          SpriteKit でゲームを作ってみる
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/03/29/deferred_shading_on_mobile/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">前の記事</strong>
-      <div class="article-nav-title">Mobile でも Deferred Shading がしたいです</div>
-    </a>
-  
-</nav>
+</article>
+
 
   
-</article>
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; 戻る</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">次へ &amp;raquo;</a>
+  </nav>
 
 </section>
         
