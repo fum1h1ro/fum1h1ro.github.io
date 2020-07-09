@@ -68,9 +68,9 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Arduboy_road_to" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Arduboy_framebuffer" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/03/29/Arduboy_road_to/" class="article-date">
+    <a href="/2020/03/29/Arduboy_framebuffer/" class="article-date">
   <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
 </a>
     
@@ -82,7 +82,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/29/Arduboy_road_to/">Arduboy への道</a>
+      <a class="article-title" href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
     </h1>
   
 
@@ -90,40 +90,119 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduboy が届かなさすぎておかしくなった頭を冷やすための記事です。</p>
-<h2 id="小ネタ"><a href="#小ネタ" class="headerlink" title="小ネタ"></a>小ネタ</h2><h3 id="外部エディタで書きたい"><a href="#外部エディタで書きたい" class="headerlink" title="外部エディタで書きたい"></a>外部エディタで書きたい</h3><ul>
-<li>書いてもいいけど、そのままだと IDE に変更が反映されない</li>
-<li><code>Preferences &gt; Use external editor</code> を有効にする</li>
-<li>IDE から編修出来なくなるけど、外部エディタで編集して IDE に戻るとファイルを読み込み直してくれる</li>
-</ul>
-<h3 id="逆アセンブルしたい-or-コンパイルした結果がどうなってるか知りたい"><a href="#逆アセンブルしたい-or-コンパイルした結果がどうなってるか知りたい" class="headerlink" title="逆アセンブルしたい or コンパイルした結果がどうなってるか知りたい"></a>逆アセンブルしたい or コンパイルした結果がどうなってるか知りたい</h3><ol>
-<li>コンパイルした結果を取得出来るようにする<ul>
-<li><a href="http://mpu.seesaa.net/article/434274452.html" target="_blank" rel="noopener">Arduino/Genuino 101 の追加メモ 2016/02</a> を参考にする。この記事は Windows 版向けだけど、OSX 版でも同じようにできる。</li>
-<li><code>~/Library/Arduino15/preferences.txt</code> を編集。 <code>build.path=ビルド結果を出力するパス</code> を追加する</li>
-<li>権限的に問題ないパスを指定するよう注意 ex) <code>/Users/Hoge/Documents/Arduino/build</code></li>
-</ul>
-</li>
-<li>逆アセンブルする<ul>
-<li><code>/Applications/Arduino.app/Contents/Java/hardware/tools/avr/bin</code> に色々入ってるのでそれを使う</li>
-<li>適当にパスを通すなどして</li>
-<li><code>% avr-objdump -hdSC hoge.elf &gt; hoge.txt</code></li>
-</ul>
-</li>
-<li>読む</li>
-</ol>
-<ul>
-<li>実際に転送されるのは、 <code>hoge.ino.hex</code> なのかな？</li>
-<li>この辺は Arduino の文献を漁った方がよさそう</li>
-</ul>
-<h3 id="早く受け取りたい"><a href="#早く受け取りたい" class="headerlink" title="早く受け取りたい"></a>早く受け取りたい</h3><ul>
-<li>日本の国際交換局に到着した段階で直接交換局に行き、受け取ることが可能らしい -&gt; <a href="http://jetstream.bz/archives/17615" target="_blank" rel="noopener">早期通関申請</a></li>
-<li>行く気満々だったが、タッチの差で発送されてしまった</li>
-</ul>
+        <h1>概要</h1>
+<p>Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。</p>
+<h2 id="フレームバッファの構造">フレームバッファの構造</h2>
+<p>1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span>* ptr = arduboy.getBuffer();</span><br></pre></td></tr></table></figure>
+<p>として、 <code>ptr</code> の添え字と座標の関係は以下の表の通り。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">x0</th>
+<th style="text-align:center">x1</th>
+<th style="text-align:center">x2</th>
+<th style="text-align:center">…</th>
+<th style="text-align:center">x127</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>y0-y7</strong></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">127</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>y8-y15</strong></td>
+<td style="text-align:center">128</td>
+<td style="text-align:center">129</td>
+<td style="text-align:center">130</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">255</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>:</strong></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>y48-y55</strong></td>
+<td style="text-align:center">768</td>
+<td style="text-align:center">769</td>
+<td style="text-align:center">770</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">895</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>y56-y63</strong></td>
+<td style="text-align:center">896</td>
+<td style="text-align:center">897</td>
+<td style="text-align:center">898</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">1023</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> ptr = arduboy.getBuffer();</span><br><span class="line">ptr[<span class="number">0</span>] = <span class="number">0xff</span>; <span class="comment">// 1111_1111</span></span><br><span class="line">ptr[<span class="number">8</span>] = <span class="number">0x11</span>; <span class="comment">// 0001_0001</span></span><br><span class="line">ptr[<span class="number">16</span>] = <span class="number">0xa7</span>; <span class="comment">// 1010_0111</span></span><br></pre></td></tr></table></figure>
+<p>例えば上記のように描き込んだ場合は、</p>
+<p><img src="/images/8683a246-e816-2bae-e7cf-8c569ad78dfa.png" alt="screenshot.png"></p>
+<p>このように表示されます。</p>
+<p>このことから、ビットの対応は、</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">bit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">y0</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">y1</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">y2</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td style="text-align:center">y3</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td style="text-align:center">y4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">y5</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td style="text-align:center">y6</td>
+<td style="text-align:center">6</td>
+</tr>
+<tr>
+<td style="text-align:center">y7</td>
+<td style="text-align:center">7</td>
+</tr>
+</tbody>
+</table>
+<p>になってることがわかりました。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/" data-id="ckbhrm7zp0008lkpk89yy3ce1" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/" data-id="ckce0yt2o00067bpk78mz24iv" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -157,26 +236,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。</p>
-<h1 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h1><p><a href="http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633" target="_blank" rel="noopener">Arduboy ことはじめ</a></p>
+        <h1>概要</h1>
+<p>Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。</p>
+<h1>はじめに</h1>
+<p><a href="http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633" target="_blank" rel="noopener">Arduboy ことはじめ</a></p>
 <p>上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。</p>
 <p>最新は、Github 上のリポジトリから入手可能です。</p>
-<h1 id="入手方法"><a href="#入手方法" class="headerlink" title="入手方法"></a>入手方法</h1><h2 id="古いライブラリを消す"><a href="#古いライブラリを消す" class="headerlink" title="古いライブラリを消す"></a>古いライブラリを消す</h2><p>Arduino IDE を終了させた状態で、 <code>~/Documents/Arduino/libraries/Arduboy</code> フォルダをざっくり消します。</p>
-<h2 id="新しいライブラリを入れる"><a href="#新しいライブラリを入れる" class="headerlink" title="新しいライブラリを入れる"></a>新しいライブラリを入れる</h2><h3 id="ターミナルを起動する"><a href="#ターミナルを起動する" class="headerlink" title="ターミナルを起動する"></a>ターミナルを起動する</h3><p>黒い画面を開きます。</p>
-<h3 id="Github-から-clone-する"><a href="#Github-から-clone-する" class="headerlink" title="Github から clone する"></a>Github から clone する</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~</span><br><span class="line">% cd Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">% git clone https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy.git</span><br><span class="line">Cloning into &#39;Arduboy&#39;...</span><br><span class="line">remote: Counting objects: 1148, done.</span><br><span class="line">remote: Total 1148 (delta 0), reused 0 (delta 0), pack-reused 1148</span><br><span class="line">Receiving objects: 100% (1148&#x2F;1148), 295.96 KiB | 160.00 KiB&#x2F;s, done.</span><br><span class="line">Resolving deltas: 100% (664&#x2F;664), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">%</span><br></pre></td></tr></table></figure>
-
+<h1>入手方法</h1>
+<h2 id="古いライブラリを消す">古いライブラリを消す</h2>
+<p>Arduino IDE を終了させた状態で、 <code>~/Documents/Arduino/libraries/Arduboy</code> フォルダをざっくり消します。</p>
+<h2 id="新しいライブラリを入れる">新しいライブラリを入れる</h2>
+<h3 id="ターミナルを起動する">ターミナルを起動する</h3>
+<p>黒い画面を開きます。</p>
+<h3 id="Github-から-clone-する">Github から clone する</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~</span><br><span class="line">% cd Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">% git clone https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy.git</span><br><span class="line">Cloning into &#39;Arduboy&#39;...</span><br><span class="line">remote: Counting objects: 1148, done.</span><br><span class="line">remote: Total 1148 (delta 0), reused 0 (delta 0), pack-reused 1148</span><br><span class="line">Receiving objects: 100% (1148&#x2F;1148), 295.96 KiB | 160.00 KiB&#x2F;s, done.</span><br><span class="line">Resolving deltas: 100% (664&#x2F;664), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">%</span><br></pre></td></tr></table></figure>
 <p><code>~/Documents/Arduino/libraries</code> へ移動し、Github からクローンします。</p>
 <p>これで、最新のライブラリがインストールされました。</p>
-<h2 id="常に最新に保つ"><a href="#常に最新に保つ" class="headerlink" title="常に最新に保つ"></a>常に最新に保つ</h2><p>最新だから良いというわけではありませんが、最新版を追っかけたい場合は、ターミナルから、 <code>~/Documents/Arduino/libraries/Arduino</code> へ移動し、</p>
+<h2 id="常に最新に保つ">常に最新に保つ</h2>
+<p>最新だから良いというわけではありませんが、最新版を追っかけたい場合は、ターミナルから、 <code>~/Documents/Arduino/libraries/Arduino</code> へ移動し、</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries&#x2F;Arduino</span><br><span class="line">% git pull origin master</span><br></pre></td></tr></table></figure>
-
 <p>とすると、更新のあったファイルを落としてくることが出来ます。</p>
-<h2 id="おわり"><a href="#おわり" class="headerlink" title="おわり"></a>おわり</h2><p>Arduino IDE からインストール出来る 1.1.0 から最新の 1.2.0 では、文字表示ライブラリが追加されていたり、サウンドの処理からデフォルトの割り込みベクタがなくなっていたりして、結構変わっているようです。</p>
+<h2 id="おわり">おわり</h2>
+<p>Arduino IDE からインストール出来る 1.1.0 から最新の 1.2.0 では、文字表示ライブラリが追加されていたり、サウンドの処理からデフォルトの割り込みベクタがなくなっていたりして、結構変わっているようです。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/" data-id="ckbhrm7zq0009lkpk719115zp" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/" data-id="ckce0yt2o00087bpk3tzian0p" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -188,9 +274,9 @@
 
 
   
-    <article id="post-GBuffer_helper_Packing_integer_and_float_together" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Arduboy_road_to" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/" class="article-date">
+    <a href="/2020/03/29/Arduboy_road_to/" class="article-date">
   <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
 </a>
     
@@ -202,7 +288,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/">GBuffer helper – Packing integer and float together</a>
+      <a class="article-title" href="/2020/03/29/Arduboy_road_to/">Arduboy への道</a>
     </h1>
   
 
@@ -210,121 +296,52 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>この記事は、<a href="https://seblagarde.wordpress.com/2018/09/02/gbuffer-helper-packing-integer-and-float-together/" target="_blank" rel="noopener">こちら</a>の記事を日本語に翻訳したものです(翻訳の許可は取っています)。</p>
-<blockquote>
-<p>Version : 1.0 – Living blog</p>
-</blockquote>
-<blockquote>
-<p>With GBuffer approach, it is often required to pack values together. One useful case is to be able to pack an integer value (often matching an enum like material ID) and a float value (inside 0..1 range).</p>
-</blockquote>
-<p>GBufferを利用するアプローチにおいて頻繁に様々な値をパックする必要がある。特によく使われるのは、整数値（マテリアルIDのような列挙型）と浮動小数値（0〜1の間）をパックするようなケースだ。</p>
-<blockquote>
-<p>For example in Unity High Definition Render Pipeline we have pack inside the GBuffer:</p>
-</blockquote>
-<p>UnityのHDPRにおけるGBuffer内部では以下のようなパッキングを行っている。</p>
-<blockquote>
+        <h1>概要</h1>
+<p>Arduboy が届かなさすぎておかしくなった頭を冷やすための記事です。</p>
+<h2 id="小ネタ">小ネタ</h2>
+<h3 id="外部エディタで書きたい">外部エディタで書きたい</h3>
 <ul>
-<li>DiffusionProfile (16 values) and Subsurface Mask (Float 0..1)</li>
-<li>Material Features (8 values) and Coat Mask (Float 0..1)</li>
-<li>Quadrant for tangent frame (8 values) and metallic (Float 0..1)</li>
+<li>書いてもいいけど、そのままだと IDE に変更が反映されない</li>
+<li><code>Preferences &gt; Use external editor</code> を有効にする</li>
+<li>IDE から編修出来なくなるけど、外部エディタで編集して IDE に戻るとファイルを読み込み直してくれる</li>
 </ul>
-</blockquote>
+<h3 id="逆アセンブルしたい-or-コンパイルした結果がどうなってるか知りたい">逆アセンブルしたい or コンパイルした結果がどうなってるか知りたい</h3>
+<ol>
+<li>コンパイルした結果を取得出来るようにする</li>
+</ol>
 <ul>
-<li>拡散反射タイプ（16個）とサブサーフェスマスク（浮動小数点数0..1）</li>
-<li>マテリアル効果（8個）とコートマスク（浮動小数点数0..1）</li>
-<li>接線空間における象限（16個）とメタリック値（浮動小数点数0..1）</li>
+<li><a href="http://mpu.seesaa.net/article/434274452.html" target="_blank" rel="noopener">Arduino/Genuino 101 の追加メモ 2016/02</a> を参考にする。この記事は Windows 版向けだけど、OSX 版でも同じようにできる。</li>
+<li><code>~/Library/Arduino15/preferences.txt</code> を編集。 <code>build.path=ビルド結果を出力するパス</code> を追加する</li>
+<li>権限的に問題ないパスを指定するよう注意 ex) <code>/Users/Hoge/Documents/Arduino/build</code></li>
 </ul>
-<blockquote>
-<p>During development we have change several times the number of bit required for our packing and it quickly come to us that we were needed to have general packing functions to encode arbitrary values. This is the topic of this short blog post.</p>
-</blockquote>
-<p>開発中、我々は幾度となくパック中のビット数を変更し、我々が任意の値をパックするためにパッキング関数が必要なことにすぐ気づいた。これは、このブログポストのトピックである。</p>
-<blockquote>
-<p>Let’s say that we want to encode a Mask on 1 bit with a Scalar in range 0..1 with 8 bit of precision inside a shader. Mean in practice we pack both values in a component of a RGBA 32bit render target. Remember that the float value in the shader is convert at the end of the pipeline to corresponding render target format, in our case the float value will be multiply by 255 to fit into the 8bit precision of the component. We will have 7 bits to encode the float, this could be perform with a simple remapping:</p>
-</blockquote>
-<p>さて、我々は1bitのマスクと0..1のスカラー値を8bit精度にエンコードしたいと思っている。これは、双方の値をRGBA32レンダーターゲットの1要素へパックすることである。忘れないで欲しいのは、シェーダ内の浮動小数点数はパイプラインの最後で対応するレンダーターゲットのフォーマットに変換される。今回の場合、浮動小数点数は255を掛けられて8bit精度の要素になる。我々は7bitを浮動小数点数のエンコードに使う。これはシンプルな変換式で実行できる。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">127.0</span> * Scalar)  / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>multiply by 127 (or (1 &lt;&lt; 7) – 1) which is 01111111 in binaries leave 1 bit available for the Mask.</p>
-</blockquote>
-<p>二進数で0b01111111である127（もしくは<code>(1&lt;&lt;7)-1</code>）を掛けることで、1bitをマスクのために使えるようになる。</p>
-<blockquote>
-<p>Then we divide by 255.0</p>
-</blockquote>
-<p>そして、255で割る。</p>
-<blockquote>
-<p>Then we need to add the bit for the mask itself at the 8th position mean value of 128 (or (1 &lt;&lt; 8) – 1)</p>
-</blockquote>
-<p>そして、我々はマスクのために、8番目のbitである128(もしくは<code>(1&lt;&lt;8)-1</code>)を足す。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">128.0</span> * Mask) / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>So encoding is</p>
-</blockquote>
-<p>そしてエンコード式は</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Val = (<span class="number">127.0</span> / <span class="number">255.0</span>) * Scalar + (<span class="number">128.0</span> / <span class="number">255.0</span>) * Mask</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Decoding should be the reverse of the operation above. First we need to retrieve the Mask value</p>
-</blockquote>
-<p>デコードは、上記の式と反対を行う必要がある。まず最初に、マスク値から取得する。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mask = <span class="keyword">int</span>((<span class="number">255.0</span> / <span class="number">128.0</span>) * Val)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Note that here we use the int cast to remove all the Scalar value part.<br>For example if we have Scalar of 0 and Mask with 1, Val is suppose to be 128.0 / 255.0.<br>Mean the above code give us 1</p>
-</blockquote>
-<p>ここでは、スカラー値部分をそぎ落とすためにintキャストを使う。<br>例えば、スカラー値0とマスク値1を持つ場合、<code>Val</code>は<code>128.0/255.0</code>になるはずだ。<br>この場合、上記の式は1を返すことになる。</p>
-<blockquote>
-<p>if Scalar is 1, Val is suppose to be 1.0, mean Mask = int(1.9921875) = 1. All good.</p>
-</blockquote>
-<p>もし、スカラー値が1の場合、<code>Val</code>は1.0になるはずだ。これは、<code>Mask = int(1.9921875) = 1</code>となるので、バッチリだ。</p>
-<blockquote>
-<p>We then retrieve the value of Scalar</p>
-</blockquote>
-<p>次にスカラー値を取り出す。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Scalar = (Val - (<span class="number">128.0</span> / <span class="number">255.0</span>) * <span class="keyword">float</span>(Mask)) / (<span class="number">127.0</span> / <span class="number">255.0</span>)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Now let’s consider a RGBA1010102 render target with a Mask on 4 bit. The process is exactly the same.<br>First remap value to cover 6 bit for the float value and 4 bit for the Mask value</p>
-</blockquote>
-<p>今、RGBA1010102のレンダーターゲットで、4bitマスクを持つ場合を考えてみよう。手順は先ほどと同じ。<br>まず、浮動小数点数を6bit、マスク値を4bitに再マップする。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Val = (<span class="number">63.0</span> / <span class="number">1023.0</span>) * Scalar + (<span class="number">64.0</span> / <span class="number">1023.0</span>) * Mask</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>For example if Mask is 2 (i.e 128.0 / 1023.0) and Scalar is 1.0 we get 0010 1111 11 as binaries representation.<br>4 bit for Mask then 6 bit for Scalar.</p>
-</blockquote>
-<p>例えば、マスク値が2(すなわち128.0/1023.0)とスカラー値が1.0の時、0b0010_1111_11が得られる。<br>4bitがマスク値、6bitがスカラー値に使われている。</p>
-<blockquote>
-<p>For decoding we first retrieve the Mask then the Scalar</p>
-</blockquote>
-<p>デコードは、まずマスク値、そしてスカラー値の順に取り出す。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Mask = <span class="keyword">int</span>((<span class="number">1023.0</span> / <span class="number">64.0</span>) * Val)</span><br><span class="line">Scalar = (Val - (<span class="number">64.0</span> / <span class="number">1023.0</span>) * <span class="keyword">float</span>(Mask)) / (<span class="number">63.0</span> / <span class="number">1023.0</span>)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Important addition.<br>Due to rounding and floating point calculation on GPU it may appear that Mask reconstruction is shifted by one value.<br>This can be fixed by adding the smallest epsilon allowed by the render target format. i.e</p>
-</blockquote>
-<p>重要なことがある。<br>GPU中で浮動小数点演算や丸めが行われる間に、マスクの再構成は一つの値によってずらされるように見えるかもしれない。（訳注：？）<br>これは、レンダーターゲットに許容される最小値を足すことで回避できる。すなわち、</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mask = <span class="keyword">int</span>((<span class="number">1023.0</span> / <span class="number">64.0</span>) * Val + <span class="number">1.0</span> / <span class="number">1023.0</span>)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>We can easily generalize this process for any unsigned render target format and any Mask size. Here are the functions to do the work.</p>
-</blockquote>
-<p>我々は簡単にこれらの手順を、様々な符号なしレンダーターゲットフォーマット、及び様々なマスクサイズに対して一般化できる。<br>ここに動く関数がある。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">PackFloatInt</span><span class="params">(<span class="keyword">float</span> f, uint i, uint numBitI, uint numBitTarget)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Constant optimize by compiler</span></span><br><span class="line">    <span class="keyword">float</span> precision = <span class="keyword">float</span>(<span class="number">1</span> &lt;&lt; numBitTarget);</span><br><span class="line">    <span class="keyword">float</span> maxi = <span class="keyword">float</span>(<span class="number">1</span> &lt;&lt; numBitI);</span><br><span class="line">    <span class="keyword">float</span> precisionMinusOne = precision - <span class="number">1.0</span>;</span><br><span class="line">    <span class="keyword">float</span> t1 = ((precision / maxi) - <span class="number">1.0</span>) / precisionMinusOne;</span><br><span class="line">    <span class="keyword">float</span> t2 = (precision / maxi) / precisionMinusOne;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Code</span></span><br><span class="line">    <span class="keyword">return</span> t1 * f + t2 * <span class="keyword">float</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnpackFloatInt</span><span class="params">(<span class="keyword">float</span> val, uint numBitI, uint numBitTarget, out <span class="keyword">float</span> f, out uint i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Constant optimize by compiler</span></span><br><span class="line">    <span class="keyword">float</span> precision = <span class="keyword">float</span>(<span class="number">1</span> &lt;&lt; numBitTarget);</span><br><span class="line">    <span class="keyword">float</span> maxi = <span class="keyword">float</span>(<span class="number">1</span> &lt;&lt; numBitI);</span><br><span class="line">    <span class="keyword">float</span> precisionMinusOne = precision - <span class="number">1.0</span>;</span><br><span class="line">    <span class="keyword">float</span> t1 = ((precision / maxi) - <span class="number">1.0</span>) / precisionMinusOne;</span><br><span class="line">    <span class="keyword">float</span> t2 = (precision / maxi) / precisionMinusOne;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Code</span></span><br><span class="line">    <span class="comment">// extract integer part</span></span><br><span class="line">    <span class="comment">// + rcp(precisionMinusOne) to deal with precision issue</span></span><br><span class="line">    i = <span class="keyword">int</span>((val / t2) + rcp(precisionMinusOne));</span><br><span class="line">    <span class="comment">// Now that we have i, solve formula in PackFloatInt for f</span></span><br><span class="line">    <span class="comment">//f = (val - t2 * float(i)) / t1 =&gt; convert in mads form</span></span><br><span class="line">    f = saturate((-t2 * <span class="keyword">float</span>(i) + val) / t1); <span class="comment">// Saturate in case of precision issue</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Define various variants for ease of use and code read</span></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">PackFloatInt8bit</span><span class="params">(<span class="keyword">float</span> f, uint i, uint numBitI)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PackFloatInt(f, i, numBitI, <span class="number">8</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnpackFloatInt8bit</span><span class="params">(<span class="keyword">float</span> val, uint numBitI, out <span class="keyword">float</span> f, out uint i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UnpackFloatInt(val, numBitI, <span class="number">8</span>, f, i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">PackFloatInt10bit</span><span class="params">(<span class="keyword">float</span> f, uint i, uint numBitI)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PackFloatInt(f, i, numBitI, <span class="number">10</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnpackFloatInt10bit</span><span class="params">(<span class="keyword">float</span> val, uint numBitI, out <span class="keyword">float</span> f, out uint i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UnpackFloatInt(val, numBitI, <span class="number">10</span>, f, i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">PackFloatInt16bit</span><span class="params">(<span class="keyword">float</span> f, uint i, uint numBitI)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PackFloatInt(f, i, numBitI, <span class="number">16</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnpackFloatInt16bit</span><span class="params">(<span class="keyword">float</span> val, uint numBitI, out <span class="keyword">float</span> f, out uint i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UnpackFloatInt(val, numBitI, <span class="number">16</span>, f, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>And example usage:</p>
-</blockquote>
-<p>それと使い方。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Encode</span></span><br><span class="line">outSSSBuffer0.a = PackFloatInt8bit(sssData.subsurfaceMask, sssData.diffusionProfile, <span class="number">4</span>);</span><br><span class="line"><span class="comment">// Decode</span></span><br><span class="line">UnpackFloatInt8bit(inSSSBuffer0.a, <span class="number">4</span>, sssData.subsurfaceMask, sssData.diffusionProfile);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Encode</span></span><br><span class="line">outGBuffer2.a  = PackFloatInt8bit(coatMask, materialFeatureId, <span class="number">3</span>);</span><br><span class="line"><span class="comment">// Decode</span></span><br><span class="line"><span class="keyword">float</span> coatMask;</span><br><span class="line">uint materialFeatureId;</span><br><span class="line">UnpackFloatInt8bit(inGBuffer2.a, <span class="number">3</span>, coatMask, materialFeatureId);</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>逆アセンブルする</li>
+</ol>
+<ul>
+<li><code>/Applications/Arduino.app/Contents/Java/hardware/tools/avr/bin</code> に色々入ってるのでそれを使う</li>
+<li>適当にパスを通すなどして</li>
+<li><code>% avr-objdump -hdSC hoge.elf &gt; hoge.txt</code></li>
+</ul>
+<ol start="3">
+<li>読む</li>
+</ol>
+<ul>
+<li>実際に転送されるのは、 <code>hoge.ino.hex</code> なのかな？</li>
+<li>この辺は Arduino の文献を漁った方がよさそう</li>
+</ul>
+<h3 id="早く受け取りたい">早く受け取りたい</h3>
+<ul>
+<li>日本の国際交換局に到着した段階で直接交換局に行き、受け取ることが可能らしい -&gt; <a href="http://jetstream.bz/archives/17615" target="_blank" rel="noopener">早期通関申請</a></li>
+<li>行く気満々だったが、タッチの差で発送されてしまった</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/" data-id="ckbhrm7zr000blkpk4c66870b" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/" data-id="ckce0yt2p00097bpkhe91e2r6" class="article-share-link">共有</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
 
     </footer>
   </div>
@@ -337,7 +354,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; 戻る</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">次へ &amp;raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; 戻る</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">次へ &amp;raquo;</a>
   </nav>
 
 </section>
@@ -370,7 +387,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -383,6 +400,10 @@
       <ul>
         
           <li>
+            <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/">ComputeShaderでProcedural</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
           </li>
         
@@ -391,15 +412,11 @@
           </li>
         
           <li>
-            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
-          </li>
-        
-          <li>
             <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
           </li>
         
       </ul>

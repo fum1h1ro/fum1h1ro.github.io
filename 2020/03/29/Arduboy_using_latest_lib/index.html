@@ -7,12 +7,12 @@
   
   <title>常に最新の Arduboy ライブラリを使う | мята</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概要Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。 はじめにArduboy ことはじめ 上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。 最新は、Github 上のリポジトリから入手可能です。 入手方法古いライブ">
+  <meta name="description" content="概要 Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。 はじめに Arduboy ことはじめ 上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。 最新は、Github 上のリポジトリから入手可能です。 入手方法 古い">
 <meta property="og:type" content="article">
 <meta property="og:title" content="常に最新の Arduboy ライブラリを使う">
 <meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/index.html">
 <meta property="og:site_name" content="мята">
-<meta property="og:description" content="概要Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。 はじめにArduboy ことはじめ 上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。 最新は、Github 上のリポジトリから入手可能です。 入手方法古いライブ">
+<meta property="og:description" content="概要 Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。 はじめに Arduboy ことはじめ 上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。 最新は、Github 上のリポジトリから入手可能です。 入手方法 古い">
 <meta property="og:locale" content="ja_JP">
 <meta property="article:published_time" content="2020-03-29T11:00:00.000Z">
 <meta property="article:modified_time" content="2020-05-09T06:15:34.154Z">
@@ -95,26 +95,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。</p>
-<h1 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h1><p><a href="http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633" target="_blank" rel="noopener">Arduboy ことはじめ</a></p>
+        <h1>概要</h1>
+<p>Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。</p>
+<h1>はじめに</h1>
+<p><a href="http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633" target="_blank" rel="noopener">Arduboy ことはじめ</a></p>
 <p>上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。</p>
 <p>最新は、Github 上のリポジトリから入手可能です。</p>
-<h1 id="入手方法"><a href="#入手方法" class="headerlink" title="入手方法"></a>入手方法</h1><h2 id="古いライブラリを消す"><a href="#古いライブラリを消す" class="headerlink" title="古いライブラリを消す"></a>古いライブラリを消す</h2><p>Arduino IDE を終了させた状態で、 <code>~/Documents/Arduino/libraries/Arduboy</code> フォルダをざっくり消します。</p>
-<h2 id="新しいライブラリを入れる"><a href="#新しいライブラリを入れる" class="headerlink" title="新しいライブラリを入れる"></a>新しいライブラリを入れる</h2><h3 id="ターミナルを起動する"><a href="#ターミナルを起動する" class="headerlink" title="ターミナルを起動する"></a>ターミナルを起動する</h3><p>黒い画面を開きます。</p>
-<h3 id="Github-から-clone-する"><a href="#Github-から-clone-する" class="headerlink" title="Github から clone する"></a>Github から clone する</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~</span><br><span class="line">% cd Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">% git clone https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy.git</span><br><span class="line">Cloning into &#39;Arduboy&#39;...</span><br><span class="line">remote: Counting objects: 1148, done.</span><br><span class="line">remote: Total 1148 (delta 0), reused 0 (delta 0), pack-reused 1148</span><br><span class="line">Receiving objects: 100% (1148&#x2F;1148), 295.96 KiB | 160.00 KiB&#x2F;s, done.</span><br><span class="line">Resolving deltas: 100% (664&#x2F;664), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">%</span><br></pre></td></tr></table></figure>
-
+<h1>入手方法</h1>
+<h2 id="古いライブラリを消す">古いライブラリを消す</h2>
+<p>Arduino IDE を終了させた状態で、 <code>~/Documents/Arduino/libraries/Arduboy</code> フォルダをざっくり消します。</p>
+<h2 id="新しいライブラリを入れる">新しいライブラリを入れる</h2>
+<h3 id="ターミナルを起動する">ターミナルを起動する</h3>
+<p>黒い画面を開きます。</p>
+<h3 id="Github-から-clone-する">Github から clone する</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~</span><br><span class="line">% cd Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">% git clone https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy.git</span><br><span class="line">Cloning into &#39;Arduboy&#39;...</span><br><span class="line">remote: Counting objects: 1148, done.</span><br><span class="line">remote: Total 1148 (delta 0), reused 0 (delta 0), pack-reused 1148</span><br><span class="line">Receiving objects: 100% (1148&#x2F;1148), 295.96 KiB | 160.00 KiB&#x2F;s, done.</span><br><span class="line">Resolving deltas: 100% (664&#x2F;664), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">%</span><br></pre></td></tr></table></figure>
 <p><code>~/Documents/Arduino/libraries</code> へ移動し、Github からクローンします。</p>
 <p>これで、最新のライブラリがインストールされました。</p>
-<h2 id="常に最新に保つ"><a href="#常に最新に保つ" class="headerlink" title="常に最新に保つ"></a>常に最新に保つ</h2><p>最新だから良いというわけではありませんが、最新版を追っかけたい場合は、ターミナルから、 <code>~/Documents/Arduino/libraries/Arduino</code> へ移動し、</p>
+<h2 id="常に最新に保つ">常に最新に保つ</h2>
+<p>最新だから良いというわけではありませんが、最新版を追っかけたい場合は、ターミナルから、 <code>~/Documents/Arduino/libraries/Arduino</code> へ移動し、</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries&#x2F;Arduino</span><br><span class="line">% git pull origin master</span><br></pre></td></tr></table></figure>
-
 <p>とすると、更新のあったファイルを落としてくることが出来ます。</p>
-<h2 id="おわり"><a href="#おわり" class="headerlink" title="おわり"></a>おわり</h2><p>Arduino IDE からインストール出来る 1.1.0 から最新の 1.2.0 では、文字表示ライブラリが追加されていたり、サウンドの処理からデフォルトの割り込みベクタがなくなっていたりして、結構変わっているようです。</p>
+<h2 id="おわり">おわり</h2>
+<p>Arduino IDE からインストール出来る 1.1.0 から最新の 1.2.0 では、文字表示ライブラリが追加されていたり、サウンドの処理からデフォルトの割り込みベクタがなくなっていたりして、結構変わっているようです。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/" data-id="ckbhrm7zq0009lkpk719115zp" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/" data-id="ckce0yt2o00087bpk3tzian0p" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -125,19 +132,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/03/29/Arduboy_road_to/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/03/29/Arduboy_framebuffer/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">次の記事</strong>
       <div class="article-nav-title">
         
-          Arduboy への道
+          Arduboy のフレームバッファ
         
       </div>
     </a>
   
   
-    <a href="/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/03/29/Arduboy_road_to/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前の記事</strong>
-      <div class="article-nav-title">GBuffer helper – Packing integer and float together</div>
+      <div class="article-nav-title">Arduboy への道</div>
     </a>
   
 </nav>
@@ -175,7 +182,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -188,6 +195,10 @@
       <ul>
         
           <li>
+            <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/">ComputeShaderでProcedural</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
           </li>
         
@@ -196,15 +207,11 @@
           </li>
         
           <li>
-            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
-          </li>
-        
-          <li>
             <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
           </li>
         
       </ul>

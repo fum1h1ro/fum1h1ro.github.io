@@ -68,148 +68,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Arduboy_framebuffer" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/29/Arduboy_framebuffer/" class="article-date">
-  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。</p>
-<h2 id="フレームバッファの構造"><a href="#フレームバッファの構造" class="headerlink" title="フレームバッファの構造"></a>フレームバッファの構造</h2><p>1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span>* ptr = arduboy.getBuffer();</span><br></pre></td></tr></table></figure>
-
-<p>として、 <code>ptr</code> の添え字と座標の関係は以下の表の通り。</p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center">x0</th>
-<th align="center">x1</th>
-<th align="center">x2</th>
-<th align="center">…</th>
-<th align="center">x127</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><strong>y0-y7</strong></td>
-<td align="center">0</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">…</td>
-<td align="center">127</td>
-</tr>
-<tr>
-<td align="center"><strong>y8-y15</strong></td>
-<td align="center">128</td>
-<td align="center">129</td>
-<td align="center">130</td>
-<td align="center">…</td>
-<td align="center">255</td>
-</tr>
-<tr>
-<td align="center"><strong>:</strong></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center"><strong>y48-y55</strong></td>
-<td align="center">768</td>
-<td align="center">769</td>
-<td align="center">770</td>
-<td align="center">…</td>
-<td align="center">895</td>
-</tr>
-<tr>
-<td align="center"><strong>y56-y63</strong></td>
-<td align="center">896</td>
-<td align="center">897</td>
-<td align="center">898</td>
-<td align="center">…</td>
-<td align="center">1023</td>
-</tr>
-</tbody></table>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> ptr = arduboy.getBuffer();</span><br><span class="line">ptr[<span class="number">0</span>] = <span class="number">0xff</span>; <span class="comment">// 1111_1111</span></span><br><span class="line">ptr[<span class="number">8</span>] = <span class="number">0x11</span>; <span class="comment">// 0001_0001</span></span><br><span class="line">ptr[<span class="number">16</span>] = <span class="number">0xa7</span>; <span class="comment">// 1010_0111</span></span><br></pre></td></tr></table></figure>
-
-<p>例えば上記のように描き込んだ場合は、</p>
-<p><img src="/images/8683a246-e816-2bae-e7cf-8c569ad78dfa.png" alt="screenshot.png"></p>
-<p>このように表示されます。</p>
-<p>このことから、ビットの対応は、</p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center">bit</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">y0</td>
-<td align="center">0</td>
-</tr>
-<tr>
-<td align="center">y1</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">y2</td>
-<td align="center">2</td>
-</tr>
-<tr>
-<td align="center">y3</td>
-<td align="center">3</td>
-</tr>
-<tr>
-<td align="center">y4</td>
-<td align="center">4</td>
-</tr>
-<tr>
-<td align="center">y5</td>
-<td align="center">5</td>
-</tr>
-<tr>
-<td align="center">y6</td>
-<td align="center">6</td>
-</tr>
-<tr>
-<td align="center">y7</td>
-<td align="center">7</td>
-</tr>
-</tbody></table>
-<p>になってることがわかりました。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/" data-id="ckbhrm7zk0002lkpk3kuchlqe" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-Arduboy_OLED" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/03/29/Arduboy_OLED/" class="article-date">
@@ -232,15 +90,20 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>OLED に直接制御コマンドを流し込みます。</p>
+        <h1>概要</h1>
+<p>OLED に直接制御コマンドを流し込みます。</p>
 <p>今回はあまり実用的でも初心者向けでもありません。</p>
-<h1 id="ハードウェア的な話"><a href="#ハードウェア的な話" class="headerlink" title="ハードウェア的な話"></a>ハードウェア的な話</h1><h2 id="OLED-の型番"><a href="#OLED-の型番" class="headerlink" title="OLED の型番"></a>OLED の型番</h2><p><a href="https://github.com/Arduboy/Arduboy/blob/master/src/core/core.h#L112" target="_blank" rel="noopener">https://github.com/Arduboy/Arduboy/blob/master/src/core/core.h#L112</a></p>
+<h1>ハードウェア的な話</h1>
+<h2 id="OLED-の型番">OLED の型番</h2>
+<p><a href="https://github.com/Arduboy/Arduboy/blob/master/src/core/core.h#L112" target="_blank" rel="noopener">https://github.com/Arduboy/Arduboy/blob/master/src/core/core.h#L112</a></p>
 <p>分解しなくてもライブラリに書いてあったのですぐわかりました。</p>
-<h2 id="OLED-のデータシート（マニュアル"><a href="#OLED-のデータシート（マニュアル" class="headerlink" title="OLED のデータシート（マニュアル)"></a>OLED のデータシート（マニュアル)</h2><p><a href="https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf" target="_blank" rel="noopener">https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf</a></p>
+<h2 id="OLED-のデータシート（マニュアル">OLED のデータシート（マニュアル)</h2>
+<p><a href="https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf" target="_blank" rel="noopener">https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf</a></p>
 <p>英語ですが、マニュアルがありました。</p>
-<h1 id="ソフトウェア的な話"><a href="#ソフトウェア的な話" class="headerlink" title="ソフトウェア的な話"></a>ソフトウェア的な話</h1><h2 id="コマンドの送り方"><a href="#コマンドの送り方" class="headerlink" title="コマンドの送り方"></a>コマンドの送り方</h2><p><code>ArduboyCore</code> クラス( <code>Arduboy</code> クラスのベースクラス )に、関数があります。</p>
+<h1>ソフトウェア的な話</h1>
+<h2 id="コマンドの送り方">コマンドの送り方</h2>
+<p><code>ArduboyCore</code> クラス( <code>Arduboy</code> クラスのベースクラス )に、関数があります。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">static</span> <span class="title">LCDDataMode</span><span class="params">()</span></span>; <span class="comment">//&lt; put the display in data mode</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">static</span> <span class="title">LCDCommandMode</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">static</span> <span class="title">sendLCDCommand</span><span class="params">(<span class="keyword">uint8_t</span> command)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>名前についてツッコむのは野暮ってもんです。</p>
 <ul>
 <li><code>LCDDataMode()</code> は OLED の受信モードを、表示データを受信するモードにします</li>
@@ -248,19 +111,95 @@
 <li><code>sendLCDCommand()</code> は、上記二つを自動で発行し、その間に 1byte の制御コマンドを送信する便利関数です</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ArduboyCore::sendLCDCommand</span><span class="params">(<span class="keyword">uint8_t</span> command)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  LCDCommandMode();</span><br><span class="line">  <span class="built_in">SPI</span>.<span class="built_in">transfer</span>(command);</span><br><span class="line">  LCDDataMode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>コアライブラリは、常に表示データ受信モードになっている前提で作られているので、受信モードを変更したあとは必ず戻すようにしておきます。</p>
-<h2 id="試しに送ってみる"><a href="#試しに送ってみる" class="headerlink" title="試しに送ってみる"></a>試しに送ってみる</h2><p>コントラストを変更するコマンドを発見したので、試しに送ってみます。</p>
+<h2 id="試しに送ってみる">試しに送ってみる</h2>
+<p>コントラストを変更するコマンドを発見したので、試しに送ってみます。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">u8 c = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!boy.nextFrame()) <span class="keyword">return</span>;</span><br><span class="line">  boy.<span class="built_in">clear</span>();</span><br><span class="line">  boy.fillScreen(<span class="number">1</span>);</span><br><span class="line">  boy.<span class="built_in">display</span>();</span><br><span class="line">  boy.LCDCommandMode();</span><br><span class="line">  <span class="built_in">SPI</span>.<span class="built_in">transfer</span>(<span class="number">0x81</span>);</span><br><span class="line">  <span class="built_in">SPI</span>.<span class="built_in">transfer</span>(c++);</span><br><span class="line">  boy.LCDDataMode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><code>setup()</code> 関数等は省略しますが、上記のソースでコントラストを 0〜255 に変化しま……す？</p>
-<p>確かに変化はしましたが、真っ暗までにはならず、また階調も三階調ほどしか変化しないようでした。残念。フェードイン・フェードアウトに使えるかと思ったのですが(‘ω`)</p>
-<h2 id="おわり"><a href="#おわり" class="headerlink" title="おわり"></a>おわり</h2><p>データシートを読むと他にも色々面白そうな制御コマンドがあるので、色々試してみると面白いかもしれません。</p>
+<p>確かに変化はしましたが、真っ暗までにはならず、また階調も三階調ほどしか変化しないようでした。残念。フェードイン・フェードアウトに使えるかと思ったのですが('ω`)</p>
+<h2 id="おわり">おわり</h2>
+<p>データシートを読むと他にも色々面白そうな制御コマンドがあるので、色々試してみると面白いかもしれません。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/" data-id="ckbhrm7zm0004lkpk9z6yaivq" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/" data-id="ckce0yt2f00007bpkewhuhm9m" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Arduboy_1st" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Arduboy_1st/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1>概要</h1>
+<p>Arduboy のセットアップから簡単なスケッチを動かすところまで解説します。</p>
+<h2 id="環境セットアップ">環境セットアップ</h2>
+<h3 id="Arduino-IDE-をダウンロードする">Arduino IDE をダウンロードする</h3>
+<ul>
+<li><a href="https://www.arduino.cc/" target="_blank" rel="noopener">Arduino　公式</a> から IDE をダウンロードします。</li>
+</ul>
+<p><img src="/images/b951bf2a-d143-bdc7-c636-234e895cd0f8.png" alt="Arduino - Home 2016-06-05 11-07-16.png"></p>
+<p><code>Download</code> をクリックして先に進みます。</p>
+<p><img src="/images/ba3b343a-211e-9cb6-b2ea-fe339ffd1cae.png" alt="Arduino - Software 2016-06-05 11-09-46.png"></p>
+<p>右側の一覧から、自分の環境に合ったものを選びます。</p>
+<p><img src="/images/ad26593a-9a37-6af2-8aeb-267000e97122.png" alt="Arduino - Donate 2016-06-05 11-14-01.png"></p>
+<p>気が向いたら寄付しましょう。寄付しない場合は、 <strong>JUST DOWNLOAD</strong> で。</p>
+<p>ダウンロード後、インストールします。</p>
+<h3 id="Arduino-IDE-の設定">Arduino IDE の設定</h3>
+<p><img src="/images/71313123-79be-17b0-c654-61249c06dd51.png" alt="Screen Shot 2016-06-05 at 11.50.53.png"></p>
+<p>メニューからボードを <code>Arduino Leonardo</code> にします。</p>
+<p><img src="/images/06dae7bc-f90a-05b8-5a81-2eff457ab4ec.png" alt="Screen Shot 2016-06-05 at 11.52.35.png"></p>
+<p>ポートも、 Arduino のものにしておくとあとで便利です。</p>
+<h3 id="Arduboy-ライブラリの追加">Arduboy ライブラリの追加</h3>
+<p>Arduboy でプログラムするにあたって必要なライブラリを IDE に追加します。</p>
+<p><img src="/images/28e26abb-34c9-6e62-6a6d-5ad013d8c6aa.png" alt="Screen Shot 2016-06-05 at 12.08.27.png"></p>
+<p>メニューの <code>Include Library &gt; Manage Libraris...</code> を選びます。</p>
+<p><img src="/images/1c932faa-8a0c-5ae0-01cb-7a67a3ccd0e5.png" alt="Screen Shot 2016-06-05 at 12.10.50.png"></p>
+<p>検索フィルタに <code>boy</code> と入れると、 Arduboy 用のライブラリが出てくるので、最新のバージョンをインストールします。</p>
+<h3 id="Arduboy-を繋ぐ">Arduboy を繋ぐ</h3>
+<p><img src="/images/61de1c66-1bd0-0258-34d4-bebec7e1f8c3.jpeg" alt="IMG_5323.JPG"></p>
+<p>USB&lt;&gt;USB-Micro ケーブルでホスト PC と Arduboy を繋ぎます。</p>
+<p>Arduboy の電源を入れると、既にインストールされているプログラムが即時実行されますが、開発中も電源入れっぱなしで、プログラムが実行されたままでも大丈夫です。</p>
+<h2 id="スケッチを用意する">スケッチを用意する</h2>
+<p><img src="/images/1714a697-164d-1b00-f84f-7230a19c4206.png" alt="Screen Shot 2016-06-05 at 12.05.18.png"></p>
+<p>新規スケッチを用意すると、上記画面のようになっていると思います。</p>
+<p>これから、ここにプログラムを書き込んでいきます。</p>
+<h2 id="スケッチに書き込む">スケッチに書き込む</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Arduboy.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">Arduboy arduboy;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  arduboy.<span class="built_in">begin</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!arduboy.nextFrame()) <span class="keyword">return</span>;</span><br><span class="line">  arduboy.<span class="built_in">clear</span>();</span><br><span class="line">  arduboy.drawCircle(<span class="number">128</span>/<span class="number">2</span>, <span class="number">64</span>/<span class="number">2</span>, <span class="number">16</span>, <span class="number">1</span>);</span><br><span class="line">  arduboy.<span class="built_in">display</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>スケッチの中身を上記のソースに置き換えて、 Command+U （Windows なら Ctrl+U） を押して Arduboy に転送します。</p>
+<p>しばらくすると、 Arduboy が起動し、真っ黒な画面の中心に円が描かれているのが確認出来ると思います。</p>
+<p>これで、プリインストールされていたゲームの代わりに、あなたが書き込んだプログラムが実行されたことになります。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/" data-id="ckce0yt2k00027bpkbnangr3e" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -294,18 +233,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>ﾋｬｯﾊｰ！約60fpsだぜ！</p>
-<h2 id="計測してみる"><a href="#計測してみる" class="headerlink" title="計測してみる"></a>計測してみる</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Arduboy.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">Arduboy boy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> <span class="keyword">char</span> s8;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> short s16;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> <span class="keyword">int</span> s32;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> u8;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> short u16;</span><br><span class="line"><span class="comment">//typedef unsigned int u32;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> short fx16;</span><br><span class="line"></span><br><span class="line">s16 x = <span class="number">0</span>;</span><br><span class="line">s32 cnt = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> frameload = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> prev_count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_SHIFT (7)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_ONE (1&lt;&lt;FX16_SHIFT)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_CONST(v) ((s16)((v) * 128.0f))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_TOINT(v) ((v)&gt;&gt;FX16_SHIFT)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_MUL(a, b) (((a)*(b))&gt;&gt;FX16_SHIFT)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_DIV(a, b) ((s16)(((s32)(a)&lt;&lt;FX16_SHIFT)/(b)))</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Object</span> &#123;</span></span><br><span class="line">  fx16 x, y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Object obj;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (boy.pressed(LEFT_BUTTON)) &#123;</span><br><span class="line">    obj.x -= FX16_CONST(<span class="number">1.5f</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (boy.pressed(RIGHT_BUTTON)) &#123;</span><br><span class="line">    obj.x += FX16_CONST(<span class="number">1.5f</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (boy.pressed(UP_BUTTON)) &#123;</span><br><span class="line">    obj.y -= FX16_CONST(<span class="number">1.5f</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (boy.pressed(DOWN_BUTTON)) &#123;</span><br><span class="line">    obj.y += FX16_CONST(<span class="number">1.5f</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  boy.drawCircle(FX16_TOINT(obj.x), FX16_TOINT(obj.y), <span class="number">8</span>, <span class="number">0xff</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  boy.<span class="built_in">begin</span>();</span><br><span class="line">  boy.setFrameRate(<span class="number">60</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!boy.nextFrame()) <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">auto</span> now = <span class="built_in">micros</span>();</span><br><span class="line">  frameload = now - prev_count;</span><br><span class="line">  prev_count = now;</span><br><span class="line">  boy.<span class="built_in">clear</span>();</span><br><span class="line">  update();</span><br><span class="line">  boy.<span class="built_in">display</span>();</span><br><span class="line">  <span class="keyword">if</span> (++cnt &gt; <span class="number">60</span>) &#123;</span><br><span class="line">    <span class="built_in">Serial</span>.<span class="built_in">println</span>(frameload);</span><br><span class="line">    cnt = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+        <h1>概要</h1>
+<p>ﾋｬｯﾊｰ！約60fpsだぜ！</p>
+<h2 id="計測してみる">計測してみる</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Arduboy.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">Arduboy boy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> <span class="keyword">char</span> s8;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> short s16;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> <span class="keyword">int</span> s32;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> u8;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> short u16;</span><br><span class="line"><span class="comment">//typedef unsigned int u32;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> short fx16;</span><br><span class="line"></span><br><span class="line">s16 x = <span class="number">0</span>;</span><br><span class="line">s32 cnt = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> frameload = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> prev_count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_SHIFT (7)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_ONE (1&lt;&lt;FX16_SHIFT)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_CONST(v) ((s16)((v) * 128.0f))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_TOINT(v) ((v)&gt;&gt;FX16_SHIFT)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_MUL(a, b) (((a)*(b))&gt;&gt;FX16_SHIFT)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FX16_DIV(a, b) ((s16)(((s32)(a)&lt;&lt;FX16_SHIFT)/(b)))</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Object</span> &#123;</span></span><br><span class="line">  fx16 x, y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Object obj;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (boy.pressed(LEFT_BUTTON)) &#123;</span><br><span class="line">    obj.x -= FX16_CONST(<span class="number">1.5f</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (boy.pressed(RIGHT_BUTTON)) &#123;</span><br><span class="line">    obj.x += FX16_CONST(<span class="number">1.5f</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (boy.pressed(UP_BUTTON)) &#123;</span><br><span class="line">    obj.y -= FX16_CONST(<span class="number">1.5f</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (boy.pressed(DOWN_BUTTON)) &#123;</span><br><span class="line">    obj.y += FX16_CONST(<span class="number">1.5f</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  boy.drawCircle(FX16_TOINT(obj.x), FX16_TOINT(obj.y), <span class="number">8</span>, <span class="number">0xff</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  boy.<span class="built_in">begin</span>();</span><br><span class="line">  boy.setFrameRate(<span class="number">60</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!boy.nextFrame()) <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">auto</span> now = <span class="built_in">micros</span>();</span><br><span class="line">  frameload = now - prev_count;</span><br><span class="line">  prev_count = now;</span><br><span class="line">  boy.<span class="built_in">clear</span>();</span><br><span class="line">  update();</span><br><span class="line">  boy.<span class="built_in">display</span>();</span><br><span class="line">  <span class="keyword">if</span> (++cnt &gt; <span class="number">60</span>) &#123;</span><br><span class="line">    <span class="built_in">Serial</span>.<span class="built_in">println</span>(frameload);</span><br><span class="line">    cnt = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>関係ないコードも混じってますが、とりあえず、毎フレーム <code>micros()</code> で起動後から経過した時間を取得して、一秒に一回シリアルへ出力。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;build</span><br><span class="line">% picocom &#x2F;dev&#x2F;cu.usbmodem1411</span><br><span class="line">picocom v2.1</span><br><span class="line"></span><br><span class="line">port is        : &#x2F;dev&#x2F;cu.usbmodem1411</span><br><span class="line">flowcontrol    : none</span><br><span class="line">baudrate is    : 9600</span><br><span class="line">parity is      : none</span><br><span class="line">databits are   : 8</span><br><span class="line">stopbits are   : 1</span><br><span class="line">escape is      : C-a</span><br><span class="line">local echo is  : no</span><br><span class="line">noinit is      : no</span><br><span class="line">noreset is     : no</span><br><span class="line">nolock is      : no</span><br><span class="line">send_cmd is    : sz -vv</span><br><span class="line">receive_cmd is : rz -vv -E</span><br><span class="line">imap is        : </span><br><span class="line">omap is        : </span><br><span class="line">emap is        : crcrlf,delbs,</span><br><span class="line"></span><br><span class="line">Type [C-a] [C-h] to see available commands</span><br><span class="line"></span><br><span class="line">Terminal ready</span><br><span class="line">16384</span><br><span class="line">16384</span><br><span class="line">16384</span><br><span class="line">16384</span><br><span class="line">16384</span><br><span class="line">15360</span><br><span class="line">15360</span><br><span class="line">15360</span><br><span class="line">16384</span><br><span class="line">16384</span><br><span class="line">16384</span><br><span class="line">16384</span><br><span class="line">16384</span><br><span class="line">15360</span><br><span class="line">15368</span><br><span class="line"></span><br><span class="line">Thanks for using picocom</span><br></pre></td></tr></table></figure>
-
 <p>タイマー精度の関係なのか、16384というこれはこれでキリのいい数字が出ているが、大体60fps出ているようだ。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_measure_1frame/" data-id="ckbhrm7zn0005lkpkh19a5odh" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_measure_1frame/" data-id="ckce0yt2m00047bpk73bdbsqi" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -321,7 +260,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&amp;laquo; 戻る</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">次へ &amp;raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&amp;laquo; 戻る</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">次へ &amp;raquo;</a>
   </nav>
 
 </section>
@@ -354,7 +293,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -367,6 +306,10 @@
       <ul>
         
           <li>
+            <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/">ComputeShaderでProcedural</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
           </li>
         
@@ -375,15 +318,11 @@
           </li>
         
           <li>
-            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
-          </li>
-        
-          <li>
             <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
           </li>
         
       </ul>

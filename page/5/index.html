@@ -68,6 +68,118 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-UnityEditorConnection" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/UnityEditorConnection/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/UnityEditorConnection/">UnityEditor と実機間で通信がしたい</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1>UnityEditorとビルド後の実機との間で通信がしたい</h1>
+<p>表題の件を、色々と今まで試行錯誤しつつやっていたんですが、公式で <code>PlayerConnection</code> が実装され、晴れて自前実装がお役御免になりそうです。<br>
+なんか勿体ないので記録として残しておこうかと思って書きました。決してContribute稼ぎではな（ｒｙ</p>
+<h2 id="昔のお話">昔のお話</h2>
+<p>昔々、CD-ROMというメディアでゲームが提供されていた時代のことですが、当然開発中にテストをする際もCD-ROMにゲームを焼く(書き込む)必要がありました。</p>
+<p>しかし、CD-ROMに焼くのも時間がかかる。下手したら現在のビルド〜転送よりも時間がかかる。更に言えば、当時のライターは焼きに失敗することもままあり、ブランクのCD-ROMもタダじゃない。</p>
+<p>では、昔の人は実機で確認する際にどうしたのかというと、開発に使っているパソコン(プログラムを書いたりコンパイルしたりする)のHDDを実機からCD-ROMドライブに見えるようにエミュレートしてました。そうすると、実行されているプログラムからCD-ROMのファイルを読もうとした際に、自動的にHDDから読み込むようになっていました。</p>
+<h2 id="現代でよくある話">現代でよくある話</h2>
+<ul>
+<li>
+<p>パターン1</p>
+<ol>
+<li>UnityEditor上で開発、良い感じになったのでビルド、実機(iOS/Android等)へ転送</li>
+<li>実機で動いたけど、動いたけど……ちょっと操作感覚が気にくわないから調整するか</li>
+<li>UnityEditor上で調整、再度ビルド、実機へ転送</li>
+<li>実機で確認。うーんなにか違うな……</li>
+<li>再度ビルド……</li>
+</ol>
+</li>
+<li>
+<p>パターン2</p>
+<ol>
+<li>UnityEditor上で開発、今度はマスターデータを外部から読み込むようにしたのでいちいちビルドしなくて平気だぜ</li>
+<li>マスターデータが一カ所にしかない、あっても本番と検証の二カ所程度なので、複数人でいじると死ぬ</li>
+</ol>
+</li>
+</ul>
+<p>どちらも、ビルド〜転送が秒で完了すれば解決する話なんですが、それは現実的ではない。</p>
+<p>もしくは、<a href="https://docs.unity3d.com/2018.1/Documentation/Manual/UnityRemote5.html" target="_blank" rel="noopener">UnityRemote</a>でなんとかするというのもありますが、公式的にもあまり活用されていないので、微妙感。</p>
+<p>調整したいものが、数値のような単純なものであれば実機用のデバッグメニューを用意して調整することも可能ですが、限界もあります。</p>
+<p>UnityEditorはよくできてますし、たいていの場合UnityEditor上で動くものは実機でも同じように動きます。また、外部のゲームコントローラを使うようなゲーム機の場合はコントローラが同じなら、UnityEditorでもそこそこ操作感覚は変わりません。</p>
+<h2 id="現代で解決するには">現代で解決するには</h2>
+<p>実機とホストで通信が簡単に行えて、ファイルの転送ができれば良いんで、構造的に採用したのは、</p>
+<ul>
+<li>ホスト側でHTTPサーバを立てる</li>
+<li>実機側からホストにHTTPリクエストを投げる</li>
+</ul>
+<p>という方法を採用しました。</p>
+<p>初期はホスト側のHTTPサーバをRubyで実行してたりしたのですが、Editorと別に起動しなくてはいけない点が面倒くさくて、<br>
+最終的にはEditorWindow内で <code>HttpListener</code> を使ってHTTPサーバを実行しました。</p>
+<h2 id="具体的な実装方法">具体的な実装方法</h2>
+<p>ここから、明日から役に立たないUnity情報です。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HostIOWindow</span> : <span class="title">EditorWindow</span> &#123;</span><br><span class="line">  [<span class="meta">MenuItem(<span class="meta-string">"Window/HostIO"</span>)</span>]</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Open</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> win = (HostIOWindow)EditorWindow.GetWindow(<span class="keyword">typeof</span>(HostIOWindow));</span><br><span class="line">    win.Show();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">static</span> HostIOWindow _instance = <span class="literal">null</span>;</span><br><span class="line">  HttpListener _listener;</span><br><span class="line">  Task&lt;HttpListenerContext&gt; _task;</span><br><span class="line">  IPAddress _local;</span><br><span class="line">  <span class="keyword">byte</span>[] _ip;</span><br><span class="line">  <span class="comment">//</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Awake</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!HttpListener.IsSupported) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> NotSupportedException(<span class="string">"not supported"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Update</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (_task == <span class="literal">null</span>) &#123;</span><br><span class="line">      _task = _listener.GetContextAsync();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (_task.IsCompleted) &#123;</span><br><span class="line">        <span class="keyword">var</span> ctxt = _task.Result;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">          RequestHandler(ctxt);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (WebException e) &#123;</span><br><span class="line">          ErrorHandler(ctxt, e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span> &#123;</span><br><span class="line">          _task.Dispose();</span><br><span class="line">          _task = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">if</span> (_task.IsCanceled) &#123;</span><br><span class="line">          _task.Dispose();</span><br><span class="line">          _task = <span class="literal">null</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span></span><br><span class="line">          <span class="keyword">if</span> (_task.IsFaulted) &#123;</span><br><span class="line">            _task.Dispose();</span><br><span class="line">            _task = <span class="literal">null</span>;</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    Repaint();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// サーバ起動</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">StartWebServer</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    StopWebServer();</span><br><span class="line">    _task = <span class="literal">null</span>;</span><br><span class="line">    _ip = HostIOUtil.DetectLocalAddress();</span><br><span class="line">    _listener = <span class="keyword">new</span> HttpListener();</span><br><span class="line">    _listener.Prefixes.Add(<span class="string">"http://localhost:4649/"</span>);</span><br><span class="line">    <span class="keyword">var</span> url = <span class="keyword">string</span>.Format(<span class="string">"http://&#123;0&#125;.&#123;1&#125;.&#123;2&#125;.&#123;3&#125;:4649/"</span>, _ip[<span class="number">0</span>], _ip[<span class="number">1</span>], _ip[<span class="number">2</span>], _ip[<span class="number">3</span>]);</span><br><span class="line">    _listener.Prefixes.Add(url);</span><br><span class="line">    _listener.Start();</span><br><span class="line">    Debug.Log(<span class="string">"START WEB SERVER =&gt; "</span> + url);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// リクエストハンドラ</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">RequestHandler</span>(<span class="params">HttpListenerContext ctxt</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> req = ctxt.Request;</span><br><span class="line">    <span class="keyword">var</span> res = ctxt.Response;</span><br><span class="line">    <span class="keyword">var</span> pathelem = req.RawUrl.Split(<span class="string">'/'</span>).ToList();</span><br><span class="line">    pathelem.RemoveAll((e) =&gt; <span class="keyword">string</span>.IsNullOrEmpty(e));</span><br><span class="line">    <span class="keyword">if</span> (pathelem.Count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">switch</span> (pathelem[<span class="number">0</span>]) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">"assets"</span>:</span><br><span class="line">        <span class="keyword">if</span> (pathelem.Count == <span class="number">1</span>) &#123;</span><br><span class="line">          RequestHandler_file(ctxt, <span class="string">"/"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">var</span> pathname = <span class="string">"/"</span> + Path.Combine(pathelem.GetRange(<span class="number">1</span>, pathelem.Count - <span class="number">1</span>).ToArray());</span><br><span class="line">          pathname = pathname.Replace(<span class="string">'\\'</span>, <span class="string">'/'</span>);</span><br><span class="line">          RequestHandler_file(ctxt, pathname);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">"ping"</span>:</span><br><span class="line">        RequestHandler_ping(ctxt);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> WebException(<span class="string">"unknown API"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> WebException(<span class="string">"unknown API"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>色々端折ってますが、だいたいこんな感じでUnityEditor側のサーバを起動します。</p>
+<p>次は実機側ですが、以下のような感じになります。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HostIO</span> : <span class="title">MonoBehaviour</span> &#123;</span><br><span class="line">  <span class="keyword">static</span> HostIO _instance = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">byte</span> _pinCode = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">static</span> StringBuilder _addressBase = <span class="keyword">new</span> StringBuilder(<span class="number">1024</span>);</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> _addressBaseRewindLength;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">bool</span> _connect;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">byte</span>[] _ip;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">readonly</span> <span class="keyword">string</span> _saveKey = <span class="string">"HostIO"</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">readonly</span> <span class="keyword">string</span> _savePINCodeKey = _saveKey + <span class="string">"_PINCode"</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">float</span> _wait = <span class="number">1.0f</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> HostIO Instance &#123;</span><br><span class="line">    <span class="keyword">get</span> &#123; <span class="keyword">return</span> _instance; &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span> PINCode &#123;</span><br><span class="line">    <span class="keyword">get</span> &#123; <span class="keyword">return</span> _pinCode; &#125;</span><br><span class="line">    <span class="keyword">set</span> &#123;</span><br><span class="line">      _pinCode = <span class="keyword">value</span>;</span><br><span class="line">      _addressBase.Clear();</span><br><span class="line">      _addressBase.Append(<span class="keyword">string</span>.Format(<span class="string">"http://&#123;0&#125;.&#123;1&#125;.&#123;2&#125;.&#123;3&#125;"</span>, _ip[<span class="number">0</span>], _ip[<span class="number">1</span>], _ip[<span class="number">2</span>], <span class="keyword">value</span>));</span><br><span class="line">      _addressBase.Append(<span class="string">":3751"</span>);</span><br><span class="line">      _addressBaseRewindLength = _addressBase.Length;</span><br><span class="line">      Debug.Log(<span class="string">"SERVER: "</span> + _addressBase.ToString());</span><br><span class="line">      _wait = <span class="number">0.0f</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> IsConnected &#123;</span><br><span class="line">    <span class="keyword">get</span> &#123; <span class="keyword">return</span> _connect; &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Awake</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line">    <span class="comment">// UnityEditor上で起動した場合は不要なので死ぬ</span></span><br><span class="line">    _ip = <span class="literal">null</span>;</span><br><span class="line">    Destroy(<span class="keyword">this</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    <span class="comment">// みんな大好きシングルトン</span></span><br><span class="line">    <span class="keyword">if</span> (_instance != <span class="literal">null</span>) &#123;</span><br><span class="line">      Destroy(<span class="keyword">this</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      _connect = <span class="literal">false</span>;</span><br><span class="line">      _instance = <span class="keyword">this</span>;</span><br><span class="line">      DontDestroyOnLoad(gameObject);</span><br><span class="line">      _ip = HostIOUtil.DetectLocalAddress();</span><br><span class="line">      PINCode = (<span class="keyword">byte</span>)PlayerPrefs.GetInt(_savePINCodeKey, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">OnDestroy</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (_instance == <span class="keyword">this</span>) &#123;</span><br><span class="line">      PlayerPrefs.SetInt(_savePINCodeKey, (<span class="keyword">int</span>)PINCode);</span><br><span class="line">      PlayerPrefs.Save();</span><br><span class="line">      _connect = <span class="literal">false</span>;</span><br><span class="line">      _instance = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    StartCoroutine(ConnectServer());</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 定期的にHTTPサーバにPingしてサーバが生きているかどうかチェックする</span></span><br><span class="line">  <span class="function">IEnumerator <span class="title">ConnectServer</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (PINCode != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> webreq = UnityWebRequest.Get(MakeAPIUrl(<span class="string">"/ping"</span>))) &#123;</span><br><span class="line">            <span class="keyword">yield</span> <span class="keyword">return</span> webreq.SendWebRequest();</span><br><span class="line">            <span class="keyword">if</span> (webreq.isNetworkError || webreq.isHttpError) &#123;</span><br><span class="line">              _connect = <span class="literal">false</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              _connect = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _connect = <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">yield</span> return new <span class="title">WaitForSecondsRealtime</span>(<span class="params"><span class="number">1.0f</span></span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 同期的にファイルを読む</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] <span class="title">LoadFile</span>(<span class="params"><span class="keyword">string</span> path</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> webreq = UnityWebRequest.Get(MakeAPIUrl(<span class="string">"/assets"</span> + path))) &#123;</span><br><span class="line">      <span class="keyword">var</span> <span class="keyword">async</span> = webreq.SendWebRequest();</span><br><span class="line">      <span class="keyword">while</span> (!<span class="keyword">async</span>.isDone) &#123;</span><br><span class="line">        Thread.Sleep(<span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">var</span> req = <span class="keyword">async</span>.webRequest;</span><br><span class="line">      <span class="keyword">if</span> (req.isNetworkError || req.isHttpError) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> req.downloadHandler.data;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 非同期的にファイルを読む</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> UnityWebRequestAsyncOperation <span class="title">LoadFileAsync</span>(<span class="params"><span class="keyword">string</span> path</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> webreq = UnityWebRequest.Get(MakeAPIUrl(<span class="string">"/assets"</span> + path))) &#123;</span><br><span class="line">      <span class="keyword">return</span> webreq.SendWebRequest();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>これまた色々端折ってますが、だいたいこんな感じです。</p>
+<p>注意点としては、 <code>Resources</code> などのように <code>UnityObject</code> として返ってくることがない点です。あくまで <code>byte[]</code> として読めるだけです。その後の処置に関しては、そこそこ苦労しています。</p>
+<p>いきなりソースをぶちまけてみましたが、簡単に流れを説明すると、</p>
+<ul>
+<li>UnityEditor側
+<ol>
+<li>EditorWindowを作る</li>
+<li>その中でHttpListenerを作り、待ち受けを開始する</li>
+<li>ホストのIPアドレスを取得しておき表示する</li>
+<li>HTTPリクエストがあったらそれに応じて処理する</li>
+</ol>
+</li>
+<li>実機側
+<ol>
+<li>指定されたIPアドレスと通信を開始する</li>
+<li>定期的にPingを発して通信状況を確認する</li>
+<li>何かしらファイルが読みたくなったらHTTPサーバに問い合わせる</li>
+</ol>
+</li>
+</ul>
+<p>実機側でのIPアドレス指定ですが、SRDebuggerを利用し、デバッグメニューから指定できるようにしてあります。また、一度指定したアドレスは <code>PlayerPrefs</code> に保存しておき、次回以降は使い回します（アドレス振り直しは頻繁に起こらないだろうという予測）。</p>
+<h2 id="具体的な用例">具体的な用例</h2>
+<ul>
+<li><a href="https://github.com/Tencent/xLua" target="_blank" rel="noopener">xLua</a>のようなスクリプトで処理を記述するゲームの場合、スクリプトを修正する度にビルドしてたら日が暮れるので、ホストPC上のスクリプトを更新したら実機側でそのままリロードできるようにしました。</li>
+<li><code>StreamingAssets</code> に埋め込むようなAssetBundleを更新する度にビルドしてたら……なので、リロードできるようにしました。</li>
+</ul>
+<h2 id="最後に">最後に</h2>
+<p>長々と書いてきましたが、今まで書いた内容はほぼ無効です。 <code>PlayerConnection</code> を使いましょう。もっと簡単に安定して通信が出来るはずです。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/UnityEditorConnection/" data-id="ckce0yt2u000j7bpk8e582bol" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-deferred_shading_on_mobile" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/03/29/deferred_shading_on_mobile/" class="article-date">
@@ -93,7 +205,8 @@
         <p>これは <a href="http://qiita.com/advent-calendar/2015/unity2" target="_blank" rel="noopener">Unity 2 Advent Calendar 2015</a> の18日目の記事です。</p>
 <p>17日目の記事は <a href="http://qiita.com/Kan_Kikuchi" target="_blank" rel="noopener">Kan_Kikuchi</a> さんの <a href="http://kan-kikuchi.hatenablog.com/entry/Asset40" target="_blank" rel="noopener">素材系のおすすめAsset38選</a> でした。</p>
 <p><strong>未検証ですが Unity2017.1.0f1 にて Metal での Deferred Rendering がサポートされたという話です。</strong></p>
-<h1 id="ご挨拶"><a href="#ご挨拶" class="headerlink" title="ご挨拶"></a>ご挨拶</h1><p><a href="https://oinkgames.com/" target="_blank" rel="noopener">株式会社オインクゲームズ</a> の <a href="https://twitter.com/fum1h1ro" target="_blank" rel="noopener">@fum1h1ro</a> です。</p>
+<h1>ご挨拶</h1>
+<p><a href="https://oinkgames.com/" target="_blank" rel="noopener">株式会社オインクゲームズ</a> の <a href="https://twitter.com/fum1h1ro" target="_blank" rel="noopener">@fum1h1ro</a> です。</p>
 <p>弊社はアナログゲームのイメージが強いのですが、実はデジタルゲームも作っています。</p>
 <ul>
 <li><a href="http://mujo.oinkgms.com/" target="_blank" rel="noopener">MUJO</a></li>
@@ -102,9 +215,11 @@
 </ul>
 <p><img src="/images/7ff7d744-aed0-f567-4737-69f4b6e54161.png" alt="Screen Shot 2015-12-11 at 19.50.06.png"></p>
 <p>幸いにして、伝説の旅団は AppStoreJP の BEST OF 2015 に選出されました。こちらもよろしくお願いします。</p>
-<h1 id="Mobile-でも-Deferred-Shading-がしたいです"><a href="#Mobile-でも-Deferred-Shading-がしたいです" class="headerlink" title="Mobile でも Deferred Shading がしたいです"></a>Mobile でも Deferred Shading がしたいです</h1><p>ところで、皆さんは Mobile でも Deferred Shading がしたいと思ったことはありませんか。</p>
+<h1>Mobile でも Deferred Shading がしたいです</h1>
+<p>ところで、皆さんは Mobile でも Deferred Shading がしたいと思ったことはありませんか。</p>
 <blockquote>
-<p>Deferred Shadingとは何ぞや？ってのはこの辺の記事を参考にしてください。<br><a href="http://game.watch.impress.co.jp/docs/series/3dcg/20090417_125909.html" target="_blank" rel="noopener">http://game.watch.impress.co.jp/docs/series/3dcg/20090417_125909.html</a></p>
+<p>Deferred Shadingとは何ぞや？ってのはこの辺の記事を参考にしてください。<br>
+<a href="http://game.watch.impress.co.jp/docs/series/3dcg/20090417_125909.html" target="_blank" rel="noopener">http://game.watch.impress.co.jp/docs/series/3dcg/20090417_125909.html</a></p>
 </blockquote>
 <p>僕はあります。</p>
 <p>Unity のバージョンが上がるにつれ、 Mobile と Desktop/Console における機能差が減りつつある昨近ですが、未だ Deferred Shading は対応されていません。</p>
@@ -114,10 +229,13 @@
 <p>ちなみに、エディタ上でも、Edit-&gt;Graphics Emulation が OpenGL ES 2.0 になっているとダメです。ちなみにこの設定、エディタが憶えていてくれないので、起動時に毎回手で直すのが地味に辛いです。</p>
 <p><img src="/images/634554ec-7f5c-f74e-4829-54ae14d4ccb7.png" alt="Screen Shot 2015-12-11 at 19.27.10.png"></p>
 <p>5.2 の頃から検証を始め、対応状況に残念がりつつも 5.3 ならきっと対応してくれるだろうから Advent Calendar に書くほどでもないと思ったのですが、 5.3 リリース版でもダメでした。なお、5.3.0f5 とかで急に対応され、この記事が無駄になることを切に祈ります。</p>
-<h2 id="どの機種から可能なのか"><a href="#どの機種から可能なのか" class="headerlink" title="どの機種から可能なのか"></a>どの機種から可能なのか</h2><p>iOS なら Metal に対応した端末、Android なら OpenGL ES 3.0 に対応した端末であれば、原理的には可能なはずです。具体的には、<code>SystemInfo.supportedRenderTargetCount</code> が2以上であることが条件です。</p>
+<h2 id="どの機種から可能なのか">どの機種から可能なのか</h2>
+<p>iOS なら Metal に対応した端末、Android なら OpenGL ES 3.0 に対応した端末であれば、原理的には可能なはずです。具体的には、<code>SystemInfo.supportedRenderTargetCount</code> が2以上であることが条件です。</p>
 <p>尚、今回は必ず対応機種であるということを前提にしていますが、実際に使う際は非対応端末時の処理が必要になると思います。</p>
-<h1 id="無理矢理実装してみる"><a href="#無理矢理実装してみる" class="headerlink" title="無理矢理実装してみる"></a>無理矢理実装してみる</h1><p>簡単ですが、独自実装 Deferred Shading を行う仕組みについて説明します。</p>
-<h2 id="描画パス"><a href="#描画パス" class="headerlink" title="描画パス"></a>描画パス</h2><p>流れとしては、</p>
+<h1>無理矢理実装してみる</h1>
+<p>簡単ですが、独自実装 Deferred Shading を行う仕組みについて説明します。</p>
+<h2 id="描画パス">描画パス</h2>
+<p>流れとしては、</p>
 <ol>
 <li>サブカメラと G-Buffer を用意</li>
 <li><code>OnPreCull()</code> で、サブカメラにメインカメラの設定をコピーしてレンダリング</li>
@@ -125,30 +243,30 @@
 <li>2に戻る</li>
 </ol>
 <p>という感じになります。</p>
-<h2 id="独自実装-Deferred-Shading-クラス"><a href="#独自実装-Deferred-Shading-クラス" class="headerlink" title="独自実装 Deferred Shading クラス"></a>独自実装 Deferred Shading クラス</h2><p>まず、エディタ上でも常に動作して欲しいので、<code>ExecuteInEditMode</code> を付けます。また、<code>OnRenderImage()</code> を使いたいので、 Camera コンポーネント必須にします。</p>
+<h2 id="独自実装-Deferred-Shading-クラス">独自実装 Deferred Shading クラス</h2>
+<p>まず、エディタ上でも常に動作して欲しいので、<code>ExecuteInEditMode</code> を付けます。また、<code>OnRenderImage()</code> を使いたいので、 Camera コンポーネント必須にします。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ExecuteInEditMode]</span><br><span class="line">[RequireComponent(typeof(Camera))]</span><br><span class="line">public class DeferredMaster : MonoBehaviour &#123;</span><br><span class="line">  const int RenderTargetCount &#x3D; 4;</span><br></pre></td></tr></table></figure>
-
-<h2 id="サブカメラと-G-Buffer-を用意"><a href="#サブカメラと-G-Buffer-を用意" class="headerlink" title="サブカメラと G-Buffer を用意"></a>サブカメラと G-Buffer を用意</h2><p><code>ExecuteInEditMode</code> が付いている場合、<code>OnEnable()</code> で初期化を行います。</p>
+<h2 id="サブカメラと-G-Buffer-を用意">サブカメラと G-Buffer を用意</h2>
+<p><code>ExecuteInEditMode</code> が付いている場合、<code>OnEnable()</code> で初期化を行います。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">void OnEnable() &#123;</span><br><span class="line">  if (!isSupported) return;</span><br><span class="line">  initialize();</span><br><span class="line">&#125;</span><br><span class="line">void initialize() &#123;</span><br><span class="line">  if (_initialized) return;</span><br><span class="line">  this.screenWidth &#x3D; Screen.width;</span><br><span class="line">  this.screenHeight &#x3D; Screen.height;</span><br><span class="line">  _mainCamera &#x3D; gameObject.GetComponent&lt;Camera&gt;();</span><br><span class="line">  _transform &#x3D; transform;</span><br><span class="line">  create_materials(); &#x2F;&#x2F; 統合用マテリアルの生成</span><br><span class="line">  create_camera(); &#x2F;&#x2F; サブカメラ生成</span><br><span class="line">  create_rt(); &#x2F;&#x2F; G-Buffer生成</span><br><span class="line">  _initialized &#x3D; true;</span><br><span class="line">&#125;</span><br><span class="line">void create_materials() &#123;</span><br><span class="line">  _uniteMaterial &#x3D; CreateMaterial(&quot;uniteMat&quot;, Shader.Find(&quot;Hidden&#x2F;Oink&#x2F;DeferredUnite&quot;));</span><br><span class="line">&#125;</span><br><span class="line">void create_camera() &#123;</span><br><span class="line">  var obj &#x3D; new GameObject(&quot;__deferred camera&quot;);</span><br><span class="line">  obj.transform.parent &#x3D; _transform;</span><br><span class="line">  obj.transform.localPosition &#x3D; Vector3.zero;</span><br><span class="line">  obj.transform.localRotation &#x3D; Quaternion.identity;</span><br><span class="line">  obj.hideFlags &#x3D; HideFlags.DontSave;</span><br><span class="line">  _deferredCamera &#x3D; obj.AddComponent&lt;Camera&gt;();</span><br><span class="line">  _deferredCamera.enabled &#x3D; false;</span><br><span class="line">&#125;</span><br><span class="line">void create_rt() &#123;</span><br><span class="line">  for (int i &#x3D; 0; i &lt; RenderTargetCount; ++i) &#123;</span><br><span class="line">    _mrtTex[i] &#x3D; CreateRenderTexture(this.screenWidth, this.screenHeight, 0, RenderTextureFormat.ARGB32);</span><br><span class="line">    _mrtRB[i] &#x3D; _mrtTex[i].colorBuffer;</span><br><span class="line">  &#125;</span><br><span class="line">  _mrtDepth &#x3D; CreateRenderTexture(this.screenWidth, this.screenHeight, 24, RenderTextureFormat.Depth);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>Unity 組み込みの Deferred Shading では当然 G-Buffer をシステム側で確保してくれるのですが、今回の場合は自分で用意する必要があります。その際、メインカメラにその設定をすると、 GUI やらに問題が出る場合があるので、別カメラによるレンダリングを行います。</p>
-<h2 id="OnPreCull-でサブカメラにメインカメラの設定をコピーしてレンダリング"><a href="#OnPreCull-でサブカメラにメインカメラの設定をコピーしてレンダリング" class="headerlink" title="OnPreCull() でサブカメラにメインカメラの設定をコピーしてレンダリング"></a><code>OnPreCull()</code> でサブカメラにメインカメラの設定をコピーしてレンダリング</h2><p>ここから先、エディタでは更新があった時しか呼ばれませんが、実行中は毎フレーム呼ばれます。</p>
+<h2 id="OnPreCull-でサブカメラにメインカメラの設定をコピーしてレンダリング"><code>OnPreCull()</code> でサブカメラにメインカメラの設定をコピーしてレンダリング</h2>
+<p>ここから先、エディタでは更新があった時しか呼ばれませんが、実行中は毎フレーム呼ばれます。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">void OnPreCull() &#123;</span><br><span class="line">  if (_initialized) &#123;</span><br><span class="line">    _deferredCamera.CopyFrom(_mainCamera); &#x2F;&#x2F; メインカメラの設定をサブカメラにコピー</span><br><span class="line">    _deferredCamera.SetTargetBuffers(_mrtRB, _mrtDepth.depthBuffer); &#x2F;&#x2F; サブカメラのレンダーターゲットを設定</span><br><span class="line">    _deferredCamera.Render(); &#x2F;&#x2F; サブカメラレンダリング</span><br><span class="line">    &#x2F;&#x2F; メインカメラは何も書かなくて良いので、マスクをクリア、かつ値を保存しておく</span><br><span class="line">    _cullingMask &#x3D; _mainCamera.cullingMask;</span><br><span class="line">    _mainCamera.cullingMask &#x3D; 0;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">void OnPostRender() &#123;</span><br><span class="line">  if (_initialized) &#123;</span><br><span class="line">    _mainCamera.cullingMask &#x3D; _cullingMask; &#x2F;&#x2F; マスクを戻してやる</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>これで、描画されるモデルのマテリアルを MRT 対応シェーダにしておくと、先ほど用意した G-Buffer に値が書き込まれるようになります。</p>
 <p><img src="/images/a0a7538d-b7d8-1025-0b2f-5f8ba3d46158.png" alt="Screen Shot 2015-12-11 at 20.41.42.png"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">void OnGUI() &#123;</span><br><span class="line">  if (_initialized) &#123;</span><br><span class="line">    float w &#x3D; Screen.width &#x2F; 6;</span><br><span class="line">    float h &#x3D; Screen.height &#x2F; 6;</span><br><span class="line">    for (int i &#x3D; 0; i &lt; RenderTargetCount; ++i) &#123;</span><br><span class="line">      if (_mrtTex[i] !&#x3D; null) GUI.DrawTexture(new Rect(0, i*h, w, h), _mrtTex[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>デバッグ時には、このようにテクスチャの中身を確認すると楽です。</p>
-<h3 id="MRT-対応シェーダ"><a href="#MRT-対応シェーダ" class="headerlink" title="MRT 対応シェーダ"></a>MRT 対応シェーダ</h3><p>素直に <code>Camera.renderingPath</code> を設定しても反映されないのですが、実はシェーダの方で MRT 対応のシェーダを書けば、<code>RenderingPath.Forward</code> のまま複数のバッファに出力することが可能になります。</p>
+<h3 id="MRT-対応シェーダ">MRT 対応シェーダ</h3>
+<p>素直に <code>Camera.renderingPath</code> を設定しても反映されないのですが、実はシェーダの方で MRT 対応のシェーダを書けば、<code>RenderingPath.Forward</code> のまま複数のバッファに出力することが可能になります。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 出力先の定義</span><br><span class="line">struct Output &#123;</span><br><span class="line">  fixed4 rt0 : COLOR0;</span><br><span class="line">  fixed4 rt1 : COLOR1;</span><br><span class="line">  fixed4 rt2 : COLOR2;</span><br><span class="line">  fixed4 rt3 : COLOR3;</span><br><span class="line">&#125;;</span><br><span class="line">&#x2F;&#x2F; フラグメントシェーダ</span><br><span class="line">Output frag(v2f f) &#123;</span><br><span class="line">  Output o;</span><br><span class="line">  o.rt0 &#x3D; fixed4(((normalize(f.nml) * 0.5 + fixed3(0.5, 0.5, 0.5)) * 0.95), _Roughness); &#x2F;&#x2F; RGB:Normal A:Roughness</span><br><span class="line">  o.rt1 &#x3D; fixed4((tex2D(_MainTex, f.uv) * _Color).xyz, _Metallic); &#x2F;&#x2F; RGB:Diffuse A:Metallic</span><br><span class="line">  o.rt2 &#x3D; fixed4(1.0f, 0.0f, 0.0f, 1.0f); &#x2F;&#x2F; 未使用</span><br><span class="line">  o.rt3 &#x3D; fixed4(0.0f, 1.0f, 1.0f, 1.0f); &#x2F;&#x2F; 未使用</span><br><span class="line">  return o;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>フラグメントシェーダの返値を、上記のように複数にしてやります。<code>Lighting</code> 等は少しでも負荷を軽くするためにオフにしておく方が良いでしょう。</p>
-<h2 id="メインカメラの-OnRenderImage-で複数バッファを統合"><a href="#メインカメラの-OnRenderImage-で複数バッファを統合" class="headerlink" title="メインカメラの OnRenderImage() で複数バッファを統合"></a>メインカメラの <code>OnRenderImage()</code> で複数バッファを統合</h2><p>最後に、メインカメラの <code>OnRenderImage()</code> で G-Buffer を統合します。</p>
+<h2 id="メインカメラの-OnRenderImage-で複数バッファを統合">メインカメラの <code>OnRenderImage()</code> で複数バッファを統合</h2>
+<p>最後に、メインカメラの <code>OnRenderImage()</code> で G-Buffer を統合します。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">void OnRenderImage(RenderTexture source, RenderTexture destination) &#123;</span><br><span class="line">  if (!_initialized) &#123; &#x2F;&#x2F; 非対応端末の場合は、そのままコピーしてお終い</span><br><span class="line">    Graphics.Blit(source, destination);</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  &#x2F;&#x2F;    :</span><br><span class="line">  &#x2F;&#x2F; 長いので中略</span><br><span class="line">  &#x2F;&#x2F;    :</span><br><span class="line">  _uniteMaterial.SetVector(&quot;_CameraWS&quot;, _mainCamera.transform.position);</span><br><span class="line">  &#x2F;&#x2F; G-Buffer</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_RT0&quot;, _mrtTex[0]);</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_RT1&quot;, _mrtTex[1]);</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_RT2&quot;, _mrtTex[2]);</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_RT3&quot;, _mrtTex[3]);</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_DepthTexture&quot;, _mrtDepth);</span><br><span class="line">  _uniteMaterial.SetMatrix(&quot;_worldToCameraMatrix&quot;, _deferredCamera.worldToCameraMatrix);</span><br><span class="line">  &#x2F;&#x2F; ライトの設定を渡してレンダリング</span><br><span class="line">  _uniteMaterial.SetColor(&quot;_lightColor&quot;, new Color(1.0f, 1.0f, 1.0f, 1.0f));</span><br><span class="line">  _uniteMaterial.SetVector(&quot;_lightPos&quot;, _mainCamera.worldToCameraMatrix * new Vector4(0, 5, -5, 1));</span><br><span class="line">  Graphics.Blit(source, destination, _uniteMaterial, 0);</span><br><span class="line">  &#x2F;&#x2F; ライトの数に応じて複数回レンダリングする</span><br><span class="line">  &#x2F;&#x2F;_uniteMaterial.SetColor(&quot;_lightColor&quot;, new Color(0.5f, 0.5f, 0.5f, 1.0f));</span><br><span class="line">  &#x2F;&#x2F;_uniteMaterial.SetVector(&quot;_lightPos&quot;, _mainCamera.worldToCameraMatrix * new Vector4(-5, 1, 5, 1));</span><br><span class="line">  &#x2F;&#x2F;Graphics.Blit(source, destination, _uniteMaterial, 1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>Deferred Shading において、 G-Buffer の統合は即ちライティングでもあるため、ライトの数に応じてレンダリング回数を調整します。</p>
-<h2 id="物理ベースシェーディング"><a href="#物理ベースシェーディング" class="headerlink" title="物理ベースシェーディング"></a>物理ベースシェーディング</h2><p>統合用のシェーダは長いので省略しますが、物理ベースシェーディングを実装するところまで頑張ってみました。</p>
+<h2 id="物理ベースシェーディング">物理ベースシェーディング</h2>
+<p>統合用のシェーダは長いので省略しますが、物理ベースシェーディングを実装するところまで頑張ってみました。</p>
 <p><img src="/images/eac348bf-813e-c821-97e2-9c3cd41b39b8.png" alt="Screen Shot 2015-12-15 at 20.05.28.png"></p>
 <p><img src="/images/b8acc853-df22-5a11-e02d-220ed864bb01.png" alt="Screen Shot 2015-12-15 at 20.05.59.png"></p>
 <p><img src="/images/37f1a5df-97b0-8acb-94cb-d7ac63da8ede.png" alt="Screen Shot 2015-12-15 at 20.06.19.png"></p>
@@ -156,7 +274,8 @@
 <p>物理ベースシェーディングは、 Forward Shading でも出来ることなので、説明は割愛します。</p>
 <p><img src="/images/811b3049-5f3f-c70d-b290-c1ded434696c.jpeg" alt="Slack for iOS Upload.png.jpeg"></p>
 <p>こちらは iPhone6s でのスクリーンショットです。</p>
-<h1 id="問題点"><a href="#問題点" class="headerlink" title="問題点"></a>問題点</h1><p>これまでの方法で、 Mobile であっても強制的に Deferred Shading を行うことが出来るようになりましたが、いくつか問題があります。</p>
+<h1>問題点</h1>
+<p>これまでの方法で、 Mobile であっても強制的に Deferred Shading を行うことが出来るようになりましたが、いくつか問題があります。</p>
 <ul>
 <li>半透明の扱い</li>
 <li>ライトの指定方法</li>
@@ -172,27 +291,30 @@
 <p><img src="/images/e9400f90-337d-fd34-f470-4fdc08abaa56.png" alt="Screen Shot 2015-12-11 at 20.48.33.png"></p>
 <p>最初の G-Buffer に出力した色がそのまま出てしまいます。まあ、このままでも作業出来なくもないのですが、流石に辛いと思われます。</p>
 <p>まだ実装していないのですが、エディタ上であれば Unity 組み込みの Deferred Shading が iOS プラットフォームでも機能することを利用して、エディタではそちらで処理し、実機時のみ独自実装 Deferred Shading にすればいいのかなと考えています。ただ、その際は組み込み Deferred Shading のシェーダ等も独自実装の方に出力結果を合わせておく必要があります。</p>
-<h1 id="罠"><a href="#罠" class="headerlink" title="罠"></a>罠</h1><ul>
+<h1>罠</h1>
+<ul>
 <li>エディタ上では、Standalone の PlayerSettings に依存</li>
 </ul>
 <p>何故か Standalone Platform(Win/Mac/Linux) の PlayerSettings にある RenderingPath が、Deferred になっていると正常に動作しません。罠としか思えません。これで半日潰しました。</p>
-<h1 id="最後に"><a href="#最後に" class="headerlink" title="最後に"></a>最後に</h1><p>今回の変則的な手法のようなものも許容してくれるのは、 Unity のレンダリング周りがシンプルであるが故の長所だと思います。サブカメラを使う方法は、画面クリア設定等に気を遣わないと無駄な処理が発生する場合がありますが、うまく使うと色々応用が利きます。</p>
-<p>独自実装 Deferred Shading については、問題点も多く、実用まで持っていくには時間が掛かりそう、かつ本体で対応されて水の泡という未来しか見えません(‘A`)</p>
+<h1>最後に</h1>
+<p>今回の変則的な手法のようなものも許容してくれるのは、 Unity のレンダリング周りがシンプルであるが故の長所だと思います。サブカメラを使う方法は、画面クリア設定等に気を遣わないと無駄な処理が発生する場合がありますが、うまく使うと色々応用が利きます。</p>
+<p>独自実装 Deferred Shading については、問題点も多く、実用まで持っていくには時間が掛かりそう、かつ本体で対応されて水の泡という未来しか見えません('A`)</p>
 <p>そんな結論かよ！といったところで、今回の記事は終わります。</p>
-<p>ありがとうございました(‘ω`)</p>
-<h1 id="追記"><a href="#追記" class="headerlink" title="追記"></a>追記</h1><ul>
+<p>ありがとうございました('ω`)</p>
+<h1>追記</h1>
+<ul>
 <li>5.3.1f1 NG</li>
 <li>5.4.0b1 NG</li>
 <li>5.3.1p3 NG</li>
 <li>5.4.0b2 NG</li>
 </ul>
 <hr>
-<p>明日は、 <a href="http://qiita.com/wotakuro" target="_blank" rel="noopener">wotakuro</a> さんの <a href="URIはあとで設定する">UnityでMoverio BT-200向けアプリ作った話とか</a> です。</p>
+<p>明日は、 <a href="http://qiita.com/wotakuro" target="_blank" rel="noopener">wotakuro</a> さんの <a href="URI%E3%81%AF%E3%81%82%E3%81%A8%E3%81%A7%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B">UnityでMoverio BT-200向けアプリ作った話とか</a> です。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/deferred_shading_on_mobile/" data-id="ckbhrm7zv000klkpkaqdufpto" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/deferred_shading_on_mobile/" data-id="ckce0yt2v000l7bpk08ajflyi" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
@@ -226,26 +348,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="はじめに"><a href="#はじめに" class="headerlink" title="はじめに"></a>はじめに</h1><p>こちらの記事は先日行われた”<a href="https://atnd.org/events/100606" target="_blank" rel="noopener">第四十八回Unityもくもく会</a>“にて発表したものの、詳細解説になります。</p>
-<h1 id="ECSって何だろう"><a href="#ECSって何だろう" class="headerlink" title="ECSって何だろう"></a>ECSって何だろう</h1><ul>
+        <h1>はじめに</h1>
+<p>こちらの記事は先日行われた&quot;<a href="https://atnd.org/events/100606" target="_blank" rel="noopener">第四十八回Unityもくもく会</a>&quot;にて発表したものの、詳細解説になります。</p>
+<h1>ECSって何だろう</h1>
+<ul>
 <li>Entity Component Systemの略</li>
 <li>Unityに新しく追加される情報処理形態の一つ</li>
 <li>ECS自体は昔からあるゲーム内オブジェクト処理記述方法の一つ[^1]</li>
 </ul>
-<h1 id="GameObject-MonoBehaviourの頃と何が違うのか"><a href="#GameObject-MonoBehaviourの頃と何が違うのか" class="headerlink" title="GameObject+MonoBehaviourの頃と何が違うのか"></a>GameObject+MonoBehaviourの頃と何が違うのか</h1><ul>
-<li>中の人達が解説してくれているので、そちらを当たるといいです[^3]<ul>
+<h1>GameObject+MonoBehaviourの頃と何が違うのか</h1>
+<ul>
+<li>中の人達が解説してくれているので、そちらを当たるといいです[^3]
+<ul>
 <li><a href="https://www.slideshare.net/UnityTechnologiesJapan/cedec2018cpu-entity-component-systemecs" target="_blank" rel="noopener">【CEDEC2018】CPUを使い切れ！ Entity Component System（通称ECS） が切り開く新しいプログラミング</a></li>
 <li><a href="http://tsubakit1.hateblo.jp/entry/2018/03/25/180203" target="_blank" rel="noopener">【Unity】Unity 2018のEntity Component System（通称ECS）について（１）</a></li>
 </ul>
 </li>
 </ul>
-<h1 id="実際の仕組みを知りたいな"><a href="#実際の仕組みを知りたいな" class="headerlink" title="実際の仕組みを知りたいな"></a>実際の仕組みを知りたいな</h1><ul>
-<li>ソースを読む<ul>
+<h1>実際の仕組みを知りたいな</h1>
+<ul>
+<li>ソースを読む
+<ul>
 <li>パッケージマネージャからEntitiesを追加</li>
 <li><code>${ProjectFolder}/Library/PackageCache/com.unity.entities@(バージョン)/Unity.Entities</code> 以下にそのままソースが入っています</li>
 </ul>
 </li>
-<li>読んでみてだいたい分かったこと<ul>
+<li>読んでみてだいたい分かったこと
+<ul>
 <li>ECSはJobSystem+PlayerLoopSystemの上に構築されている</li>
 <li>ネイティブプラグインはなし</li>
 <li>Unity本体の隠し機能などは利用されていない</li>
@@ -254,114 +383,136 @@
 </ul>
 </li>
 </ul>
-<h1 id="だいたい分かったことの詳細"><a href="#だいたい分かったことの詳細" class="headerlink" title="だいたい分かったことの詳細"></a>だいたい分かったことの詳細</h1><ul>
-<li>JobSystem+PlayerLoopSystemの上に構築されている<ul>
-<li>登録されたEntityやComponentに対する処理<ul>
+<h1>だいたい分かったことの詳細</h1>
+<ul>
+<li>JobSystem+PlayerLoopSystemの上に構築されている
+<ul>
+<li>登録されたEntityやComponentに対する処理
+<ul>
 <li>PlayerLoopSystemでUpdate()の辺りに差し込まれ、毎フレーム自動で実行される</li>
 </ul>
 </li>
-<li>複数のEntityに対する処理<ul>
+<li>複数のEntityに対する処理
+<ul>
 <li>JobSystemでUpdate</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>ネイティプラグインはなし<ul>
+<li>ネイティプラグインはなし
+<ul>
 <li>パッケージ内は</li>
 <li>依存パッケージまでは追わず</li>
 </ul>
 </li>
-<li>Unity本体の隠し機能などは利用されていない<ul>
+<li>Unity本体の隠し機能などは利用されていない
+<ul>
 <li>見た感じ</li>
 </ul>
 </li>
 <li>unsafe祭り</li>
-<li>メモリ確保はNative系<ul>
+<li>メモリ確保はNative系
+<ul>
 <li>上記二点のお陰で、非常に読みにくいソースになっている</li>
 </ul>
 </li>
 </ul>
-<h1 id="だいたい分かったことから思いついたこと"><a href="#だいたい分かったことから思いついたこと" class="headerlink" title="だいたい分かったことから思いついたこと"></a>だいたい分かったことから思いついたこと</h1><ul>
+<h1>だいたい分かったことから思いついたこと</h1>
+<ul>
 <li>自分で実装できるんじゃない？</li>
 </ul>
-<h1 id="してみました"><a href="#してみました" class="headerlink" title="してみました"></a>してみました</h1><p><a href="https://github.com/fum1h1ro/SimpleECS" target="_blank" rel="noopener">https://github.com/fum1h1ro/SimpleECS</a></p>
+<h1>してみました</h1>
+<p><a href="https://github.com/fum1h1ro/SimpleECS" target="_blank" rel="noopener">https://github.com/fum1h1ro/SimpleECS</a></p>
 <p>Unity2018.3.0b5で作業しましたが、特殊なものはNativeCollectionくらいしか使ってないので、2018.1辺りでも動くはずです。</p>
 <p><img src="/images/993d6c0a-aacf-16fc-75ab-fe3efb2568ec.png" alt="Screen Shot 2018-10-19 at 12.07.59.png"></p>
 <p>サンプルとして、100x100=10,000個のCubeをサインカーブで動かしています。</p>
 <p>また同等のものを、10,000個のGameObject+MonoBehaviourで実装しており、ボタンを押すことで切り替えることが出来るようになってます。</p>
-<h1 id="簡単な解説"><a href="#簡単な解説" class="headerlink" title="簡単な解説"></a>簡単な解説</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">	void Awake() &#123;</span><br><span class="line">		_world &#x3D; new World();</span><br><span class="line">		var archeType &#x3D; _world.ArcheTypeManager.GetOrCreateArcheType(typeof(PositionData), typeof(RotationData));</span><br><span class="line">		var xOrigin &#x3D; -(Width * 0.5f);</span><br><span class="line">		var yOrigin &#x3D; -(Height * 0.5f);</span><br><span class="line">		for (int y &#x3D; 0; y &lt; Height; ++y) &#123;</span><br><span class="line">			for (int x &#x3D; 0; x &lt; Width; ++x) &#123;</span><br><span class="line">				var entity &#x3D; _world.EntityManager.Create(archeType);</span><br><span class="line">				_world.EntityManager.SetComponentData&lt;PositionData&gt;(entity, new PositionData()&#123; pos &#x3D; new Vector3(xOrigin+x, 0, yOrigin+y) &#125;);</span><br><span class="line">				_world.EntityManager.SetComponentData&lt;RotationData&gt;(entity, new RotationData()&#123; rot &#x3D; Quaternion.identity &#125;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		_matrices &#x3D; new Matrix4x4[ObjectCount];</span><br><span class="line">		_moveSystem &#x3D; new MoveSystem(_world.ArcheTypeManager.GetOrCreateArcheType(typeof(PositionData)));</span><br><span class="line">		_makeMatrixSystem &#x3D; new MakeMatrixSystem(archeType);</span><br><span class="line">		_makeMatrixSystem.Matrices &#x3D; _matrices;</span><br><span class="line">		_makeMatrixSystem.MatricesSegments &#x3D; _matricesSegments;</span><br><span class="line"></span><br><span class="line">		int count &#x3D; ObjectCount;</span><br><span class="line">		while (count &gt; 0) &#123;</span><br><span class="line">			var len &#x3D; Mathf.Min(count, 1023);</span><br><span class="line">			var segment &#x3D; new Matrix4x4[len];</span><br><span class="line">			_matricesSegments.Add(segment);</span><br><span class="line">			count -&#x3D; len;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	void OnDestroy() &#123;</span><br><span class="line">		_world.Dispose();</span><br><span class="line">	&#125;</span><br><span class="line">	void Update() &#123;</span><br><span class="line">		_moveSystem.Time &#x3D; Time.realtimeSinceStartup;</span><br><span class="line">		_world.Dispatch(_moveSystem);</span><br><span class="line">		_world.Dispatch(_makeMatrixSystem);</span><br><span class="line">#if true</span><br><span class="line">		foreach (var mtxs in _matricesSegments) &#123;</span><br><span class="line">			Graphics.DrawMeshInstanced(_mesh, 0, _material, mtxs, mtxs.Length, null, ShadowCastingMode.Off, false);</span><br><span class="line">		&#125;</span><br><span class="line">#else</span><br><span class="line">		foreach (var mtxs in _matricesSegments) &#123;</span><br><span class="line">			foreach (var mtx in mtxs) &#123;</span><br><span class="line">				Graphics.DrawMesh(_mesh, mtx, _material, 0, null, 0, null, ShadowCastingMode.Off, false);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">#endif</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
+<h1>簡単な解説</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">	void Awake() &#123;</span><br><span class="line">		_world &#x3D; new World();</span><br><span class="line">		var archeType &#x3D; _world.ArcheTypeManager.GetOrCreateArcheType(typeof(PositionData), typeof(RotationData));</span><br><span class="line">		var xOrigin &#x3D; -(Width * 0.5f);</span><br><span class="line">		var yOrigin &#x3D; -(Height * 0.5f);</span><br><span class="line">		for (int y &#x3D; 0; y &lt; Height; ++y) &#123;</span><br><span class="line">			for (int x &#x3D; 0; x &lt; Width; ++x) &#123;</span><br><span class="line">				var entity &#x3D; _world.EntityManager.Create(archeType);</span><br><span class="line">				_world.EntityManager.SetComponentData&lt;PositionData&gt;(entity, new PositionData()&#123; pos &#x3D; new Vector3(xOrigin+x, 0, yOrigin+y) &#125;);</span><br><span class="line">				_world.EntityManager.SetComponentData&lt;RotationData&gt;(entity, new RotationData()&#123; rot &#x3D; Quaternion.identity &#125;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		_matrices &#x3D; new Matrix4x4[ObjectCount];</span><br><span class="line">		_moveSystem &#x3D; new MoveSystem(_world.ArcheTypeManager.GetOrCreateArcheType(typeof(PositionData)));</span><br><span class="line">		_makeMatrixSystem &#x3D; new MakeMatrixSystem(archeType);</span><br><span class="line">		_makeMatrixSystem.Matrices &#x3D; _matrices;</span><br><span class="line">		_makeMatrixSystem.MatricesSegments &#x3D; _matricesSegments;</span><br><span class="line"></span><br><span class="line">		int count &#x3D; ObjectCount;</span><br><span class="line">		while (count &gt; 0) &#123;</span><br><span class="line">			var len &#x3D; Mathf.Min(count, 1023);</span><br><span class="line">			var segment &#x3D; new Matrix4x4[len];</span><br><span class="line">			_matricesSegments.Add(segment);</span><br><span class="line">			count -&#x3D; len;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	void OnDestroy() &#123;</span><br><span class="line">		_world.Dispose();</span><br><span class="line">	&#125;</span><br><span class="line">	void Update() &#123;</span><br><span class="line">		_moveSystem.Time &#x3D; Time.realtimeSinceStartup;</span><br><span class="line">		_world.Dispatch(_moveSystem);</span><br><span class="line">		_world.Dispatch(_makeMatrixSystem);</span><br><span class="line">#if true</span><br><span class="line">		foreach (var mtxs in _matricesSegments) &#123;</span><br><span class="line">			Graphics.DrawMeshInstanced(_mesh, 0, _material, mtxs, mtxs.Length, null, ShadowCastingMode.Off, false);</span><br><span class="line">		&#125;</span><br><span class="line">#else</span><br><span class="line">		foreach (var mtxs in _matricesSegments) &#123;</span><br><span class="line">			foreach (var mtx in mtxs) &#123;</span><br><span class="line">				Graphics.DrawMesh(_mesh, mtx, _material, 0, null, 0, null, ShadowCastingMode.Off, false);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">#endif</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <p>コメントが皆無で申し訳ないのですが、<code>Awake()</code>にて各種の準備を行って、<code>Update()</code>でEntityの更新を行うようになっています。</p>
 <p><code>World</code>クラスは本家と同じで、<code>Entity</code>を束ねる役目を果たしています。クラス名は本家に近いものになっていますが、自動呼び出しなどがないので、自分で更新を呼んでやる必要があります。</p>
 <p><code>MoveSystem</code>で位置情報を更新し、<code>MakeMatrixSystem</code>で<code>Matrix4x4</code>を作っています。</p>
 <p>描画部分が変な感じのループになっているのは、<code>Graphics.DrawMeshInstanced()</code>が、1023個までしか受け付けてくれないため、10,000個を1023ずつ分割して描画しているためです。[^2]</p>
-<h1 id="実装"><a href="#実装" class="headerlink" title="実装"></a>実装</h1><p>ソースを見てもらうとわかると思いますが、800行程度の1ファイルに収まっています。</p>
+<h1>実装</h1>
+<p>ソースを見てもらうとわかると思いますが、800行程度の1ファイルに収まっています。</p>
 <p>（詳しい説明を書く予定だった）</p>
-<h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p><img src="/images/a9fc9f2a-9781-f0c0-417b-8519dd779728.png" alt="Screen Shot 2018-10-19 at 18.19.26.png"></p>
+<h1>性能</h1>
+<p><img src="/images/a9fc9f2a-9781-f0c0-417b-8519dd779728.png" alt="Screen Shot 2018-10-19 at 18.19.26.png"></p>
 <p><img src="/images/28e9c39c-ddc4-042d-8369-70fa2575cf9a.png" alt="Screen Shot 2018-10-19 at 18.19.46.png"></p>
 <p>ざっくりですが、エディタ上で見ると、10,000個の<code>MonoBehaviour</code>よりは早いようです。しかし、これは皆さんご存じの通り、<a href="https://blogs.unity3d.com/jp/2015/12/23/1k-update-calls/" target="_blank" rel="noopener">Update()を10000回呼ぶ</a>問題です。</p>
 <p>ちなみに、エディタ上で<code>NativeArray</code>にアクセスする際にはチェックが範囲チェックが入ります。ビルドするとその辺が消えるらしいので、もっと早くなります。</p>
 <p>また、ECSの強みはSOAによるキャッシュミスの削減ですので、呼び出し時間も大切ですが、キャッシュミスの削減が実現されているかどうかをチェックする必要があります。</p>
 <p><img src="/images/0fcc2459-0b72-a12c-d324-bd534bb677d9.png" alt="Screen Shot 2018-10-19 at 18.33.12.png"></p>
 <p>ビルドし、<code>Instruments.app</code>で測ってみます。上記の設定で測れているのかは確信がないのですが、L2キャッシュのリクエストのミスなのであってる？知ってる人がいたら教えてください。</p>
-<p>SimpleECSの場合。<br><img src="/images/947bdb1b-27e1-0c0c-a89a-4fce0fd020af.png" alt="Screen Shot 2018-10-19 at 18.36.56.png"></p>
-<p>MonoBehaviourの場合。<br><img src="/images/b4739b7e-3304-dc68-881b-64c21ec2309c.png" alt="Screen Shot 2018-10-19 at 18.39.31.png"></p>
+<p>SimpleECSの場合。<br>
+<img src="/images/947bdb1b-27e1-0c0c-a89a-4fce0fd020af.png" alt="Screen Shot 2018-10-19 at 18.36.56.png"></p>
+<p>MonoBehaviourの場合。<br>
+<img src="/images/b4739b7e-3304-dc68-881b-64c21ec2309c.png" alt="Screen Shot 2018-10-19 at 18.39.31.png"></p>
 <table>
 <thead>
 <tr>
 <th>type</th>
-<th align="right">min</th>
-<th align="right">max</th>
+<th style="text-align:right">min</th>
+<th style="text-align:right">max</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>SimpleECS</td>
-<td align="right">21</td>
-<td align="right">62</td>
+<td style="text-align:right">21</td>
+<td style="text-align:right">62</td>
 </tr>
 <tr>
 <td>MonoBehaviour</td>
-<td align="right">57</td>
-<td align="right">89</td>
+<td style="text-align:right">57</td>
+<td style="text-align:right">89</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>び、微妙。</p>
 <p>微妙ついでに<code>L1D.REPLACEMENT</code>もカウントしてみます。</p>
-<p>SimpleECS<br><img src="/images/d30dc2ac-4191-cacb-db56-0f969f1b8f68.png" alt="Screen Shot 2018-10-19 at 18.44.16.png"></p>
-<p>MonoBehaviour<br><img src="/images/b2037569-14c9-38a8-af2a-86aedf105feb.png" alt="Screen Shot 2018-10-19 at 18.44.51.png"></p>
+<p>SimpleECS<br>
+<img src="/images/d30dc2ac-4191-cacb-db56-0f969f1b8f68.png" alt="Screen Shot 2018-10-19 at 18.44.16.png"></p>
+<p>MonoBehaviour<br>
+<img src="/images/b2037569-14c9-38a8-af2a-86aedf105feb.png" alt="Screen Shot 2018-10-19 at 18.44.51.png"></p>
 <table>
 <thead>
 <tr>
 <th>type</th>
-<th align="right">min</th>
-<th align="right">max</th>
+<th style="text-align:right">min</th>
+<th style="text-align:right">max</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>SimpleECS</td>
-<td align="right">12</td>
-<td align="right">30</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">30</td>
 </tr>
 <tr>
 <td>MonoBehaviour</td>
-<td align="right">37</td>
-<td align="right">57</td>
+<td style="text-align:right">37</td>
+<td style="text-align:right">57</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>数値は減ってるな。うん。</p>
-<h1 id="まとめ"><a href="#まとめ" class="headerlink" title="まとめ"></a>まとめ</h1><ul>
+<h1>まとめ</h1>
+<ul>
 <li>ここまで一切触れてきてませんが、JobSystemは使っていません。なので、対応すればもっと早くなるはず。対応も難しくないはず</li>
 <li>性能面よりも、コンポーネントを付けたりする際にどういうメモリレイアウトになってるのかを知りたかった</li>
 <li>そしてそれは果たされたし、自分で同じように実装してみて面倒くささがわかった</li>
 <li>SharedComponentとか本家にある便利機能は未実装</li>
 <li>unsafeなコードを書いていると、C++でも書いているんじゃないかという気分になってくる</li>
 </ul>
-<p>[^1]: 最古は1998らしい <a href="https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system</a><br>[^3]: 全然関係ないですけど、公式的には”Entity Component System(通称ECS)”って書く決まりでもあるんですかね<br>[^2]: こういう場合は <code>Graphics.DrawMeshInstancedIndirect()</code>すると良いっぽいですが、そこまでは気力がなかった</p>
+<p>[^1]: 最古は1998らしい <a href="https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Entity–component–system</a><br>
+[^3]: 全然関係ないですけど、公式的には&quot;Entity Component System(通称ECS)&quot;って書く決まりでもあるんですかね<br>
+[^2]: こういう場合は <code>Graphics.DrawMeshInstancedIndirect()</code>すると良いっぽいですが、そこまでは気力がなかった</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/making_ECS/" data-id="ckbhrm7zy000plkpkcve2crxt" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/making_ECS/" data-id="ckce0yt2w000q7bpk87a71z6h" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
@@ -373,60 +524,11 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/20/hello-world/" class="article-date">
-  <time datetime="2020-03-20T05:17:25.015Z" itemprop="datePublished">2020-03-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/20/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/20/hello-world/" data-id="ckbhrm7zw000mlkpk55ry4ogp" class="article-share-link">共有</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">&amp;laquo; 戻る</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+    <a class="extend prev" rel="prev" href="/page/4/">&amp;laquo; 戻る</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">次へ &amp;raquo;</a>
   </nav>
 
 </section>
@@ -459,7 +561,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -472,6 +574,10 @@
       <ul>
         
           <li>
+            <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/">ComputeShaderでProcedural</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
           </li>
         
@@ -480,15 +586,11 @@
           </li>
         
           <li>
-            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
-          </li>
-        
-          <li>
             <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
           </li>
         
       </ul>

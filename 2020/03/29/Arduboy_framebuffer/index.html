@@ -7,12 +7,12 @@
   
   <title>Arduboy のフレームバッファ | мята</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概要Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。 フレームバッファの構造1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。 1unsigned char* ptr &#x3D; arduboy.getBuffer();  として、 ptr の添え字と座標の関係は以下の表の通り。     x0 x1 x2 … x127    y0-y7 0 1">
+  <meta name="description" content="概要 Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。 フレームバッファの構造 1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。 1unsigned char* ptr &#x3D; arduboy.getBuffer(); として、 ptr の添え字と座標の関係は以下の表の通り。     x0 x1 x2 … x127     y0-y7 0">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Arduboy のフレームバッファ">
 <meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/index.html">
 <meta property="og:site_name" content="мята">
-<meta property="og:description" content="概要Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。 フレームバッファの構造1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。 1unsigned char* ptr &#x3D; arduboy.getBuffer();  として、 ptr の添え字と座標の関係は以下の表の通り。     x0 x1 x2 … x127    y0-y7 0 1">
+<meta property="og:description" content="概要 Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。 フレームバッファの構造 1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。 1unsigned char* ptr &#x3D; arduboy.getBuffer(); として、 ptr の添え字と座標の関係は以下の表の通り。     x0 x1 x2 … x127     y0-y7 0">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:image" content="https://fum1h1ro.github.io/images/8683a246-e816-2bae-e7cf-8c569ad78dfa.png">
 <meta property="article:published_time" content="2020-03-29T11:00:00.000Z">
@@ -97,65 +97,67 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><p>Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。</p>
-<h2 id="フレームバッファの構造"><a href="#フレームバッファの構造" class="headerlink" title="フレームバッファの構造"></a>フレームバッファの構造</h2><p>1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。</p>
+        <h1>概要</h1>
+<p>Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。</p>
+<h2 id="フレームバッファの構造">フレームバッファの構造</h2>
+<p>1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span>* ptr = arduboy.getBuffer();</span><br></pre></td></tr></table></figure>
-
 <p>として、 <code>ptr</code> の添え字と座標の関係は以下の表の通り。</p>
 <table>
 <thead>
 <tr>
-<th align="center"></th>
-<th align="center">x0</th>
-<th align="center">x1</th>
-<th align="center">x2</th>
-<th align="center">…</th>
-<th align="center">x127</th>
+<th style="text-align:center"></th>
+<th style="text-align:center">x0</th>
+<th style="text-align:center">x1</th>
+<th style="text-align:center">x2</th>
+<th style="text-align:center">…</th>
+<th style="text-align:center">x127</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center"><strong>y0-y7</strong></td>
-<td align="center">0</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">…</td>
-<td align="center">127</td>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>y0-y7</strong></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">127</td>
 </tr>
 <tr>
-<td align="center"><strong>y8-y15</strong></td>
-<td align="center">128</td>
-<td align="center">129</td>
-<td align="center">130</td>
-<td align="center">…</td>
-<td align="center">255</td>
+<td style="text-align:center"><strong>y8-y15</strong></td>
+<td style="text-align:center">128</td>
+<td style="text-align:center">129</td>
+<td style="text-align:center">130</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">255</td>
 </tr>
 <tr>
-<td align="center"><strong>:</strong></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
+<td style="text-align:center"><strong>:</strong></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
 </tr>
 <tr>
-<td align="center"><strong>y48-y55</strong></td>
-<td align="center">768</td>
-<td align="center">769</td>
-<td align="center">770</td>
-<td align="center">…</td>
-<td align="center">895</td>
+<td style="text-align:center"><strong>y48-y55</strong></td>
+<td style="text-align:center">768</td>
+<td style="text-align:center">769</td>
+<td style="text-align:center">770</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">895</td>
 </tr>
 <tr>
-<td align="center"><strong>y56-y63</strong></td>
-<td align="center">896</td>
-<td align="center">897</td>
-<td align="center">898</td>
-<td align="center">…</td>
-<td align="center">1023</td>
+<td style="text-align:center"><strong>y56-y63</strong></td>
+<td style="text-align:center">896</td>
+<td style="text-align:center">897</td>
+<td style="text-align:center">898</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">1023</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> ptr = arduboy.getBuffer();</span><br><span class="line">ptr[<span class="number">0</span>] = <span class="number">0xff</span>; <span class="comment">// 1111_1111</span></span><br><span class="line">ptr[<span class="number">8</span>] = <span class="number">0x11</span>; <span class="comment">// 0001_0001</span></span><br><span class="line">ptr[<span class="number">16</span>] = <span class="number">0xa7</span>; <span class="comment">// 1010_0111</span></span><br></pre></td></tr></table></figure>
-
 <p>例えば上記のように描き込んだ場合は、</p>
 <p><img src="/images/8683a246-e816-2bae-e7cf-8c569ad78dfa.png" alt="screenshot.png"></p>
 <p>このように表示されます。</p>
@@ -163,49 +165,51 @@
 <table>
 <thead>
 <tr>
-<th align="center"></th>
-<th align="center">bit</th>
+<th style="text-align:center"></th>
+<th style="text-align:center">bit</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">y0</td>
-<td align="center">0</td>
+<tbody>
+<tr>
+<td style="text-align:center">y0</td>
+<td style="text-align:center">0</td>
 </tr>
 <tr>
-<td align="center">y1</td>
-<td align="center">1</td>
+<td style="text-align:center">y1</td>
+<td style="text-align:center">1</td>
 </tr>
 <tr>
-<td align="center">y2</td>
-<td align="center">2</td>
+<td style="text-align:center">y2</td>
+<td style="text-align:center">2</td>
 </tr>
 <tr>
-<td align="center">y3</td>
-<td align="center">3</td>
+<td style="text-align:center">y3</td>
+<td style="text-align:center">3</td>
 </tr>
 <tr>
-<td align="center">y4</td>
-<td align="center">4</td>
+<td style="text-align:center">y4</td>
+<td style="text-align:center">4</td>
 </tr>
 <tr>
-<td align="center">y5</td>
-<td align="center">5</td>
+<td style="text-align:center">y5</td>
+<td style="text-align:center">5</td>
 </tr>
 <tr>
-<td align="center">y6</td>
-<td align="center">6</td>
+<td style="text-align:center">y6</td>
+<td style="text-align:center">6</td>
 </tr>
 <tr>
-<td align="center">y7</td>
-<td align="center">7</td>
+<td style="text-align:center">y7</td>
+<td style="text-align:center">7</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>になってることがわかりました。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/" data-id="ckbhrm7zk0002lkpk3kuchlqe" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/" data-id="ckce0yt2o00067bpk78mz24iv" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
@@ -216,19 +220,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/03/29/Arduboy_1st/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/03/29/Arduboy_measure_1frame/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">次の記事</strong>
       <div class="article-nav-title">
         
-          Arduboy ことはじめ
+          1フレームの時間を測る
         
       </div>
     </a>
   
   
-    <a href="/2020/03/29/Arduboy_OLED/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/03/29/Arduboy_using_latest_lib/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前の記事</strong>
-      <div class="article-nav-title">Arduboy のOLEDを叩く</div>
+      <div class="article-nav-title">常に最新の Arduboy ライブラリを使う</div>
     </a>
   
 </nav>
@@ -266,7 +270,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -279,6 +283,10 @@
       <ul>
         
           <li>
+            <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/">ComputeShaderでProcedural</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
           </li>
         
@@ -287,15 +295,11 @@
           </li>
         
           <li>
-            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
-          </li>
-        
-          <li>
             <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
           </li>
         
       </ul>

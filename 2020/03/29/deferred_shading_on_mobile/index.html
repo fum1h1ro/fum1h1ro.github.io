@@ -7,12 +7,12 @@
   
   <title>Mobile でも Deferred Shading がしたいです | мята</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="これは Unity 2 Advent Calendar 2015 の18日目の記事です。 17日目の記事は Kan_Kikuchi さんの 素材系のおすすめAsset38選 でした。 未検証ですが Unity2017.1.0f1 にて Metal での Deferred Rendering がサポートされたという話です。 ご挨拶株式会社オインクゲームズ の @fum1h1ro です。 弊社はアナロ">
+  <meta name="description" content="これは Unity 2 Advent Calendar 2015 の18日目の記事です。 17日目の記事は Kan_Kikuchi さんの 素材系のおすすめAsset38選 でした。 未検証ですが Unity2017.1.0f1 にて Metal での Deferred Rendering がサポートされたという話です。 ご挨拶 株式会社オインクゲームズ の @fum1h1ro です。 弊社はアナ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mobile でも Deferred Shading がしたいです">
 <meta property="og:url" content="https://fum1h1ro.github.io/2020/03/29/deferred_shading_on_mobile/index.html">
 <meta property="og:site_name" content="мята">
-<meta property="og:description" content="これは Unity 2 Advent Calendar 2015 の18日目の記事です。 17日目の記事は Kan_Kikuchi さんの 素材系のおすすめAsset38選 でした。 未検証ですが Unity2017.1.0f1 にて Metal での Deferred Rendering がサポートされたという話です。 ご挨拶株式会社オインクゲームズ の @fum1h1ro です。 弊社はアナロ">
+<meta property="og:description" content="これは Unity 2 Advent Calendar 2015 の18日目の記事です。 17日目の記事は Kan_Kikuchi さんの 素材系のおすすめAsset38選 でした。 未検証ですが Unity2017.1.0f1 にて Metal での Deferred Rendering がサポートされたという話です。 ご挨拶 株式会社オインクゲームズ の @fum1h1ro です。 弊社はアナ">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:image" content="https://fum1h1ro.github.io/images/7ff7d744-aed0-f567-4737-69f4b6e54161.png">
 <meta property="og:image" content="https://fum1h1ro.github.io/images/54d237c9-1e39-7db5-5fbb-75950b40f29c.png">
@@ -108,7 +108,8 @@
         <p>これは <a href="http://qiita.com/advent-calendar/2015/unity2" target="_blank" rel="noopener">Unity 2 Advent Calendar 2015</a> の18日目の記事です。</p>
 <p>17日目の記事は <a href="http://qiita.com/Kan_Kikuchi" target="_blank" rel="noopener">Kan_Kikuchi</a> さんの <a href="http://kan-kikuchi.hatenablog.com/entry/Asset40" target="_blank" rel="noopener">素材系のおすすめAsset38選</a> でした。</p>
 <p><strong>未検証ですが Unity2017.1.0f1 にて Metal での Deferred Rendering がサポートされたという話です。</strong></p>
-<h1 id="ご挨拶"><a href="#ご挨拶" class="headerlink" title="ご挨拶"></a>ご挨拶</h1><p><a href="https://oinkgames.com/" target="_blank" rel="noopener">株式会社オインクゲームズ</a> の <a href="https://twitter.com/fum1h1ro" target="_blank" rel="noopener">@fum1h1ro</a> です。</p>
+<h1>ご挨拶</h1>
+<p><a href="https://oinkgames.com/" target="_blank" rel="noopener">株式会社オインクゲームズ</a> の <a href="https://twitter.com/fum1h1ro" target="_blank" rel="noopener">@fum1h1ro</a> です。</p>
 <p>弊社はアナログゲームのイメージが強いのですが、実はデジタルゲームも作っています。</p>
 <ul>
 <li><a href="http://mujo.oinkgms.com/" target="_blank" rel="noopener">MUJO</a></li>
@@ -117,9 +118,11 @@
 </ul>
 <p><img src="/images/7ff7d744-aed0-f567-4737-69f4b6e54161.png" alt="Screen Shot 2015-12-11 at 19.50.06.png"></p>
 <p>幸いにして、伝説の旅団は AppStoreJP の BEST OF 2015 に選出されました。こちらもよろしくお願いします。</p>
-<h1 id="Mobile-でも-Deferred-Shading-がしたいです"><a href="#Mobile-でも-Deferred-Shading-がしたいです" class="headerlink" title="Mobile でも Deferred Shading がしたいです"></a>Mobile でも Deferred Shading がしたいです</h1><p>ところで、皆さんは Mobile でも Deferred Shading がしたいと思ったことはありませんか。</p>
+<h1>Mobile でも Deferred Shading がしたいです</h1>
+<p>ところで、皆さんは Mobile でも Deferred Shading がしたいと思ったことはありませんか。</p>
 <blockquote>
-<p>Deferred Shadingとは何ぞや？ってのはこの辺の記事を参考にしてください。<br><a href="http://game.watch.impress.co.jp/docs/series/3dcg/20090417_125909.html" target="_blank" rel="noopener">http://game.watch.impress.co.jp/docs/series/3dcg/20090417_125909.html</a></p>
+<p>Deferred Shadingとは何ぞや？ってのはこの辺の記事を参考にしてください。<br>
+<a href="http://game.watch.impress.co.jp/docs/series/3dcg/20090417_125909.html" target="_blank" rel="noopener">http://game.watch.impress.co.jp/docs/series/3dcg/20090417_125909.html</a></p>
 </blockquote>
 <p>僕はあります。</p>
 <p>Unity のバージョンが上がるにつれ、 Mobile と Desktop/Console における機能差が減りつつある昨近ですが、未だ Deferred Shading は対応されていません。</p>
@@ -129,10 +132,13 @@
 <p>ちなみに、エディタ上でも、Edit-&gt;Graphics Emulation が OpenGL ES 2.0 になっているとダメです。ちなみにこの設定、エディタが憶えていてくれないので、起動時に毎回手で直すのが地味に辛いです。</p>
 <p><img src="/images/634554ec-7f5c-f74e-4829-54ae14d4ccb7.png" alt="Screen Shot 2015-12-11 at 19.27.10.png"></p>
 <p>5.2 の頃から検証を始め、対応状況に残念がりつつも 5.3 ならきっと対応してくれるだろうから Advent Calendar に書くほどでもないと思ったのですが、 5.3 リリース版でもダメでした。なお、5.3.0f5 とかで急に対応され、この記事が無駄になることを切に祈ります。</p>
-<h2 id="どの機種から可能なのか"><a href="#どの機種から可能なのか" class="headerlink" title="どの機種から可能なのか"></a>どの機種から可能なのか</h2><p>iOS なら Metal に対応した端末、Android なら OpenGL ES 3.0 に対応した端末であれば、原理的には可能なはずです。具体的には、<code>SystemInfo.supportedRenderTargetCount</code> が2以上であることが条件です。</p>
+<h2 id="どの機種から可能なのか">どの機種から可能なのか</h2>
+<p>iOS なら Metal に対応した端末、Android なら OpenGL ES 3.0 に対応した端末であれば、原理的には可能なはずです。具体的には、<code>SystemInfo.supportedRenderTargetCount</code> が2以上であることが条件です。</p>
 <p>尚、今回は必ず対応機種であるということを前提にしていますが、実際に使う際は非対応端末時の処理が必要になると思います。</p>
-<h1 id="無理矢理実装してみる"><a href="#無理矢理実装してみる" class="headerlink" title="無理矢理実装してみる"></a>無理矢理実装してみる</h1><p>簡単ですが、独自実装 Deferred Shading を行う仕組みについて説明します。</p>
-<h2 id="描画パス"><a href="#描画パス" class="headerlink" title="描画パス"></a>描画パス</h2><p>流れとしては、</p>
+<h1>無理矢理実装してみる</h1>
+<p>簡単ですが、独自実装 Deferred Shading を行う仕組みについて説明します。</p>
+<h2 id="描画パス">描画パス</h2>
+<p>流れとしては、</p>
 <ol>
 <li>サブカメラと G-Buffer を用意</li>
 <li><code>OnPreCull()</code> で、サブカメラにメインカメラの設定をコピーしてレンダリング</li>
@@ -140,30 +146,30 @@
 <li>2に戻る</li>
 </ol>
 <p>という感じになります。</p>
-<h2 id="独自実装-Deferred-Shading-クラス"><a href="#独自実装-Deferred-Shading-クラス" class="headerlink" title="独自実装 Deferred Shading クラス"></a>独自実装 Deferred Shading クラス</h2><p>まず、エディタ上でも常に動作して欲しいので、<code>ExecuteInEditMode</code> を付けます。また、<code>OnRenderImage()</code> を使いたいので、 Camera コンポーネント必須にします。</p>
+<h2 id="独自実装-Deferred-Shading-クラス">独自実装 Deferred Shading クラス</h2>
+<p>まず、エディタ上でも常に動作して欲しいので、<code>ExecuteInEditMode</code> を付けます。また、<code>OnRenderImage()</code> を使いたいので、 Camera コンポーネント必須にします。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ExecuteInEditMode]</span><br><span class="line">[RequireComponent(typeof(Camera))]</span><br><span class="line">public class DeferredMaster : MonoBehaviour &#123;</span><br><span class="line">  const int RenderTargetCount &#x3D; 4;</span><br></pre></td></tr></table></figure>
-
-<h2 id="サブカメラと-G-Buffer-を用意"><a href="#サブカメラと-G-Buffer-を用意" class="headerlink" title="サブカメラと G-Buffer を用意"></a>サブカメラと G-Buffer を用意</h2><p><code>ExecuteInEditMode</code> が付いている場合、<code>OnEnable()</code> で初期化を行います。</p>
+<h2 id="サブカメラと-G-Buffer-を用意">サブカメラと G-Buffer を用意</h2>
+<p><code>ExecuteInEditMode</code> が付いている場合、<code>OnEnable()</code> で初期化を行います。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">void OnEnable() &#123;</span><br><span class="line">  if (!isSupported) return;</span><br><span class="line">  initialize();</span><br><span class="line">&#125;</span><br><span class="line">void initialize() &#123;</span><br><span class="line">  if (_initialized) return;</span><br><span class="line">  this.screenWidth &#x3D; Screen.width;</span><br><span class="line">  this.screenHeight &#x3D; Screen.height;</span><br><span class="line">  _mainCamera &#x3D; gameObject.GetComponent&lt;Camera&gt;();</span><br><span class="line">  _transform &#x3D; transform;</span><br><span class="line">  create_materials(); &#x2F;&#x2F; 統合用マテリアルの生成</span><br><span class="line">  create_camera(); &#x2F;&#x2F; サブカメラ生成</span><br><span class="line">  create_rt(); &#x2F;&#x2F; G-Buffer生成</span><br><span class="line">  _initialized &#x3D; true;</span><br><span class="line">&#125;</span><br><span class="line">void create_materials() &#123;</span><br><span class="line">  _uniteMaterial &#x3D; CreateMaterial(&quot;uniteMat&quot;, Shader.Find(&quot;Hidden&#x2F;Oink&#x2F;DeferredUnite&quot;));</span><br><span class="line">&#125;</span><br><span class="line">void create_camera() &#123;</span><br><span class="line">  var obj &#x3D; new GameObject(&quot;__deferred camera&quot;);</span><br><span class="line">  obj.transform.parent &#x3D; _transform;</span><br><span class="line">  obj.transform.localPosition &#x3D; Vector3.zero;</span><br><span class="line">  obj.transform.localRotation &#x3D; Quaternion.identity;</span><br><span class="line">  obj.hideFlags &#x3D; HideFlags.DontSave;</span><br><span class="line">  _deferredCamera &#x3D; obj.AddComponent&lt;Camera&gt;();</span><br><span class="line">  _deferredCamera.enabled &#x3D; false;</span><br><span class="line">&#125;</span><br><span class="line">void create_rt() &#123;</span><br><span class="line">  for (int i &#x3D; 0; i &lt; RenderTargetCount; ++i) &#123;</span><br><span class="line">    _mrtTex[i] &#x3D; CreateRenderTexture(this.screenWidth, this.screenHeight, 0, RenderTextureFormat.ARGB32);</span><br><span class="line">    _mrtRB[i] &#x3D; _mrtTex[i].colorBuffer;</span><br><span class="line">  &#125;</span><br><span class="line">  _mrtDepth &#x3D; CreateRenderTexture(this.screenWidth, this.screenHeight, 24, RenderTextureFormat.Depth);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>Unity 組み込みの Deferred Shading では当然 G-Buffer をシステム側で確保してくれるのですが、今回の場合は自分で用意する必要があります。その際、メインカメラにその設定をすると、 GUI やらに問題が出る場合があるので、別カメラによるレンダリングを行います。</p>
-<h2 id="OnPreCull-でサブカメラにメインカメラの設定をコピーしてレンダリング"><a href="#OnPreCull-でサブカメラにメインカメラの設定をコピーしてレンダリング" class="headerlink" title="OnPreCull() でサブカメラにメインカメラの設定をコピーしてレンダリング"></a><code>OnPreCull()</code> でサブカメラにメインカメラの設定をコピーしてレンダリング</h2><p>ここから先、エディタでは更新があった時しか呼ばれませんが、実行中は毎フレーム呼ばれます。</p>
+<h2 id="OnPreCull-でサブカメラにメインカメラの設定をコピーしてレンダリング"><code>OnPreCull()</code> でサブカメラにメインカメラの設定をコピーしてレンダリング</h2>
+<p>ここから先、エディタでは更新があった時しか呼ばれませんが、実行中は毎フレーム呼ばれます。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">void OnPreCull() &#123;</span><br><span class="line">  if (_initialized) &#123;</span><br><span class="line">    _deferredCamera.CopyFrom(_mainCamera); &#x2F;&#x2F; メインカメラの設定をサブカメラにコピー</span><br><span class="line">    _deferredCamera.SetTargetBuffers(_mrtRB, _mrtDepth.depthBuffer); &#x2F;&#x2F; サブカメラのレンダーターゲットを設定</span><br><span class="line">    _deferredCamera.Render(); &#x2F;&#x2F; サブカメラレンダリング</span><br><span class="line">    &#x2F;&#x2F; メインカメラは何も書かなくて良いので、マスクをクリア、かつ値を保存しておく</span><br><span class="line">    _cullingMask &#x3D; _mainCamera.cullingMask;</span><br><span class="line">    _mainCamera.cullingMask &#x3D; 0;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">void OnPostRender() &#123;</span><br><span class="line">  if (_initialized) &#123;</span><br><span class="line">    _mainCamera.cullingMask &#x3D; _cullingMask; &#x2F;&#x2F; マスクを戻してやる</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>これで、描画されるモデルのマテリアルを MRT 対応シェーダにしておくと、先ほど用意した G-Buffer に値が書き込まれるようになります。</p>
 <p><img src="/images/a0a7538d-b7d8-1025-0b2f-5f8ba3d46158.png" alt="Screen Shot 2015-12-11 at 20.41.42.png"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">void OnGUI() &#123;</span><br><span class="line">  if (_initialized) &#123;</span><br><span class="line">    float w &#x3D; Screen.width &#x2F; 6;</span><br><span class="line">    float h &#x3D; Screen.height &#x2F; 6;</span><br><span class="line">    for (int i &#x3D; 0; i &lt; RenderTargetCount; ++i) &#123;</span><br><span class="line">      if (_mrtTex[i] !&#x3D; null) GUI.DrawTexture(new Rect(0, i*h, w, h), _mrtTex[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>デバッグ時には、このようにテクスチャの中身を確認すると楽です。</p>
-<h3 id="MRT-対応シェーダ"><a href="#MRT-対応シェーダ" class="headerlink" title="MRT 対応シェーダ"></a>MRT 対応シェーダ</h3><p>素直に <code>Camera.renderingPath</code> を設定しても反映されないのですが、実はシェーダの方で MRT 対応のシェーダを書けば、<code>RenderingPath.Forward</code> のまま複数のバッファに出力することが可能になります。</p>
+<h3 id="MRT-対応シェーダ">MRT 対応シェーダ</h3>
+<p>素直に <code>Camera.renderingPath</code> を設定しても反映されないのですが、実はシェーダの方で MRT 対応のシェーダを書けば、<code>RenderingPath.Forward</code> のまま複数のバッファに出力することが可能になります。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 出力先の定義</span><br><span class="line">struct Output &#123;</span><br><span class="line">  fixed4 rt0 : COLOR0;</span><br><span class="line">  fixed4 rt1 : COLOR1;</span><br><span class="line">  fixed4 rt2 : COLOR2;</span><br><span class="line">  fixed4 rt3 : COLOR3;</span><br><span class="line">&#125;;</span><br><span class="line">&#x2F;&#x2F; フラグメントシェーダ</span><br><span class="line">Output frag(v2f f) &#123;</span><br><span class="line">  Output o;</span><br><span class="line">  o.rt0 &#x3D; fixed4(((normalize(f.nml) * 0.5 + fixed3(0.5, 0.5, 0.5)) * 0.95), _Roughness); &#x2F;&#x2F; RGB:Normal A:Roughness</span><br><span class="line">  o.rt1 &#x3D; fixed4((tex2D(_MainTex, f.uv) * _Color).xyz, _Metallic); &#x2F;&#x2F; RGB:Diffuse A:Metallic</span><br><span class="line">  o.rt2 &#x3D; fixed4(1.0f, 0.0f, 0.0f, 1.0f); &#x2F;&#x2F; 未使用</span><br><span class="line">  o.rt3 &#x3D; fixed4(0.0f, 1.0f, 1.0f, 1.0f); &#x2F;&#x2F; 未使用</span><br><span class="line">  return o;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>フラグメントシェーダの返値を、上記のように複数にしてやります。<code>Lighting</code> 等は少しでも負荷を軽くするためにオフにしておく方が良いでしょう。</p>
-<h2 id="メインカメラの-OnRenderImage-で複数バッファを統合"><a href="#メインカメラの-OnRenderImage-で複数バッファを統合" class="headerlink" title="メインカメラの OnRenderImage() で複数バッファを統合"></a>メインカメラの <code>OnRenderImage()</code> で複数バッファを統合</h2><p>最後に、メインカメラの <code>OnRenderImage()</code> で G-Buffer を統合します。</p>
+<h2 id="メインカメラの-OnRenderImage-で複数バッファを統合">メインカメラの <code>OnRenderImage()</code> で複数バッファを統合</h2>
+<p>最後に、メインカメラの <code>OnRenderImage()</code> で G-Buffer を統合します。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">void OnRenderImage(RenderTexture source, RenderTexture destination) &#123;</span><br><span class="line">  if (!_initialized) &#123; &#x2F;&#x2F; 非対応端末の場合は、そのままコピーしてお終い</span><br><span class="line">    Graphics.Blit(source, destination);</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  &#x2F;&#x2F;    :</span><br><span class="line">  &#x2F;&#x2F; 長いので中略</span><br><span class="line">  &#x2F;&#x2F;    :</span><br><span class="line">  _uniteMaterial.SetVector(&quot;_CameraWS&quot;, _mainCamera.transform.position);</span><br><span class="line">  &#x2F;&#x2F; G-Buffer</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_RT0&quot;, _mrtTex[0]);</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_RT1&quot;, _mrtTex[1]);</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_RT2&quot;, _mrtTex[2]);</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_RT3&quot;, _mrtTex[3]);</span><br><span class="line">  _uniteMaterial.SetTexture(&quot;_DepthTexture&quot;, _mrtDepth);</span><br><span class="line">  _uniteMaterial.SetMatrix(&quot;_worldToCameraMatrix&quot;, _deferredCamera.worldToCameraMatrix);</span><br><span class="line">  &#x2F;&#x2F; ライトの設定を渡してレンダリング</span><br><span class="line">  _uniteMaterial.SetColor(&quot;_lightColor&quot;, new Color(1.0f, 1.0f, 1.0f, 1.0f));</span><br><span class="line">  _uniteMaterial.SetVector(&quot;_lightPos&quot;, _mainCamera.worldToCameraMatrix * new Vector4(0, 5, -5, 1));</span><br><span class="line">  Graphics.Blit(source, destination, _uniteMaterial, 0);</span><br><span class="line">  &#x2F;&#x2F; ライトの数に応じて複数回レンダリングする</span><br><span class="line">  &#x2F;&#x2F;_uniteMaterial.SetColor(&quot;_lightColor&quot;, new Color(0.5f, 0.5f, 0.5f, 1.0f));</span><br><span class="line">  &#x2F;&#x2F;_uniteMaterial.SetVector(&quot;_lightPos&quot;, _mainCamera.worldToCameraMatrix * new Vector4(-5, 1, 5, 1));</span><br><span class="line">  &#x2F;&#x2F;Graphics.Blit(source, destination, _uniteMaterial, 1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>Deferred Shading において、 G-Buffer の統合は即ちライティングでもあるため、ライトの数に応じてレンダリング回数を調整します。</p>
-<h2 id="物理ベースシェーディング"><a href="#物理ベースシェーディング" class="headerlink" title="物理ベースシェーディング"></a>物理ベースシェーディング</h2><p>統合用のシェーダは長いので省略しますが、物理ベースシェーディングを実装するところまで頑張ってみました。</p>
+<h2 id="物理ベースシェーディング">物理ベースシェーディング</h2>
+<p>統合用のシェーダは長いので省略しますが、物理ベースシェーディングを実装するところまで頑張ってみました。</p>
 <p><img src="/images/eac348bf-813e-c821-97e2-9c3cd41b39b8.png" alt="Screen Shot 2015-12-15 at 20.05.28.png"></p>
 <p><img src="/images/b8acc853-df22-5a11-e02d-220ed864bb01.png" alt="Screen Shot 2015-12-15 at 20.05.59.png"></p>
 <p><img src="/images/37f1a5df-97b0-8acb-94cb-d7ac63da8ede.png" alt="Screen Shot 2015-12-15 at 20.06.19.png"></p>
@@ -171,7 +177,8 @@
 <p>物理ベースシェーディングは、 Forward Shading でも出来ることなので、説明は割愛します。</p>
 <p><img src="/images/811b3049-5f3f-c70d-b290-c1ded434696c.jpeg" alt="Slack for iOS Upload.png.jpeg"></p>
 <p>こちらは iPhone6s でのスクリーンショットです。</p>
-<h1 id="問題点"><a href="#問題点" class="headerlink" title="問題点"></a>問題点</h1><p>これまでの方法で、 Mobile であっても強制的に Deferred Shading を行うことが出来るようになりましたが、いくつか問題があります。</p>
+<h1>問題点</h1>
+<p>これまでの方法で、 Mobile であっても強制的に Deferred Shading を行うことが出来るようになりましたが、いくつか問題があります。</p>
 <ul>
 <li>半透明の扱い</li>
 <li>ライトの指定方法</li>
@@ -187,27 +194,30 @@
 <p><img src="/images/e9400f90-337d-fd34-f470-4fdc08abaa56.png" alt="Screen Shot 2015-12-11 at 20.48.33.png"></p>
 <p>最初の G-Buffer に出力した色がそのまま出てしまいます。まあ、このままでも作業出来なくもないのですが、流石に辛いと思われます。</p>
 <p>まだ実装していないのですが、エディタ上であれば Unity 組み込みの Deferred Shading が iOS プラットフォームでも機能することを利用して、エディタではそちらで処理し、実機時のみ独自実装 Deferred Shading にすればいいのかなと考えています。ただ、その際は組み込み Deferred Shading のシェーダ等も独自実装の方に出力結果を合わせておく必要があります。</p>
-<h1 id="罠"><a href="#罠" class="headerlink" title="罠"></a>罠</h1><ul>
+<h1>罠</h1>
+<ul>
 <li>エディタ上では、Standalone の PlayerSettings に依存</li>
 </ul>
 <p>何故か Standalone Platform(Win/Mac/Linux) の PlayerSettings にある RenderingPath が、Deferred になっていると正常に動作しません。罠としか思えません。これで半日潰しました。</p>
-<h1 id="最後に"><a href="#最後に" class="headerlink" title="最後に"></a>最後に</h1><p>今回の変則的な手法のようなものも許容してくれるのは、 Unity のレンダリング周りがシンプルであるが故の長所だと思います。サブカメラを使う方法は、画面クリア設定等に気を遣わないと無駄な処理が発生する場合がありますが、うまく使うと色々応用が利きます。</p>
-<p>独自実装 Deferred Shading については、問題点も多く、実用まで持っていくには時間が掛かりそう、かつ本体で対応されて水の泡という未来しか見えません(‘A`)</p>
+<h1>最後に</h1>
+<p>今回の変則的な手法のようなものも許容してくれるのは、 Unity のレンダリング周りがシンプルであるが故の長所だと思います。サブカメラを使う方法は、画面クリア設定等に気を遣わないと無駄な処理が発生する場合がありますが、うまく使うと色々応用が利きます。</p>
+<p>独自実装 Deferred Shading については、問題点も多く、実用まで持っていくには時間が掛かりそう、かつ本体で対応されて水の泡という未来しか見えません('A`)</p>
 <p>そんな結論かよ！といったところで、今回の記事は終わります。</p>
-<p>ありがとうございました(‘ω`)</p>
-<h1 id="追記"><a href="#追記" class="headerlink" title="追記"></a>追記</h1><ul>
+<p>ありがとうございました('ω`)</p>
+<h1>追記</h1>
+<ul>
 <li>5.3.1f1 NG</li>
 <li>5.4.0b1 NG</li>
 <li>5.3.1p3 NG</li>
 <li>5.4.0b2 NG</li>
 </ul>
 <hr>
-<p>明日は、 <a href="http://qiita.com/wotakuro" target="_blank" rel="noopener">wotakuro</a> さんの <a href="URIはあとで設定する">UnityでMoverio BT-200向けアプリ作った話とか</a> です。</p>
+<p>明日は、 <a href="http://qiita.com/wotakuro" target="_blank" rel="noopener">wotakuro</a> さんの <a href="URI%E3%81%AF%E3%81%82%E3%81%A8%E3%81%A7%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B">UnityでMoverio BT-200向けアプリ作った話とか</a> です。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/deferred_shading_on_mobile/" data-id="ckbhrm7zv000klkpkaqdufpto" class="article-share-link">共有</a>
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/deferred_shading_on_mobile/" data-id="ckce0yt2v000l7bpk08ajflyi" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
@@ -218,11 +228,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/03/29/SpriteKit/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/03/29/UnityEditorConnection/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">次の記事</strong>
       <div class="article-nav-title">
         
-          SpriteKit でゲームを作ってみる
+          UnityEditor と実機間で通信がしたい
         
       </div>
     </a>
@@ -268,7 +278,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -281,6 +291,10 @@
       <ul>
         
           <li>
+            <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/">ComputeShaderでProcedural</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
           </li>
         
@@ -289,15 +303,11 @@
           </li>
         
           <li>
-            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/29/Arduboy_framebuffer/">Arduboy のフレームバッファ</a>
-          </li>
-        
-          <li>
             <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
           </li>
         
       </ul>

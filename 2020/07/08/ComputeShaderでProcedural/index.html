@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>ComputeShaderでProcedural | мята</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="今更ながらに ComputeShader でも触っておくかと思い、何がしたいのか考えを巡らせた挙げ句、 GeometoryShader みたいなことがしたかったというあんまり面白くない結論に達した。 Graphics.DrawProcedural() かなー？と思い、ググって漁ったが、思ったような解説が無かったので少し苦労した。みんな、「インスタンシングで大量表示！物量！」がやりたいみたいで、自分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ComputeShaderでProcedural">
+<meta property="og:url" content="https://fum1h1ro.github.io/2020/07/08/ComputeShader%E3%81%A7Procedural/index.html">
+<meta property="og:site_name" content="мята">
+<meta property="og:description" content="今更ながらに ComputeShader でも触っておくかと思い、何がしたいのか考えを巡らせた挙げ句、 GeometoryShader みたいなことがしたかったというあんまり面白くない結論に達した。 Graphics.DrawProcedural() かなー？と思い、ググって漁ったが、思ったような解説が無かったので少し苦労した。みんな、「インスタンシングで大量表示！物量！」がやりたいみたいで、自分">
+<meta property="og:locale" content="ja_JP">
+<meta property="article:published_time" content="2020-07-08T11:54:54.000Z">
+<meta property="article:modified_time" content="2020-07-09T00:00:01.002Z">
+<meta property="article:author" content="fum1h1ro">
+<meta property="article:tag" content="dev">
+<meta property="article:tag" content="unity3d">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@fum1h1ro">
+  
+    <link rel="alternate" href="/atom.xml" title="мята" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <meta name="google-site-verification" content="Q_KOZIl-x1Q8Vj6ZyK3PDbGhm0DwmU1NZqfuq86U1es" />
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">мята</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://fum1h1ro.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ComputeShaderでProcedural" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/" class="article-date">
+  <time datetime="2020-07-08T11:54:54.000Z" itemprop="datePublished">2020-07-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ComputeShaderでProcedural
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今更ながらに ComputeShader でも触っておくかと思い、何がしたいのか考えを巡らせた挙げ句、 GeometoryShader みたいなことがしたかったというあんまり面白くない結論に達した。</p>
+<p><code>Graphics.DrawProcedural()</code> かなー？と思い、ググって漁ったが、思ったような解説が無かったので少し苦労した。みんな、「インスタンシングで大量表示！物量！」がやりたいみたいで、自分の目的とはちょっと違ったのだ。</p>
+<p>自分がやりたかったのは、</p>
+<ol>
+<li>位置のみ渡す</li>
+<li>ComputeShader でその点を中心としたポリゴンを生成</li>
+<li>描画</li>
+</ol>
+<p>というような、先ほども書いたように GeometoryShader なんである。</p>
+<p>まずは、スクリプト。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Rendering;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Assertions;</span><br><span class="line"><span class="keyword">using</span> Unity.Mathematics;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestComputeRenderer</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> ComputeShader ComputeShader;</span><br><span class="line">    <span class="keyword">private</span> ComputeBuffer PreCalc;</span><br><span class="line">    <span class="keyword">private</span> ComputeBuffer PostCalc;</span><br><span class="line">    <span class="keyword">private</span> Material Material;</span><br><span class="line">    <span class="keyword">private</span> MaterialPropertyBlock Properties;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> KernelID;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (PreCalc == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            PreCalc = <span class="keyword">new</span> ComputeBuffer(<span class="number">1</span>, Marshal.SizeOf(<span class="keyword">typeof</span>(Source)));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (PostCalc == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            PostCalc = <span class="keyword">new</span> ComputeBuffer(<span class="number">3</span>, Marshal.SizeOf(<span class="keyword">typeof</span>(Output)));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        KernelID = ComputeShader.FindKernel(<span class="string">"CSMain"</span>);</span><br><span class="line">        ComputeShader.SetBuffer(KernelID, <span class="string">"_Source"</span>, PreCalc);</span><br><span class="line">        ComputeShader.SetBuffer(KernelID, <span class="string">"_Output"</span>, PostCalc);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (Material == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            Material = <span class="keyword">new</span> Material(Shader.Find(<span class="string">"TestCompute"</span>));</span><br><span class="line">            Properties = <span class="keyword">new</span> MaterialPropertyBlock();</span><br><span class="line">            Properties.SetBuffer(<span class="string">"_Source"</span>, PostCalc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">OnDisable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        PreCalc.Release();</span><br><span class="line">        PostCalc.Release();</span><br><span class="line">        Destroy(Material);</span><br><span class="line">        Material = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">LateUpdate</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> data = <span class="keyword">new</span> Source[]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">new</span> Source()&#123; Position = <span class="keyword">new</span> float3(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>) &#125;,</span><br><span class="line">        &#125;;</span><br><span class="line">        PreCalc.SetData(data);</span><br><span class="line">        ComputeShader.Dispatch(KernelID, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> bounds = <span class="keyword">new</span> Bounds(Vector3.zero, Vector3.one * <span class="number">1000</span>);</span><br><span class="line">        Graphics.DrawProcedural(Material, bounds, MeshTopology.Triangles, <span class="number">3</span>, <span class="number">1</span>, <span class="literal">null</span>, Properties, ShadowCastingMode.Off, <span class="literal">false</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">StructLayout(LayoutKind.Sequential)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">struct</span> Source</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> float3 Position;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">StructLayout(LayoutKind.Sequential)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">struct</span> Output</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> float3 Position;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>点が一つだけ入る ComputeBuffer と、計算後の点が三つ入る ComputeBuffer を用意する</li>
+<li>それぞれを、 ComputeShder 及び描画用の Material/MaterialPropertyBlock に、 <code>.SetBuffer()</code> する</li>
+<li>計算前の ComputeBuffer に、点のデータを <code>.SetData()</code> する</li>
+<li>ComputeShader を <code>.Dispatch()</code> で起動する</li>
+<li><code>Graphics.DrawProcedural()</code> を呼ぶ</li>
+</ul>
+<p>次に ComputeShader 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#pragma kernel CSMain</span><br><span class="line"></span><br><span class="line">struct Source</span><br><span class="line">&#123;</span><br><span class="line">    float3 Position;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct Output</span><br><span class="line">&#123;</span><br><span class="line">    float3 Position;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">StructuredBuffer&lt;Source&gt; _Source;</span><br><span class="line">RWStructuredBuffer&lt;Output&gt; _Output;</span><br><span class="line"></span><br><span class="line">[numthreads(1, 1, 1)]</span><br><span class="line">void CSMain (uint3 id : SV_DispatchThreadID)</span><br><span class="line">&#123;</span><br><span class="line">    _Output[id.x+0].Position &#x3D; _Source[id.x].Position + float3(-1, 1, 0);</span><br><span class="line">    _Output[id.x+1].Position &#x3D; _Source[id.x].Position + float3(1, 1, 0);</span><br><span class="line">    _Output[id.x+2].Position &#x3D; _Source[id.x].Position + float3(0, -1, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大したことはしてない。入ってきた点一つに対して、三つの点を出力してるだけ。</p>
+<p>点の番号は <code>SV_DispatchThreadID.x</code> なのだが、この辺の説明は他を読んだ方が早いし詳しいです。</p>
+<ul>
+<li><a href="https://edom18.hateblo.jp/entry/2017/05/10/083421" target="_blank" rel="noopener">ComputeShaderを触ってみる その1 ～スレッド編～</a></li>
+</ul>
+<p>最後に描画用の Vertex/FragmentShader 。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">Shader "TestCompute"</span><br><span class="line">&#123;</span><br><span class="line">    Properties</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    SubShader</span><br><span class="line">    &#123;</span><br><span class="line">        Tags &#123; "RenderType"="Opaque" &#125;</span><br><span class="line">        LOD <span class="number">100</span></span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            Cull Off</span><br><span class="line">            Lighting Off</span><br><span class="line">            BlendOp Add, Add</span><br><span class="line">            Blend One One, One One</span><br><span class="line">            ZWrite On</span><br><span class="line">            ZTest Always</span><br><span class="line">CGPROGRAM</span><br><span class="line"><span class="meta">#pragma target 4.5</span></span><br><span class="line"><span class="meta">#pragma vertex vert</span></span><br><span class="line"><span class="meta">#pragma fragment frag</span></span><br><span class="line"><span class="meta">#include "UnityCG.cginc"</span></span><br><span class="line"></span><br><span class="line">            struct c2v</span><br><span class="line">            &#123;</span><br><span class="line">                float3 Position;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            struct v2f</span><br><span class="line">            &#123;</span><br><span class="line">                float4 vertex : SV_POSITION;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            StructuredBuffer&lt;c2v&gt; _Source;</span><br><span class="line"></span><br><span class="line">            v2f vert(<span class="type">uint</span> vertexID : SV_VertexID)</span><br><span class="line">            &#123;</span><br><span class="line">                v2f o;</span><br><span class="line">                o.vertex = UnityObjectToClipPos(_Source[vertexID].Position);</span><br><span class="line">                <span class="keyword">return</span> o;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            fixed4 frag(v2f i) : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> fixed4(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">ENDCG</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>スクリプトで <code>.SetBuffer()</code> したものが <code>StructureBuffer</code> として渡ってくるので、それをいつも通り変換して送り出すだけの簡単なお仕事。</p>
+<p>とりあえず、最小構成はこんな感じというのが分かった。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/07/08/ComputeShader%E3%81%A7Procedural/" data-id="ckce0yt2q000b7bpkckei93cz" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/06/09/mesh-api-v2-trap/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">Mesh API v2 の罠</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/arduboy/" style="font-size: 15px;">arduboy</a> <a href="/tags/c/" style="font-size: 10px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/qiita/" style="font-size: 17.5px;">qiita</a> <a href="/tags/unity3d/" style="font-size: 12.5px;">unity3d</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/">ComputeShaderでProcedural</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/30/Arduboy_move_tofu/">Arduboy で豆腐を動かす</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 fum1h1ro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
