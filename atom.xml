@@ -29,7 +29,17 @@
       
         
         
-          &lt;p&gt;今更ながらに ComputeShader でも触っておくかと思い、何がしたいのか考えを巡らせた挙げ句、 GeometoryShader
+          &lt;p&gt;今更ながらに ComputeShader でも触っておくかと思い、何がしたいのか考えを巡らせた挙げ句、 GeometoryShader みたいなことがしたかったというあんまり面白くない結論に達した。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Graphics.DrawProcedural()&lt;/code&gt; かなー？と思い、ググって漁ったが、思ったような解説が無かったので少し苦労した。みんな、「インスタンシングで大量表示！物量！」がやりたいみたいで、自分の目的とはちょっと違ったのだ。&lt;/p&gt;
+&lt;p&gt;自分がやりたかったのは、&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;位置のみ渡す&lt;/li&gt;
+&lt;li&gt;ComputeShader でその点を中心としたポリゴンを生成&lt;/li&gt;
+&lt;li&gt;描画&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;というような、先ほども書いたように GeometoryShader なんである。&lt;/p&gt;
+&lt;p&gt;まずは、スクリプト。&lt;/p&gt;
+&lt;figure class=&quot;highlight cs&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span
         
       
     
@@ -57,7 +67,8 @@
         
         
           &lt;p&gt;今更ながらに Mesh API v2 と呼ばれるものを触ってみたけど、初っ端から罠に引っかかった。&lt;/p&gt;
-&lt;p&gt;v2
+&lt;p&gt;v2 では、頂点データの配列を別々に渡すのではなく、インターリーブされたものとして渡す。なので、一つの頂点データがどういう構造になっているかを伝えてやらねばならないのだが、以下はダメ。&lt;/p&gt;
+&lt;figure class=&quot;highlight cs&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span
         
       
     
@@ -87,7 +98,12 @@
           &lt;h1&gt;概要&lt;/h1&gt;
 &lt;p&gt;Arduboy で豆腐を動かすまで。&lt;/p&gt;
 &lt;h2 id=&quot;前回までのお話&quot;&gt;前回までのお話&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633&quot;
+&lt;p&gt;&lt;a href=&quot;http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Arduboy ことはじめ&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;豆腐とは&quot;&gt;豆腐とは&lt;/h2&gt;
+&lt;p&gt;キャラの画も無い状態で白い四角形だけ画面上で動かすことを、豆腐を動かすと呼んでいた(要出展)時代があって、それを Arduboy でやろうという話です。&lt;/p&gt;
+&lt;p&gt;食べれません。&lt;/p&gt;
+&lt;h2 id=&quot;豆腐あれと神は言った&quot;&gt;豆腐あれと神は言った&lt;/h2&gt;
+&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span
         
       
     
@@ -121,7 +137,10 @@
 &lt;p&gt;今回はあまり実用的でも初心者向けでもありません。&lt;/p&gt;
 &lt;h1&gt;ハードウェア的な話&lt;/h1&gt;
 &lt;h2 id=&quot;OLED-の型番&quot;&gt;OLED の型番&lt;/h2&gt;
-&lt;p&gt;&lt;a
+&lt;p&gt;&lt;a href=&quot;https://github.com/Arduboy/Arduboy/blob/master/src/core/core.h#L112&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://github.com/Arduboy/Arduboy/blob/master/src/core/core.h#L112&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;分解しなくてもライブラリに書いてあったのですぐわかりました。&lt;/p&gt;
+&lt;h2 id=&quot;OLED-のデータシート（マニュアル&quot;&gt;OLED のデータシート（マニュアル)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf&quot; target=&quot;_blank&quot;
         
       
     
@@ -153,7 +172,13 @@
           &lt;h1&gt;概要&lt;/h1&gt;
 &lt;p&gt;Arduboy のセットアップから簡単なスケッチを動かすところまで解説します。&lt;/p&gt;
 &lt;h2 id=&quot;環境セットアップ&quot;&gt;環境セットアップ&lt;/h2&gt;
-&lt;h3 id=&quot;Arduino-IDE-をダウンロードする&quot;&gt;Arduino IDE
+&lt;h3 id=&quot;Arduino-IDE-をダウンロードする&quot;&gt;Arduino IDE をダウンロードする&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.arduino.cc/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Arduino　公式&lt;/a&gt; から IDE をダウンロードします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&quot;/images/b951bf2a-d143-bdc7-c636-234e895cd0f8.png&quot; alt=&quot;Arduino - Home 2016-06-05 11-07-16.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Download&lt;/code&gt; をクリックして先に進みます。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/ba3b343a-211e-9cb6-b2ea-fe339ffd1cae.png&quot;
         
       
     
@@ -185,7 +210,7 @@
           &lt;h1&gt;概要&lt;/h1&gt;
 &lt;p&gt;ﾋｬｯﾊｰ！約60fpsだぜ！&lt;/p&gt;
 &lt;h2 id=&quot;計測してみる&quot;&gt;計測してみる&lt;/h2&gt;
-&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span
+&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span
         
       
     
@@ -217,7 +242,9 @@
           &lt;h1&gt;概要&lt;/h1&gt;
 &lt;p&gt;Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。&lt;/p&gt;
 &lt;h2 id=&quot;フレームバッファの構造&quot;&gt;フレームバッファの構造&lt;/h2&gt;
-&lt;p&gt;1bit が 1 ドットに対応しており、 1
+&lt;p&gt;1bit が 1 ドットに対応しており、 1 バイト毎に縦に並んでいる。&lt;/p&gt;
+&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;unsigned&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;char&lt;/span&gt;* ptr = arduboy.getBuffer();&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;として、 &lt;code&gt;ptr&lt;/code&gt;
         
       
     
@@ -249,7 +276,13 @@
           &lt;h1&gt;概要&lt;/h1&gt;
 &lt;p&gt;Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。&lt;/p&gt;
 &lt;h1&gt;はじめに&lt;/h1&gt;
-&lt;p&gt;&lt;a
+&lt;p&gt;&lt;a href=&quot;http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Arduboy ことはじめ&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。&lt;/p&gt;
+&lt;p&gt;最新は、Github 上のリポジトリから入手可能です。&lt;/p&gt;
+&lt;h1&gt;入手方法&lt;/h1&gt;
+&lt;h2 id=&quot;古いライブラリを消す&quot;&gt;古いライブラリを消す&lt;/h2&gt;
+&lt;p&gt;Arduino IDE を終了させた状態で、 &lt;code&gt;~/Documents/Arduino/libraries/Arduboy&lt;/code&gt; フォルダをざっくり消します。&lt;/p&gt;
+&lt;h2
         
       
     
@@ -281,7 +314,18 @@
           &lt;h1&gt;概要&lt;/h1&gt;
 &lt;p&gt;Arduboy が届かなさすぎておかしくなった頭を冷やすための記事です。&lt;/p&gt;
 &lt;h2 id=&quot;小ネタ&quot;&gt;小ネタ&lt;/h2&gt;
-&lt;h3
+&lt;h3 id=&quot;外部エディタで書きたい&quot;&gt;外部エディタで書きたい&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;書いてもいいけど、そのままだと IDE に変更が反映されない&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Preferences &amp;gt; Use external editor&lt;/code&gt; を有効にする&lt;/li&gt;
+&lt;li&gt;IDE から編修出来なくなるけど、外部エディタで編集して IDE に戻るとファイルを読み込み直してくれる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;逆アセンブルしたい-or-コンパイルした結果がどうなってるか知りたい&quot;&gt;逆アセンブルしたい or コンパイルした結果がどうなってるか知りたい&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;コンパイルした結果を取得出来るようにする&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://mpu.seesaa.net/article/434274452.html&quot; target=&quot;_blank&quot;
         
       
     
@@ -310,7 +354,12 @@
       
         
         
-          &lt;p&gt;この記事は、&lt;a href=&quot;https://seblagarde.wordpress.com/2018/09/02/gbuffer-helper-packing-integer-and-float-together/&quot; target=&quot;_blank&quot;
+          &lt;p&gt;この記事は、&lt;a href=&quot;https://seblagarde.wordpress.com/2018/09/02/gbuffer-helper-packing-integer-and-float-together/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;こちら&lt;/a&gt;の記事を日本語に翻訳したものです(翻訳の許可は取っています)。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Version : 1.0 – Living blog&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;With GBuffer approach, it is often required to pack values together. One useful case is to be able to pack an integer value (often matching an enum like material ID) and a float value (inside 0…1
         
       
     
@@ -338,7 +387,12 @@
         
         
           &lt;h2 id=&quot;はじめに&quot;&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;http://qiita.com/beinteractive/items/a2264048a601ee998aca&quot; target=&quot;_blank&quot;
+&lt;p&gt;&lt;a href=&quot;http://qiita.com/beinteractive/items/a2264048a601ee998aca&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;http://qiita.com/beinteractive/items/a2264048a601ee998aca&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;例の(?)が何だか解らないんですが、こういうのが上がってきたので、パーサの練習がてら書いてみました。&lt;/p&gt;
+&lt;h2 id=&quot;使ったもの&quot;&gt;使ったもの&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/sprache/Sprache&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://github.com/sprache/Sprache&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;C# の Monadic Parser だそうです。Monadic って Haskell で出てきたモナド的なヤツでしょうか。&lt;/p&gt;
+&lt;h2
         
       
     
@@ -368,7 +422,7 @@
         
         
           &lt;h1&gt;動機&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/tech-talks/jp/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;iOS7 Tech Talks&lt;/a&gt;
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/tech-talks/jp/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;iOS7 Tech Talks&lt;/a&gt; に当選したので、いそいそとお出かけしたら、ゴイスーなホテルでランチまでごちそうになってしまった。その割にアウトプットも無い自分なので、これは申し訳ないなと思い、 &lt;a href=&quot;http://www.apple.com/jp/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Apple 社&lt;/a&gt;激推しの &lt;a href=&quot;https://developer.apple.com/library/ios/documentation/GraphicsAnimation/Conceptual/SpriteKit_PG/Introduction/Introduction.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;SpriteKit&lt;/a&gt;
         
       
     
@@ -400,7 +454,9 @@
         
         
           &lt;h1&gt;UnityEditorとビルド後の実機との間で通信がしたい&lt;/h1&gt;
-&lt;p&gt;表題の件を、色々と今まで試行錯誤しつつやっていたんですが、公式で &lt;code&gt;PlayerConnection&lt;/code&gt;
+&lt;p&gt;表題の件を、色々と今まで試行錯誤しつつやっていたんですが、公式で &lt;code&gt;PlayerConnection&lt;/code&gt; が実装され、晴れて自前実装がお役御免になりそうです。&lt;br&gt;
+なんか勿体ないので記録として残しておこうかと思って書きました。決してContribute稼ぎではな（ｒｙ&lt;/p&gt;
+&lt;h2
         
       
     
@@ -429,7 +485,11 @@
       
         
         
-          &lt;p&gt;これは &lt;a href=&quot;http://qiita.com/advent-calendar/2015/unity2&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Unity 2 Advent Calendar 2015&lt;/a&gt;
+          &lt;p&gt;これは &lt;a href=&quot;http://qiita.com/advent-calendar/2015/unity2&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Unity 2 Advent Calendar 2015&lt;/a&gt; の18日目の記事です。&lt;/p&gt;
+&lt;p&gt;17日目の記事は &lt;a href=&quot;http://qiita.com/Kan_Kikuchi&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Kan_Kikuchi&lt;/a&gt; さんの &lt;a href=&quot;http://kan-kikuchi.hatenablog.com/entry/Asset40&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;素材系のおすすめAsset38選&lt;/a&gt; でした。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;未検証ですが Unity2017.1.0f1 にて Metal での Deferred Rendering がサポートされたという話です。&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;ご挨拶&lt;/h1&gt;
+&lt;p&gt;&lt;a
         
       
     
@@ -459,7 +519,18 @@
         
         
           &lt;h1&gt;はじめに&lt;/h1&gt;
-&lt;p&gt;こちらの記事は先日行われた&amp;quot;&lt;a href=&quot;https://atnd.org/events/100606&quot; target=&quot;_blank&quot;
+&lt;p&gt;こちらの記事は先日行われた&amp;quot;&lt;a href=&quot;https://atnd.org/events/100606&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;第四十八回Unityもくもく会&lt;/a&gt;&amp;quot;にて発表したものの、詳細解説になります。&lt;/p&gt;
+&lt;h1&gt;ECSって何だろう&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Entity Component Systemの略&lt;/li&gt;
+&lt;li&gt;Unityに新しく追加される情報処理形態の一つ&lt;/li&gt;
+&lt;li&gt;ECS自体は昔からあるゲーム内オブジェクト処理記述方法の一つ[^1]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;GameObject+MonoBehaviourの頃と何が違うのか&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;中の人達が解説してくれているので、そちらを当たるといいです[^3]
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/UnityTechnologiesJapan/cedec2018cpu-entity-component-systemecs&quot;
         
       
     
@@ -488,7 +559,7 @@
       
         
         
-          &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a
+          &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot; target=&quot;_blank&quot;
         
       
     
