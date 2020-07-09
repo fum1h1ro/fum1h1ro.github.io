@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>мята</title>
+    <link>https://fum1h1ro.github.io/</link>
+    
+    <image>
+      <url>https://fum1h1ro.github.io/icon.png</url>
+      <title>мята</title>
+      <link>https://fum1h1ro.github.io/</link>
+    </image>
+    
+    <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
+    
+    <description></description>
+    <pubDate>Thu, 09 Jul 2020 23:49:19 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>ComputeShaderでProcedural</title>
+      <link>https://fum1h1ro.github.io/2020/07/08/ComputeShader%E3%81%A7Procedural/</link>
+      <guid>https://fum1h1ro.github.io/2020/07/08/ComputeShader%E3%81%A7Procedural/</guid>
+      <pubDate>Wed, 08 Jul 2020 11:54:54 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;p&gt;今更ながらに ComputeShader でも触っておくかと思い、何がしたいのか考えを巡らせた挙げ句、 GeometoryShader
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/07/08/ComputeShader%E3%81%A7Procedural/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Mesh API v2 の罠</title>
+      <link>https://fum1h1ro.github.io/2020/06/09/mesh-api-v2-trap/</link>
+      <guid>https://fum1h1ro.github.io/2020/06/09/mesh-api-v2-trap/</guid>
+      <pubDate>Tue, 09 Jun 2020 03:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;p&gt;今更ながらに Mesh API v2 と呼ばれるものを触ってみたけど、初っ端から罠に引っかかった。&lt;/p&gt;
+&lt;p&gt;v2
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/06/09/mesh-api-v2-trap/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Arduboy で豆腐を動かす</title>
+      <link>https://fum1h1ro.github.io/2020/03/30/Arduboy_move_tofu/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/30/Arduboy_move_tofu/</guid>
+      <pubDate>Mon, 30 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;概要&lt;/h1&gt;
+&lt;p&gt;Arduboy で豆腐を動かすまで。&lt;/p&gt;
+&lt;h2 id=&quot;前回までのお話&quot;&gt;前回までのお話&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633&quot;
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/30/Arduboy_move_tofu/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Arduboy のOLEDを叩く</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;概要&lt;/h1&gt;
+&lt;p&gt;OLED に直接制御コマンドを流し込みます。&lt;/p&gt;
+&lt;p&gt;今回はあまり実用的でも初心者向けでもありません。&lt;/p&gt;
+&lt;h1&gt;ハードウェア的な話&lt;/h1&gt;
+&lt;h2 id=&quot;OLED-の型番&quot;&gt;OLED の型番&lt;/h2&gt;
+&lt;p&gt;&lt;a
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/Arduboy_OLED/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Arduboy ことはじめ</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;概要&lt;/h1&gt;
+&lt;p&gt;Arduboy のセットアップから簡単なスケッチを動かすところまで解説します。&lt;/p&gt;
+&lt;h2 id=&quot;環境セットアップ&quot;&gt;環境セットアップ&lt;/h2&gt;
+&lt;h3 id=&quot;Arduino-IDE-をダウンロードする&quot;&gt;Arduino IDE
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>1フレームの時間を測る</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/Arduboy_measure_1frame/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/Arduboy_measure_1frame/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;概要&lt;/h1&gt;
+&lt;p&gt;ﾋｬｯﾊｰ！約60fpsだぜ！&lt;/p&gt;
+&lt;h2 id=&quot;計測してみる&quot;&gt;計測してみる&lt;/h2&gt;
+&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/Arduboy_measure_1frame/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Arduboy のフレームバッファ</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;概要&lt;/h1&gt;
+&lt;p&gt;Arduboy の画面に色々表示させるために、フレームバッファの構造について検証します。&lt;/p&gt;
+&lt;h2 id=&quot;フレームバッファの構造&quot;&gt;フレームバッファの構造&lt;/h2&gt;
+&lt;p&gt;1bit が 1 ドットに対応しており、 1
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/Arduboy_framebuffer/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>常に最新の Arduboy ライブラリを使う</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;概要&lt;/h1&gt;
+&lt;p&gt;Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。&lt;/p&gt;
+&lt;h1&gt;はじめに&lt;/h1&gt;
+&lt;p&gt;&lt;a
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Arduboy への道</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;概要&lt;/h1&gt;
+&lt;p&gt;Arduboy が届かなさすぎておかしくなった頭を冷やすための記事です。&lt;/p&gt;
+&lt;h2 id=&quot;小ネタ&quot;&gt;小ネタ&lt;/h2&gt;
+&lt;h3
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/Arduboy_road_to/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>GBuffer helper – Packing integer and float together</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;p&gt;この記事は、&lt;a href=&quot;https://seblagarde.wordpress.com/2018/09/02/gbuffer-helper-packing-integer-and-float-together/&quot; target=&quot;_blank&quot;
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/GBuffer_helper_Packing_integer_and_float_together/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>例のキヨシチェックを Sprache で書いてみる</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/Kiyoshi_Check/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/Kiyoshi_Check/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h2 id=&quot;はじめに&quot;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;http://qiita.com/beinteractive/items/a2264048a601ee998aca&quot; target=&quot;_blank&quot;
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/Kiyoshi_Check/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>SpriteKit でゲームを作ってみる</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/SpriteKit/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/SpriteKit/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;動機&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/tech-talks/jp/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;iOS7 Tech Talks&lt;/a&gt;
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/SpriteKit/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>UnityEditor と実機間で通信がしたい</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/UnityEditorConnection/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/UnityEditorConnection/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;UnityEditorとビルド後の実機との間で通信がしたい&lt;/h1&gt;
+&lt;p&gt;表題の件を、色々と今まで試行錯誤しつつやっていたんですが、公式で &lt;code&gt;PlayerConnection&lt;/code&gt;
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/UnityEditorConnection/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Mobile でも Deferred Shading がしたいです</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/deferred_shading_on_mobile/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/deferred_shading_on_mobile/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;p&gt;これは &lt;a href=&quot;http://qiita.com/advent-calendar/2015/unity2&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Unity 2 Advent Calendar 2015&lt;/a&gt;
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/deferred_shading_on_mobile/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>作って学ぶECS</title>
+      <link>https://fum1h1ro.github.io/2020/03/29/making_ECS/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/29/making_ECS/</guid>
+      <pubDate>Sun, 29 Mar 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;h1&gt;はじめに&lt;/h1&gt;
+&lt;p&gt;こちらの記事は先日行われた&amp;quot;&lt;a href=&quot;https://atnd.org/events/100606&quot; target=&quot;_blank&quot;
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/29/making_ECS/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Hello World</title>
+      <link>https://fum1h1ro.github.io/2020/03/20/hello-world/</link>
+      <guid>https://fum1h1ro.github.io/2020/03/20/hello-world/</guid>
+      <pubDate>Fri, 20 Mar 2020 05:17:25 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/03/20/hello-world/#disqus_thread</comments>
+    </item>
+    
+  </channel>
+</rss>
