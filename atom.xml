@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://fum1h1ro.github.io/"/>
-  <updated>2020-07-09T23:49:19.603Z</updated>
+  <updated>2020-07-19T10:42:06.952Z</updated>
   <id>https://fum1h1ro.github.io/</id>
   
   <author>
@@ -15,6 +15,45 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>omnisharp-vim で .NET Framework 4.7.1 が見つからないとか言われる時の対処法</title>
+    <link href="https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/"/>
+    <id>https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/</id>
+    <published>2020-07-19T11:00:00.000Z</published>
+    <updated>2020-07-19T10:42:06.952Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;なんか毎回アップデートする度に悩んでる気がするので備忘録。&lt;/p&gt;
+&lt;p&gt;4.7.1 というバージョンは任意。&lt;br&gt;
+Windows だと Visual Studio とかでよしなに。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://tsubakit1.hateblo.jp/entry/2018/06/17/030129&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;【Unity】Unity 2018.2で「C# プロジェクト &amp;quot;Assembly-Csharp&amp;quot;は、このコンピューターにインストールされていない」が出たので、その対処&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;OSX の場合。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/OmniSharp/omnisharp-vscode/issues/3063&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;.NETFramework not found in macOS
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="c#" scheme="https://fum1h1ro.github.io/tags/c/"/>
+    
+      <category term="vim" scheme="https://fum1h1ro.github.io/tags/vim/"/>
+    
+      <category term="lsp" scheme="https://fum1h1ro.github.io/tags/lsp/"/>
+    
+      <category term="omnisharp" scheme="https://fum1h1ro.github.io/tags/omnisharp/"/>
+    
+  </entry>
   
   <entry>
     <title>ComputeShaderでProcedural</title>

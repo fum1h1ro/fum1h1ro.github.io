@@ -15,8 +15,37 @@
     <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Thu, 09 Jul 2020 23:49:19 GMT</pubDate>
+    <pubDate>Sun, 19 Jul 2020 10:42:06 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>omnisharp-vim で .NET Framework 4.7.1 が見つからないとか言われる時の対処法</title>
+      <link>https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/</link>
+      <guid>https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/</guid>
+      <pubDate>Sun, 19 Jul 2020 11:00:00 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;p&gt;なんか毎回アップデートする度に悩んでる気がするので備忘録。&lt;/p&gt;
+&lt;p&gt;4.7.1 というバージョンは任意。&lt;br&gt;
+Windows だと Visual Studio とかでよしなに。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://tsubakit1.hateblo.jp/entry/2018/06/17/030129&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;【Unity】Unity 2018.2で「C# プロジェクト &amp;quot;Assembly-Csharp&amp;quot;は、このコンピューターにインストールされていない」が出たので、その対処&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;OSX の場合。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/OmniSharp/omnisharp-vscode/issues/3063&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;.NETFramework not found in macOS
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/#disqus_thread</comments>
+    </item>
     
     <item>
       <title>ComputeShaderでProcedural</title>
