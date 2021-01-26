@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://fum1h1ro.github.io/"/>
-  <updated>2020-07-19T10:42:06.952Z</updated>
+  <updated>2021-01-26T01:56:00.310Z</updated>
   <id>https://fum1h1ro.github.io/</id>
   
   <author>
@@ -17,11 +17,44 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>PlatformIO でユニットテストが書きたい</title>
+    <link href="https://fum1h1ro.github.io/2021/01/26/m5paper-test/"/>
+    <id>https://fum1h1ro.github.io/2021/01/26/m5paper-test/</id>
+    <published>2021-01-26T00:55:47.000Z</published>
+    <updated>2021-01-26T01:56:00.310Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;先日、うっかり&lt;a href=&quot;https://www.switch-science.com/catalog/6749/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;M5Paper&lt;/a&gt;を買ってしまったので、肥やしにならぬよう、ちょくちょくプログラムを書いているのだが、プロジェクト内で書いた自分のクラスをテストしたいと思った時に少しハマったので、解決策を書いておく。&lt;/p&gt;
+&lt;h2 id=&quot;前提&quot;&gt;前提&lt;/h2&gt;
+&lt;p&gt;Arduino IDEは使わない。&lt;a href=&quot;https://platformio.org/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;PlatformIO&lt;/a&gt;を使います。ビルドがめちゃくちゃ早いので（Arduino IDEが遅いとも言う）オススメ。&lt;/p&gt;
+&lt;p&gt;本旨とズレるが、PlatformIO Coreっていうのがあったんだな。PlatformIO IDEしかないのかと思って、VSCodeで書いてた……。&lt;/p&gt;
+&lt;h2
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="arduino" scheme="https://fum1h1ro.github.io/tags/arduino/"/>
+    
+      <category term="m5stack" scheme="https://fum1h1ro.github.io/tags/m5stack/"/>
+    
+      <category term="platformio" scheme="https://fum1h1ro.github.io/tags/platformio/"/>
+    
+  </entry>
+  
+  <entry>
     <title>omnisharp-vim で .NET Framework 4.7.1 が見つからないとか言われる時の対処法</title>
     <link href="https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/"/>
     <id>https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/</id>
-    <published>2020-07-19T11:00:00.000Z</published>
-    <updated>2020-07-19T10:42:06.952Z</updated>
+    <published>2020-07-19T10:00:00.000Z</published>
+    <updated>2020-07-19T10:43:33.433Z</updated>
     
     <summary type="html">
     

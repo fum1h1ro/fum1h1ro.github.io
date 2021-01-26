@@ -15,14 +15,39 @@
     <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Sun, 19 Jul 2020 10:42:06 GMT</pubDate>
+    <pubDate>Tue, 26 Jan 2021 01:56:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>PlatformIO でユニットテストが書きたい</title>
+      <link>https://fum1h1ro.github.io/2021/01/26/m5paper-test/</link>
+      <guid>https://fum1h1ro.github.io/2021/01/26/m5paper-test/</guid>
+      <pubDate>Tue, 26 Jan 2021 00:55:47 GMT</pubDate>
+      <description>
+      
+        
+        
+          
+          
+            &lt;p&gt;先日、うっかり&lt;a href=&quot;https://www.switch-science.com/catalog/6749/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;M5Paper&lt;/a&gt;を買ってしまったので、肥やしにならぬよう、ちょくちょくプログラムを書いているのだが、プロジェクト内で書いた自分のクラスをテストしたいと思った時に少しハマったので、解決策を書いておく。&lt;/p&gt;
+&lt;h2 id=&quot;前提&quot;&gt;前提&lt;/h2&gt;
+&lt;p&gt;Arduino IDEは使わない。&lt;a href=&quot;https://platformio.org/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;PlatformIO&lt;/a&gt;を使います。ビルドがめちゃくちゃ早いので（Arduino IDEが遅いとも言う）オススメ。&lt;/p&gt;
+&lt;p&gt;本旨とズレるが、PlatformIO Coreっていうのがあったんだな。PlatformIO IDEしかないのかと思って、VSCodeで書いてた……。&lt;/p&gt;
+&lt;h2
+          
+        
+      
+      </description>
+      
+      
+      <comments>https://fum1h1ro.github.io/2021/01/26/m5paper-test/#disqus_thread</comments>
+    </item>
     
     <item>
       <title>omnisharp-vim で .NET Framework 4.7.1 が見つからないとか言われる時の対処法</title>
       <link>https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/</link>
       <guid>https://fum1h1ro.github.io/2020/07/19/omnisharp-and-dotnetframework/</guid>
-      <pubDate>Sun, 19 Jul 2020 11:00:00 GMT</pubDate>
+      <pubDate>Sun, 19 Jul 2020 10:00:00 GMT</pubDate>
       <description>
       
         

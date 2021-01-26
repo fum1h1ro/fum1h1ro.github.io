@@ -68,10 +68,76 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-m5paper-test" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/26/m5paper-test/" class="article-date">
+  <time datetime="2021-01-26T00:55:47.000Z" itemprop="datePublished">2021-01-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/26/m5paper-test/">PlatformIO でユニットテストが書きたい</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>先日、うっかり<a href="https://www.switch-science.com/catalog/6749/" target="_blank" rel="noopener">M5Paper</a>を買ってしまったので、肥やしにならぬよう、ちょくちょくプログラムを書いているのだが、プロジェクト内で書いた自分のクラスをテストしたいと思った時に少しハマったので、解決策を書いておく。</p>
+<h2 id="前提">前提</h2>
+<p>Arduino IDEは使わない。<a href="https://platformio.org/" target="_blank" rel="noopener">PlatformIO</a>を使います。ビルドがめちゃくちゃ早いので（Arduino IDEが遅いとも言う）オススメ。</p>
+<p>本旨とズレるが、PlatformIO Coreっていうのがあったんだな。PlatformIO IDEしかないのかと思って、VSCodeで書いてた……。</p>
+<h2 id="testフォルダ">testフォルダ</h2>
+<p>最初、何も考えずにプロジェクト内の<code>test</code>フォルダ内に、<code>test_hoge.cpp</code>を置いて、以下のようなコードを書いたところうまくいった。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Arduino.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unity.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test0</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TEST_ASSERT_TRUE(<span class="literal">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TEST_ASSERT_FALSE(<span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UNITY_BEGIN();</span><br><span class="line">    RUN_TEST(test0);</span><br><span class="line">    RUN_TEST(test1);</span><br><span class="line">    UNITY_END();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>しかし、ここで既にあった自分のクラスをテストしたいと思って以下のようなコードを追加したら、テストコードのビルドが通らなくなった。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"test_class.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test0</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> t = <span class="keyword">new</span> TestClass();</span><br><span class="line">    TEST_ASSERT_TRUE(t != <span class="literal">nullptr</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="test-build-project-src-yes">test_build_project_src = yes</h2>
+<p><a href="https://docs.platformio.org/en/latest/plus/unit-testing.html" target="_blank" rel="noopener">ドキュメント</a>を確認すると、プロジェクト設定である<code>platformio.ini</code>に、<code>test_build_project_src</code>という設定があり、それを有効にしないと<code>src</code>フォルダがビルドされないらしい（<code>test_class.h</code>は<code>include</code>フォルダ、<code>test_class.cpp</code>は<code>src</code>フォルダにあった）。</p>
+<p>なるほど、と思い有効にしてビルドしたが、今度は<code>setup()</code>と<code>loop()</code>が二重定義になってると怒られる。当たり前だ。</p>
+<h2 id="lib-dir">lib_dir</h2>
+<p>更にドキュメントを読んでいくと、<a href="https://docs.platformio.org/en/latest/plus/unit-testing.html#shared-code" target="_blank" rel="noopener">Shared Code</a>と言うところに、本体とテストで共有するコードは<code>lib_dir</code>に置けとある。</p>
+<p>なるほどなるほど、と思い<code>test_class.cpp</code>を<code>lib</code>に移動して試すがダメ。<code>test_class.h</code>もか？と思い試すがダメ。</p>
+<p>ちなみに、<code>test_build_project_src</code>は無効にしている。</p>
+<h2 id="サンプル">サンプル</h2>
+<p>更にドキュメントを精査すると、<a href="https://github.com/platformio/platformio-examples/tree/develop/unit-testing/calculator" target="_blank" rel="noopener">サンプル</a>を見なさいと書いてあった。</p>
+<p>自分のプロジェクトと比較すると、<code>lib</code>フォルダ内の構成が全く違うことに気づいたので、サンプルに合わせたところ、バッチリうまくいった。</p>
+<h2 id="結論">結論</h2>
+<p>最終的なプロジェクト構成は以下のようになった。</p>
+<p><img src="/images/20210126_00.png" alt=""></p>
+<p>ポイントは二つ。</p>
+<ul>
+<li><code>lib</code>の中は、<code>lib/$(好きなモジュール名)/src</code>に共有するコードを入れる。ヘッダも一緒に入れちゃっておｋ。共有ヘッダの<code>#include</code>は<code>&lt;&gt;</code>。</li>
+<li><code>test</code>の中は、<code>test/$(テストケース名)</code>にテストコードを入れる。</li>
+</ul>
+<p>今回はやってないけど、テストケースの設定で、実際にデバイスに送って実行するテスト以外に、ホストPCで実行するテストとかも書けるみたい。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2021/01/26/m5paper-test/" data-id="ckkdbduxf0000kipkex7ecqr3" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduino/" rel="tag">arduino</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/m5stack/" rel="tag">m5stack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/platformio/" rel="tag">platformio</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-omnisharp-and-dotnetframework" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/19/omnisharp-and-dotnetframework/" class="article-date">
-  <time datetime="2020-07-19T11:00:00.000Z" itemprop="datePublished">2020-07-19</time>
+  <time datetime="2020-07-19T10:00:00.000Z" itemprop="datePublished">2020-07-19</time>
 </a>
     
   </div>
@@ -196,55 +262,6 @@ Windows だと Visual Studio とかでよしなに。</p>
 
 
   
-    <article id="post-mesh-api-v2-trap" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/09/mesh-api-v2-trap/" class="article-date">
-  <time datetime="2020-06-09T03:00:00.000Z" itemprop="datePublished">2020-06-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今更ながらに Mesh API v2 と呼ばれるものを触ってみたけど、初っ端から罠に引っかかった。</p>
-<p>v2 では、頂点データの配列を別々に渡すのではなく、インターリーブされたものとして渡す。なので、一つの頂点データがどういう構造になっているかを伝えてやらねばならないのだが、以下はダメ。</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)</span>]</span><br><span class="line"><span class="keyword">struct</span> Vertex</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Vector3 BeginPos;</span><br><span class="line">    <span class="keyword">public</span> Vector3 EndPos;</span><br><span class="line">    <span class="keyword">public</span> Vector4 Adjuster;</span><br><span class="line">    <span class="keyword">public</span> Color Color;</span><br><span class="line">    <span class="keyword">public</span> Vector3 Normal0;</span><br><span class="line">    <span class="keyword">public</span> Vector4 Normal1;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> VertexAttributeDescriptor[] Layout = <span class="keyword">new</span>[]&#123;</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord2, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>何故か。</p>
-<p>一日悩んで、諦めた。と言うのも、使っていた場所が Runtime ではなく、Editor 拡張だったから。</p>
-<p>Asset としての Mesh をいじる場合は、シリアライズしたりする必要もあって、従来の API を使うべきなのでは？と思ったのだ。マニュアルにそうしろとは書いてなかったが(伏線)。</p>
-<p>飯食って、そろそろ寝るかと落ち着いた時に、「まさか」と思って試したらうまくいったのが次のコード。</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)</span>]</span><br><span class="line"><span class="keyword">struct</span> Vertex</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Vector3 BeginPos;</span><br><span class="line">    <span class="keyword">public</span> Vector3 Normal0;</span><br><span class="line">    <span class="keyword">public</span> Vector4 Normal1;</span><br><span class="line">    <span class="keyword">public</span> Vector3 EndPos;</span><br><span class="line">    <span class="keyword">public</span> Vector4 Adjuster;</span><br><span class="line">    <span class="keyword">public</span> Color Color;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> VertexAttributeDescriptor[] Layout = <span class="keyword">new</span>[]&#123;</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, <span class="number">3</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">    <span class="keyword">new</span> VertexAttributeDescriptor(VertexAttribute.TexCoord2, VertexAttributeFormat.Float32, <span class="number">4</span>),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>違うのは、 <code>VertexAttribute</code> の順番。これを、おそらく <code>enum VertexAttribute</code> の定義順に合わせた。</p>
-<p>それなら最初に言ってくれよ……。マニュアルにそうしろとは書いてなかった(回収)。</p>
-<p>まあ、でもこれ、 Unity というより、グラフィックの API 側の都合のような気はする。最近はとんと、直接 API に触れることもなくなったので、「オマエがヌルいだけじゃねーか」と言われれば、「はい」としか(‘A’)</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/06/09/mesh-api-v2-trap/" data-id="ckce0yt2x000s7bpk1d6g8nxv" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -263,7 +280,7 @@ Windows だと Visual Studio とかでよしなに。</p>
   <div class="widget-wrap">
     <h3 class="widget-title">タグ</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/omnisharp/" rel="tag">omnisharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/" rel="tag">vim</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduino/" rel="tag">arduino</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/m5stack/" rel="tag">m5stack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/omnisharp/" rel="tag">omnisharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/platformio/" rel="tag">platformio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/" rel="tag">vim</a></li></ul>
     </div>
   </div>
 
@@ -273,7 +290,7 @@ Windows だと Visual Studio とかでよしなに。</p>
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/tags/arduboy/" style="font-size: 16px;">arduboy</a> <a href="/tags/c/" style="font-size: 12px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/omnisharp/" style="font-size: 10px;">omnisharp</a> <a href="/tags/qiita/" style="font-size: 18px;">qiita</a> <a href="/tags/unity3d/" style="font-size: 14px;">unity3d</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a>
+      <a href="/tags/arduboy/" style="font-size: 16px;">arduboy</a> <a href="/tags/arduino/" style="font-size: 10px;">arduino</a> <a href="/tags/c/" style="font-size: 12px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/m5stack/" style="font-size: 10px;">m5stack</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/omnisharp/" style="font-size: 10px;">omnisharp</a> <a href="/tags/platformio/" style="font-size: 10px;">platformio</a> <a href="/tags/qiita/" style="font-size: 18px;">qiita</a> <a href="/tags/unity3d/" style="font-size: 14px;">unity3d</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a>
     </div>
   </div>
 
@@ -282,7 +299,7 @@ Windows だと Visual Studio とかでよしなに。</p>
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">1月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -293,6 +310,10 @@ Windows だと Visual Studio とかでよしなに。</p>
     <h3 class="widget-title">最近の投稿</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/01/26/m5paper-test/">PlatformIO でユニットテストが書きたい</a>
+          </li>
         
           <li>
             <a href="/2020/07/19/omnisharp-and-dotnetframework/">omnisharp-vim で .NET Framework 4.7.1 が見つからないとか言われる時の対処法</a>
@@ -310,10 +331,6 @@ Windows だと Visual Studio とかでよしなに。</p>
             <a href="/2020/03/30/Arduboy_move_tofu/">Arduboy で豆腐を動かす</a>
           </li>
         
-          <li>
-            <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -326,7 +343,7 @@ Windows だと Visual Studio とかでよしなに。</p>
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 fum1h1ro<br>
+      &copy; 2021 fum1h1ro<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

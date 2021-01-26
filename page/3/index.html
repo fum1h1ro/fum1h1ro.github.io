@@ -68,6 +68,82 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Arduboy_1st" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/29/Arduboy_1st/" class="article-date">
+  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/29/Arduboy_1st/">Arduboy ことはじめ</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1>概要</h1>
+<p>Arduboy のセットアップから簡単なスケッチを動かすところまで解説します。</p>
+<h2 id="環境セットアップ">環境セットアップ</h2>
+<h3 id="Arduino-IDE-をダウンロードする">Arduino IDE をダウンロードする</h3>
+<ul>
+<li><a href="https://www.arduino.cc/" target="_blank" rel="noopener">Arduino　公式</a> から IDE をダウンロードします。</li>
+</ul>
+<p><img src="/images/b951bf2a-d143-bdc7-c636-234e895cd0f8.png" alt="Arduino - Home 2016-06-05 11-07-16.png"></p>
+<p><code>Download</code> をクリックして先に進みます。</p>
+<p><img src="/images/ba3b343a-211e-9cb6-b2ea-fe339ffd1cae.png" alt="Arduino - Software 2016-06-05 11-09-46.png"></p>
+<p>右側の一覧から、自分の環境に合ったものを選びます。</p>
+<p><img src="/images/ad26593a-9a37-6af2-8aeb-267000e97122.png" alt="Arduino - Donate 2016-06-05 11-14-01.png"></p>
+<p>気が向いたら寄付しましょう。寄付しない場合は、 <strong>JUST DOWNLOAD</strong> で。</p>
+<p>ダウンロード後、インストールします。</p>
+<h3 id="Arduino-IDE-の設定">Arduino IDE の設定</h3>
+<p><img src="/images/71313123-79be-17b0-c654-61249c06dd51.png" alt="Screen Shot 2016-06-05 at 11.50.53.png"></p>
+<p>メニューからボードを <code>Arduino Leonardo</code> にします。</p>
+<p><img src="/images/06dae7bc-f90a-05b8-5a81-2eff457ab4ec.png" alt="Screen Shot 2016-06-05 at 11.52.35.png"></p>
+<p>ポートも、 Arduino のものにしておくとあとで便利です。</p>
+<h3 id="Arduboy-ライブラリの追加">Arduboy ライブラリの追加</h3>
+<p>Arduboy でプログラムするにあたって必要なライブラリを IDE に追加します。</p>
+<p><img src="/images/28e26abb-34c9-6e62-6a6d-5ad013d8c6aa.png" alt="Screen Shot 2016-06-05 at 12.08.27.png"></p>
+<p>メニューの <code>Include Library &gt; Manage Libraris...</code> を選びます。</p>
+<p><img src="/images/1c932faa-8a0c-5ae0-01cb-7a67a3ccd0e5.png" alt="Screen Shot 2016-06-05 at 12.10.50.png"></p>
+<p>検索フィルタに <code>boy</code> と入れると、 Arduboy 用のライブラリが出てくるので、最新のバージョンをインストールします。</p>
+<h3 id="Arduboy-を繋ぐ">Arduboy を繋ぐ</h3>
+<p><img src="/images/61de1c66-1bd0-0258-34d4-bebec7e1f8c3.jpeg" alt="IMG_5323.JPG"></p>
+<p>USB&lt;&gt;USB-Micro ケーブルでホスト PC と Arduboy を繋ぎます。</p>
+<p>Arduboy の電源を入れると、既にインストールされているプログラムが即時実行されますが、開発中も電源入れっぱなしで、プログラムが実行されたままでも大丈夫です。</p>
+<h2 id="スケッチを用意する">スケッチを用意する</h2>
+<p><img src="/images/1714a697-164d-1b00-f84f-7230a19c4206.png" alt="Screen Shot 2016-06-05 at 12.05.18.png"></p>
+<p>新規スケッチを用意すると、上記画面のようになっていると思います。</p>
+<p>これから、ここにプログラムを書き込んでいきます。</p>
+<h2 id="スケッチに書き込む">スケッチに書き込む</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Arduboy.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">Arduboy arduboy;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  arduboy.<span class="built_in">begin</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!arduboy.nextFrame()) <span class="keyword">return</span>;</span><br><span class="line">  arduboy.<span class="built_in">clear</span>();</span><br><span class="line">  arduboy.drawCircle(<span class="number">128</span>/<span class="number">2</span>, <span class="number">64</span>/<span class="number">2</span>, <span class="number">16</span>, <span class="number">1</span>);</span><br><span class="line">  arduboy.<span class="built_in">display</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>スケッチの中身を上記のソースに置き換えて、 Command+U （Windows なら Ctrl+U） を押して Arduboy に転送します。</p>
+<p>しばらくすると、 Arduboy が起動し、真っ黒な画面の中心に円が描かれているのが確認出来ると思います。</p>
+<p>これで、プリインストールされていたゲームの代わりに、あなたが書き込んだプログラムが実行されたことになります。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_1st/" data-id="ckce0yt2k00027bpkbnangr3e" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Arduboy_measure_1frame" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/03/29/Arduboy_measure_1frame/" class="article-date">
@@ -259,66 +335,6 @@
 
 
   
-    <article id="post-Arduboy_using_latest_lib" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/29/Arduboy_using_latest_lib/" class="article-date">
-  <time datetime="2020-03-29T11:00:00.000Z" itemprop="datePublished">2020-03-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/29/Arduboy_using_latest_lib/">常に最新の Arduboy ライブラリを使う</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1>概要</h1>
-<p>Arduino IDE によるライブラリ管理では満足出来ない御仁のための TIPS です。</p>
-<h1>はじめに</h1>
-<p><a href="http://qiita.com/fum1h1ro/items/9c7fb0d072e4e6e87633" target="_blank" rel="noopener">Arduboy ことはじめ</a></p>
-<p>上記の記事で、Arduino IDE の Manage Libraries を使って、Arduboy のコアライブラリをインストールしましたが、残念ながらあそこから入るのは最新ではありません。</p>
-<p>最新は、Github 上のリポジトリから入手可能です。</p>
-<h1>入手方法</h1>
-<h2 id="古いライブラリを消す">古いライブラリを消す</h2>
-<p>Arduino IDE を終了させた状態で、 <code>~/Documents/Arduino/libraries/Arduboy</code> フォルダをざっくり消します。</p>
-<h2 id="新しいライブラリを入れる">新しいライブラリを入れる</h2>
-<h3 id="ターミナルを起動する">ターミナルを起動する</h3>
-<p>黒い画面を開きます。</p>
-<h3 id="Github-から-clone-する">Github から clone する</h3>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~</span><br><span class="line">% cd Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">% git clone https:&#x2F;&#x2F;github.com&#x2F;Arduboy&#x2F;Arduboy.git</span><br><span class="line">Cloning into &#39;Arduboy&#39;...</span><br><span class="line">remote: Counting objects: 1148, done.</span><br><span class="line">remote: Total 1148 (delta 0), reused 0 (delta 0), pack-reused 1148</span><br><span class="line">Receiving objects: 100% (1148&#x2F;1148), 295.96 KiB | 160.00 KiB&#x2F;s, done.</span><br><span class="line">Resolving deltas: 100% (664&#x2F;664), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries</span><br><span class="line">%</span><br></pre></td></tr></table></figure>
-<p><code>~/Documents/Arduino/libraries</code> へ移動し、Github からクローンします。</p>
-<p>これで、最新のライブラリがインストールされました。</p>
-<h2 id="常に最新に保つ">常に最新に保つ</h2>
-<p>最新だから良いというわけではありませんが、最新版を追っかけたい場合は、ターミナルから、 <code>~/Documents/Arduino/libraries/Arduino</code> へ移動し、</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[k-ya@meteor] ~&#x2F;Documents&#x2F;Arduino&#x2F;libraries&#x2F;Arduino</span><br><span class="line">% git pull origin master</span><br></pre></td></tr></table></figure>
-<p>とすると、更新のあったファイルを落としてくることが出来ます。</p>
-<h2 id="おわり">おわり</h2>
-<p>Arduino IDE からインストール出来る 1.1.0 から最新の 1.2.0 では、文字表示ライブラリが追加されていたり、サウンドの処理からデフォルトの割り込みベクタがなくなっていたりして、結構変わっているようです。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://fum1h1ro.github.io/2020/03/29/Arduboy_using_latest_lib/" data-id="ckce0yt2o00087bpk3tzian0p" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -337,7 +353,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグ</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/omnisharp/" rel="tag">omnisharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/" rel="tag">vim</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduino/" rel="tag">arduino</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/m5stack/" rel="tag">m5stack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/omnisharp/" rel="tag">omnisharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/platformio/" rel="tag">platformio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/" rel="tag">vim</a></li></ul>
     </div>
   </div>
 
@@ -347,7 +363,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/tags/arduboy/" style="font-size: 16px;">arduboy</a> <a href="/tags/c/" style="font-size: 12px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/omnisharp/" style="font-size: 10px;">omnisharp</a> <a href="/tags/qiita/" style="font-size: 18px;">qiita</a> <a href="/tags/unity3d/" style="font-size: 14px;">unity3d</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a>
+      <a href="/tags/arduboy/" style="font-size: 16px;">arduboy</a> <a href="/tags/arduino/" style="font-size: 10px;">arduino</a> <a href="/tags/c/" style="font-size: 12px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/m5stack/" style="font-size: 10px;">m5stack</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/omnisharp/" style="font-size: 10px;">omnisharp</a> <a href="/tags/platformio/" style="font-size: 10px;">platformio</a> <a href="/tags/qiita/" style="font-size: 18px;">qiita</a> <a href="/tags/unity3d/" style="font-size: 14px;">unity3d</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a>
     </div>
   </div>
 
@@ -356,7 +372,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">1月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
     </div>
   </div>
 
@@ -367,6 +383,10 @@
     <h3 class="widget-title">最近の投稿</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/01/26/m5paper-test/">PlatformIO でユニットテストが書きたい</a>
+          </li>
         
           <li>
             <a href="/2020/07/19/omnisharp-and-dotnetframework/">omnisharp-vim で .NET Framework 4.7.1 が見つからないとか言われる時の対処法</a>
@@ -384,10 +404,6 @@
             <a href="/2020/03/30/Arduboy_move_tofu/">Arduboy で豆腐を動かす</a>
           </li>
         
-          <li>
-            <a href="/2020/03/29/Arduboy_OLED/">Arduboy のOLEDを叩く</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -400,7 +416,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 fum1h1ro<br>
+      &copy; 2021 fum1h1ro<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

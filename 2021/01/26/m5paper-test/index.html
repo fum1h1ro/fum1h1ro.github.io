@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>PlatformIO でユニットテストが書きたい | мята</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="先日、うっかりM5Paperを買ってしまったので、肥やしにならぬよう、ちょくちょくプログラムを書いているのだが、プロジェクト内で書いた自分のクラスをテストしたいと思った時に少しハマったので、解決策を書いておく。 前提 Arduino IDEは使わない。PlatformIOを使います。ビルドがめちゃくちゃ早いので（Arduino IDEが遅いとも言う）オススメ。 本旨とズレるが、PlatformIO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PlatformIO でユニットテストが書きたい">
+<meta property="og:url" content="https://fum1h1ro.github.io/2021/01/26/m5paper-test/index.html">
+<meta property="og:site_name" content="мята">
+<meta property="og:description" content="先日、うっかりM5Paperを買ってしまったので、肥やしにならぬよう、ちょくちょくプログラムを書いているのだが、プロジェクト内で書いた自分のクラスをテストしたいと思った時に少しハマったので、解決策を書いておく。 前提 Arduino IDEは使わない。PlatformIOを使います。ビルドがめちゃくちゃ早いので（Arduino IDEが遅いとも言う）オススメ。 本旨とズレるが、PlatformIO">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:image" content="https://fum1h1ro.github.io/images/20210126_00.png">
+<meta property="article:published_time" content="2021-01-26T00:55:47.000Z">
+<meta property="article:modified_time" content="2021-01-26T01:56:00.310Z">
+<meta property="article:author" content="fum1h1ro">
+<meta property="article:tag" content="arduino">
+<meta property="article:tag" content="m5stack">
+<meta property="article:tag" content="platformio">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fum1h1ro.github.io/images/20210126_00.png">
+<meta name="twitter:creator" content="@fum1h1ro">
+  
+    <link rel="alternate" href="/atom.xml" title="мята" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <meta name="google-site-verification" content="Q_KOZIl-x1Q8Vj6ZyK3PDbGhm0DwmU1NZqfuq86U1es" />
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">мята</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://fum1h1ro.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-m5paper-test" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/26/m5paper-test/" class="article-date">
+  <time datetime="2021-01-26T00:55:47.000Z" itemprop="datePublished">2021-01-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PlatformIO でユニットテストが書きたい
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>先日、うっかり<a href="https://www.switch-science.com/catalog/6749/" target="_blank" rel="noopener">M5Paper</a>を買ってしまったので、肥やしにならぬよう、ちょくちょくプログラムを書いているのだが、プロジェクト内で書いた自分のクラスをテストしたいと思った時に少しハマったので、解決策を書いておく。</p>
+<h2 id="前提">前提</h2>
+<p>Arduino IDEは使わない。<a href="https://platformio.org/" target="_blank" rel="noopener">PlatformIO</a>を使います。ビルドがめちゃくちゃ早いので（Arduino IDEが遅いとも言う）オススメ。</p>
+<p>本旨とズレるが、PlatformIO Coreっていうのがあったんだな。PlatformIO IDEしかないのかと思って、VSCodeで書いてた……。</p>
+<h2 id="testフォルダ">testフォルダ</h2>
+<p>最初、何も考えずにプロジェクト内の<code>test</code>フォルダ内に、<code>test_hoge.cpp</code>を置いて、以下のようなコードを書いたところうまくいった。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Arduino.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unity.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test0</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TEST_ASSERT_TRUE(<span class="literal">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TEST_ASSERT_FALSE(<span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    UNITY_BEGIN();</span><br><span class="line">    RUN_TEST(test0);</span><br><span class="line">    RUN_TEST(test1);</span><br><span class="line">    UNITY_END();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>しかし、ここで既にあった自分のクラスをテストしたいと思って以下のようなコードを追加したら、テストコードのビルドが通らなくなった。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"test_class.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test0</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> t = <span class="keyword">new</span> TestClass();</span><br><span class="line">    TEST_ASSERT_TRUE(t != <span class="literal">nullptr</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="test-build-project-src-yes">test_build_project_src = yes</h2>
+<p><a href="https://docs.platformio.org/en/latest/plus/unit-testing.html" target="_blank" rel="noopener">ドキュメント</a>を確認すると、プロジェクト設定である<code>platformio.ini</code>に、<code>test_build_project_src</code>という設定があり、それを有効にしないと<code>src</code>フォルダがビルドされないらしい（<code>test_class.h</code>は<code>include</code>フォルダ、<code>test_class.cpp</code>は<code>src</code>フォルダにあった）。</p>
+<p>なるほど、と思い有効にしてビルドしたが、今度は<code>setup()</code>と<code>loop()</code>が二重定義になってると怒られる。当たり前だ。</p>
+<h2 id="lib-dir">lib_dir</h2>
+<p>更にドキュメントを読んでいくと、<a href="https://docs.platformio.org/en/latest/plus/unit-testing.html#shared-code" target="_blank" rel="noopener">Shared Code</a>と言うところに、本体とテストで共有するコードは<code>lib_dir</code>に置けとある。</p>
+<p>なるほどなるほど、と思い<code>test_class.cpp</code>を<code>lib</code>に移動して試すがダメ。<code>test_class.h</code>もか？と思い試すがダメ。</p>
+<p>ちなみに、<code>test_build_project_src</code>は無効にしている。</p>
+<h2 id="サンプル">サンプル</h2>
+<p>更にドキュメントを精査すると、<a href="https://github.com/platformio/platformio-examples/tree/develop/unit-testing/calculator" target="_blank" rel="noopener">サンプル</a>を見なさいと書いてあった。</p>
+<p>自分のプロジェクトと比較すると、<code>lib</code>フォルダ内の構成が全く違うことに気づいたので、サンプルに合わせたところ、バッチリうまくいった。</p>
+<h2 id="結論">結論</h2>
+<p>最終的なプロジェクト構成は以下のようになった。</p>
+<p><img src="/images/20210126_00.png" alt=""></p>
+<p>ポイントは二つ。</p>
+<ul>
+<li><code>lib</code>の中は、<code>lib/$(好きなモジュール名)/src</code>に共有するコードを入れる。ヘッダも一緒に入れちゃっておｋ。共有ヘッダの<code>#include</code>は<code>&lt;&gt;</code>。</li>
+<li><code>test</code>の中は、<code>test/$(テストケース名)</code>にテストコードを入れる。</li>
+</ul>
+<p>今回はやってないけど、テストケースの設定で、実際にデバイスに送って実行するテスト以外に、ホストPCで実行するテストとかも書けるみたい。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fum1h1ro.github.io/2021/01/26/m5paper-test/" data-id="ckkdbduxf0000kipkex7ecqr3" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arduino/" rel="tag">arduino</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/m5stack/" rel="tag">m5stack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/platformio/" rel="tag">platformio</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/07/19/omnisharp-and-dotnetframework/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">omnisharp-vim で .NET Framework 4.7.1 が見つからないとか言われる時の対処法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduboy/" rel="tag">arduboy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arduino/" rel="tag">arduino</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/" rel="tag">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/m5stack/" rel="tag">m5stack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/objc/" rel="tag">objc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/omnisharp/" rel="tag">omnisharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/platformio/" rel="tag">platformio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qiita/" rel="tag">qiita</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unity3d/" rel="tag">unity3d</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/" rel="tag">vim</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/arduboy/" style="font-size: 16px;">arduboy</a> <a href="/tags/arduino/" style="font-size: 10px;">arduino</a> <a href="/tags/c/" style="font-size: 12px;">c#</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/ios/" style="font-size: 10px;">ios</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/m5stack/" style="font-size: 10px;">m5stack</a> <a href="/tags/objc/" style="font-size: 10px;">objc</a> <a href="/tags/omnisharp/" style="font-size: 10px;">omnisharp</a> <a href="/tags/platformio/" style="font-size: 10px;">platformio</a> <a href="/tags/qiita/" style="font-size: 18px;">qiita</a> <a href="/tags/unity3d/" style="font-size: 14px;">unity3d</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">1月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">7月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">6月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">3月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/01/26/m5paper-test/">PlatformIO でユニットテストが書きたい</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/19/omnisharp-and-dotnetframework/">omnisharp-vim で .NET Framework 4.7.1 が見つからないとか言われる時の対処法</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/08/ComputeShader%E3%81%A7Procedural/">ComputeShaderでProcedural</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/09/mesh-api-v2-trap/">Mesh API v2 の罠</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/30/Arduboy_move_tofu/">Arduboy で豆腐を動かす</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 fum1h1ro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
